@@ -1,0 +1,2448 @@
+{
+  "conversions": [
+    {
+      "from": "/assets/images/course-filter/1.jpg",
+      "to": "/assets/images/course-filter/1.png"
+    },
+    {
+      "from": "/assets/images/courses/course-capf.png",
+      "to": "/assets/images/courses/course-capf.jpg"
+    },
+    {
+      "from": "/assets/images/courses/course-indian-air-force.png",
+      "to": "/assets/images/courses/course-indian-air-force.jpg"
+    },
+    {
+      "from": "/assets/images/courses/course-indian-army.png",
+      "to": "/assets/images/courses/course-indian-army.jpg"
+    },
+    {
+      "from": "/assets/images/courses/course-indian-navy.png",
+      "to": "/assets/images/courses/course-indian-navy.jpg"
+    },
+    {
+      "from": "/assets/images/courses/course-rpf.png",
+      "to": "/assets/images/courses/course-rpf.jpg"
+    },
+    {
+      "from": "/assets/images/courses/course-sub-inspector.png",
+      "to": "/assets/images/courses/course-sub-inspector.jpg"
+    },
+    {
+      "from": "/assets/images/courses/course-tnusrb-constable.png",
+      "to": "/assets/images/courses/course-tnusrb-constable.jpg"
+    },
+    {
+      "from": "/assets/images/home4/placeholder/backdrop.png",
+      "to": "/assets/images/home4/placeholder/backdrop.jpg"
+    }
+  ],
+  "results": [
+    {
+      "relativePath": "Home7/about/1.png",
+      "action": "skipped",
+      "before": 6002,
+      "after": 6002
+    },
+    {
+      "relativePath": "Home7/about/2.png",
+      "action": "skipped",
+      "before": 5564,
+      "after": 5564
+    },
+    {
+      "relativePath": "Home7/about/3.png",
+      "action": "skipped",
+      "before": 5826,
+      "after": 5826
+    },
+    {
+      "relativePath": "Home7/about/4.png",
+      "action": "skipped",
+      "before": 6244,
+      "after": 6244
+    },
+    {
+      "relativePath": "Home7/banner-bg.jpg",
+      "action": "skipped",
+      "before": 65253,
+      "after": 65253
+    },
+    {
+      "relativePath": "Home7/blog/1.png",
+      "action": "optimized",
+      "before": 237194,
+      "after": 71457
+    },
+    {
+      "relativePath": "Home7/blog/2.png",
+      "action": "optimized",
+      "before": 268388,
+      "after": 74897
+    },
+    {
+      "relativePath": "Home7/blog/3.png",
+      "action": "optimized",
+      "before": 260498,
+      "after": 74297
+    },
+    {
+      "relativePath": "Home7/courses/1.png",
+      "action": "optimized",
+      "before": 130505,
+      "after": 157128
+    },
+    {
+      "relativePath": "Home7/courses/2.png",
+      "action": "optimized",
+      "before": 180198,
+      "after": 49468
+    },
+    {
+      "relativePath": "Home7/courses/3.png",
+      "action": "optimized",
+      "before": 175647,
+      "after": 51053
+    },
+    {
+      "relativePath": "Home7/courses/4.png",
+      "action": "optimized",
+      "before": 179225,
+      "after": 52618
+    },
+    {
+      "relativePath": "Home7/courses/5.png",
+      "action": "optimized",
+      "before": 165792,
+      "after": 61917
+    },
+    {
+      "relativePath": "Home7/overview/1.png",
+      "action": "optimized",
+      "before": 202972,
+      "after": 54962
+    },
+    {
+      "relativePath": "Home7/overview/2.png",
+      "action": "optimized",
+      "before": 197196,
+      "after": 61791
+    },
+    {
+      "relativePath": "Home7/overview/3.png",
+      "action": "optimized",
+      "before": 189716,
+      "after": 56029
+    },
+    {
+      "relativePath": "Home7/overview/4.png",
+      "action": "optimized",
+      "before": 171790,
+      "after": 51704
+    },
+    {
+      "relativePath": "Home7/particles/type1.png",
+      "action": "skipped",
+      "before": 3603,
+      "after": 3603
+    },
+    {
+      "relativePath": "Home7/particles/type2.png",
+      "action": "skipped",
+      "before": 3411,
+      "after": 3411
+    },
+    {
+      "relativePath": "Home7/particles/type3.png",
+      "action": "skipped",
+      "before": 4455,
+      "after": 4455
+    },
+    {
+      "relativePath": "Home7/particles/type4.png",
+      "action": "skipped",
+      "before": 4414,
+      "after": 4414
+    },
+    {
+      "relativePath": "Home7/poster/successful-middle-aged-employers-sitting-handshaking.png",
+      "action": "optimized",
+      "before": 818458,
+      "after": 202241
+    },
+    {
+      "relativePath": "Home7/qna/1.png",
+      "action": "optimized",
+      "before": 529814,
+      "after": 136366
+    },
+    {
+      "relativePath": "Home7/testimonials/1.png",
+      "action": "skipped",
+      "before": 36367,
+      "after": 36367
+    },
+    {
+      "relativePath": "Home7/testimonials/2.png",
+      "action": "skipped",
+      "before": 45028,
+      "after": 45028
+    },
+    {
+      "relativePath": "Home7/testimonials/3.png",
+      "action": "skipped",
+      "before": 43321,
+      "after": 43321
+    },
+    {
+      "relativePath": "Home7/testimonials/quote.png",
+      "action": "skipped",
+      "before": 4512,
+      "after": 4512
+    },
+    {
+      "relativePath": "about/ab.png",
+      "action": "optimized",
+      "before": 733052,
+      "after": 188133
+    },
+    {
+      "relativePath": "about/ab3.png",
+      "action": "optimized",
+      "before": 397677,
+      "after": 99942
+    },
+    {
+      "relativePath": "about/about2.png",
+      "action": "optimized",
+      "before": 299014,
+      "after": 87535
+    },
+    {
+      "relativePath": "about/about22.png",
+      "action": "optimized",
+      "before": 315502,
+      "after": 87611
+    },
+    {
+      "relativePath": "about/badge.png",
+      "action": "skipped",
+      "before": 25344,
+      "after": 25344
+    },
+    {
+      "relativePath": "about/comment.png",
+      "action": "skipped",
+      "before": 2142,
+      "after": 2142
+    },
+    {
+      "relativePath": "about/dot.png",
+      "action": "skipped",
+      "before": 1863,
+      "after": 1863
+    },
+    {
+      "relativePath": "about/dots1.png",
+      "action": "skipped",
+      "before": 2896,
+      "after": 2896
+    },
+    {
+      "relativePath": "about/dots2.png",
+      "action": "skipped",
+      "before": 3530,
+      "after": 3530
+    },
+    {
+      "relativePath": "about/home/classroom.jpg",
+      "action": "optimized",
+      "before": 204274,
+      "after": 33111
+    },
+    {
+      "relativePath": "about/home/founder.jpg",
+      "action": "skipped",
+      "before": 13578,
+      "after": 13578
+    },
+    {
+      "relativePath": "about/instructors/about-02.png",
+      "action": "skipped",
+      "before": 81657,
+      "after": 81657
+    },
+    {
+      "relativePath": "about/instructors/avatar-01.jpg",
+      "action": "skipped",
+      "before": 1226,
+      "after": 1226
+    },
+    {
+      "relativePath": "about/instructors/history-01.jpg",
+      "action": "skipped",
+      "before": 45902,
+      "after": 45902
+    },
+    {
+      "relativePath": "about/instructors/history-04.jpg",
+      "action": "skipped",
+      "before": 46317,
+      "after": 46317
+    },
+    {
+      "relativePath": "about/shape_01.png",
+      "action": "skipped",
+      "before": 1024,
+      "after": 1024
+    },
+    {
+      "relativePath": "about/shape_02.png",
+      "action": "skipped",
+      "before": 1622,
+      "after": 1622
+    },
+    {
+      "relativePath": "about/shape_03.png",
+      "action": "skipped",
+      "before": 476,
+      "after": 476
+    },
+    {
+      "relativePath": "about/shape_044.png",
+      "action": "skipped",
+      "before": 2224,
+      "after": 2224
+    },
+    {
+      "relativePath": "about/signature.png",
+      "action": "skipped",
+      "before": 5041,
+      "after": 5041
+    },
+    {
+      "relativePath": "acc.png",
+      "action": "skipped",
+      "before": 991,
+      "after": 991
+    },
+    {
+      "relativePath": "banner2/bg.png",
+      "action": "skipped",
+      "before": 4005,
+      "after": 4005
+    },
+    {
+      "relativePath": "banner2/bg11.png",
+      "action": "skipped",
+      "before": 3903,
+      "after": 3903
+    },
+    {
+      "relativePath": "banner2/bg2.png",
+      "action": "optimized",
+      "before": 24492,
+      "after": 20858
+    },
+    {
+      "relativePath": "banner2/line_01.png",
+      "action": "skipped",
+      "before": 1615,
+      "after": 1615
+    },
+    {
+      "relativePath": "banner2/normal-image/01.png",
+      "action": "optimized",
+      "before": 182845,
+      "after": 187114
+    },
+    {
+      "relativePath": "banner2/normal-image/02.png",
+      "action": "skipped",
+      "before": 42763,
+      "after": 42763
+    },
+    {
+      "relativePath": "banner2/shape/01.png",
+      "action": "skipped",
+      "before": 17337,
+      "after": 17337
+    },
+    {
+      "relativePath": "banner2/shape/02.png",
+      "action": "skipped",
+      "before": 81213,
+      "after": 81213
+    },
+    {
+      "relativePath": "banner2/shape/03.png",
+      "action": "skipped",
+      "before": 19318,
+      "after": 19318
+    },
+    {
+      "relativePath": "banner2/shape_01.png",
+      "action": "skipped",
+      "before": 656,
+      "after": 656
+    },
+    {
+      "relativePath": "blog-grid/1.jpg",
+      "action": "optimized",
+      "before": 576822,
+      "after": 106924
+    },
+    {
+      "relativePath": "blog-grid/2.jpg",
+      "action": "optimized",
+      "before": 471710,
+      "after": 76668
+    },
+    {
+      "relativePath": "blog-grid/3.jpg",
+      "action": "optimized",
+      "before": 463489,
+      "after": 79601
+    },
+    {
+      "relativePath": "blog-grid/4.jpg",
+      "action": "optimized",
+      "before": 592599,
+      "after": 106213
+    },
+    {
+      "relativePath": "blog-grid/5.jpg",
+      "action": "optimized",
+      "before": 115583,
+      "after": 82987
+    },
+    {
+      "relativePath": "blog-grid/6.jpg",
+      "action": "optimized",
+      "before": 119813,
+      "after": 83409
+    },
+    {
+      "relativePath": "blog-grid/7.jpg",
+      "action": "optimized",
+      "before": 107257,
+      "after": 74359
+    },
+    {
+      "relativePath": "blog-grid/link.png",
+      "action": "skipped",
+      "before": 1613,
+      "after": 1613
+    },
+    {
+      "relativePath": "blog-grid/qu.png",
+      "action": "skipped",
+      "before": 1876,
+      "after": 1876
+    },
+    {
+      "relativePath": "blog/1.jpg",
+      "action": "optimized",
+      "before": 1074089,
+      "after": 54100
+    },
+    {
+      "relativePath": "blog/2.jpg",
+      "action": "optimized",
+      "before": 915812,
+      "after": 53253
+    },
+    {
+      "relativePath": "blog/3.jpg",
+      "action": "optimized",
+      "before": 851135,
+      "after": 61659
+    },
+    {
+      "relativePath": "blog/4.png",
+      "action": "skipped",
+      "before": 16458,
+      "after": 16458
+    },
+    {
+      "relativePath": "blog/5.png",
+      "action": "skipped",
+      "before": 15403,
+      "after": 15403
+    },
+    {
+      "relativePath": "blog/6.png",
+      "action": "skipped",
+      "before": 14638,
+      "after": 14638
+    },
+    {
+      "relativePath": "blog/7.png",
+      "action": "optimized",
+      "before": 594032,
+      "after": 163120
+    },
+    {
+      "relativePath": "blog/author.png",
+      "action": "skipped",
+      "before": 10490,
+      "after": 10490
+    },
+    {
+      "relativePath": "books/a1.jpg",
+      "action": "skipped",
+      "before": 61072,
+      "after": 61072
+    },
+    {
+      "relativePath": "books/b1.jpg",
+      "action": "skipped",
+      "before": 49066,
+      "after": 49066
+    },
+    {
+      "relativePath": "books/c1.jpg",
+      "action": "skipped",
+      "before": 47204,
+      "after": 47204
+    },
+    {
+      "relativePath": "books/e1.jpg",
+      "action": "skipped",
+      "before": 38205,
+      "after": 38205
+    },
+    {
+      "relativePath": "books/g1.jpg",
+      "action": "skipped",
+      "before": 27146,
+      "after": 27146
+    },
+    {
+      "relativePath": "books/h1.jpg",
+      "action": "skipped",
+      "before": 39552,
+      "after": 39552
+    },
+    {
+      "relativePath": "books/h2.jpg",
+      "action": "skipped",
+      "before": 34306,
+      "after": 34306
+    },
+    {
+      "relativePath": "books/i1.jpg",
+      "action": "skipped",
+      "before": 33536,
+      "after": 33536
+    },
+    {
+      "relativePath": "books/p1.jpg",
+      "action": "skipped",
+      "before": 28807,
+      "after": 28807
+    },
+    {
+      "relativePath": "books/py1.jpg",
+      "action": "skipped",
+      "before": 45347,
+      "after": 45347
+    },
+    {
+      "relativePath": "books/t1.jpg",
+      "action": "skipped",
+      "before": 60861,
+      "after": 60861
+    },
+    {
+      "relativePath": "breadcrumbs/1.jpg",
+      "action": "optimized",
+      "before": 24936,
+      "after": 7380
+    },
+    {
+      "relativePath": "breadcrumbs/2.jpg",
+      "action": "optimized",
+      "before": 118305,
+      "after": 35868
+    },
+    {
+      "relativePath": "breadcrumbs/22.jpg",
+      "action": "skipped",
+      "before": 67897,
+      "after": 67897
+    },
+    {
+      "relativePath": "breadcrumbs/3-1.jpg",
+      "action": "optimized",
+      "before": 79169,
+      "after": 25591
+    },
+    {
+      "relativePath": "breadcrumbs/3.jpg",
+      "action": "optimized",
+      "before": 512480,
+      "after": 25705
+    },
+    {
+      "relativePath": "breadcrumbs/33.jpg",
+      "action": "skipped",
+      "before": 56225,
+      "after": 56225
+    },
+    {
+      "relativePath": "campus/1.png",
+      "action": "skipped",
+      "before": 949,
+      "after": 949
+    },
+    {
+      "relativePath": "campus/2.png",
+      "action": "skipped",
+      "before": 898,
+      "after": 898
+    },
+    {
+      "relativePath": "campus/3.png",
+      "action": "skipped",
+      "before": 981,
+      "after": 981
+    },
+    {
+      "relativePath": "campus/4.png",
+      "action": "optimized",
+      "before": 447277,
+      "after": 139132
+    },
+    {
+      "relativePath": "campus/cam.png",
+      "action": "optimized",
+      "before": 12497,
+      "after": 7929
+    },
+    {
+      "relativePath": "campus/shape.png",
+      "action": "skipped",
+      "before": 2313,
+      "after": 2313
+    },
+    {
+      "relativePath": "close.png",
+      "action": "skipped",
+      "before": 1415,
+      "after": 1415
+    },
+    {
+      "relativePath": "contact/1.jpg",
+      "action": "optimized",
+      "before": 614390,
+      "after": 99033
+    },
+    {
+      "relativePath": "contact/2.png",
+      "action": "skipped",
+      "before": 3142,
+      "after": 3142
+    },
+    {
+      "relativePath": "contact/3.png",
+      "action": "skipped",
+      "before": 3295,
+      "after": 3295
+    },
+    {
+      "relativePath": "contact/4.png",
+      "action": "skipped",
+      "before": 3216,
+      "after": 3216
+    },
+    {
+      "relativePath": "contact/contact-info.jpg",
+      "action": "skipped",
+      "before": 41280,
+      "after": 41280
+    },
+    {
+      "relativePath": "counter/1.png",
+      "action": "skipped",
+      "before": 1416,
+      "after": 1416
+    },
+    {
+      "relativePath": "counter/2.png",
+      "action": "skipped",
+      "before": 885,
+      "after": 885
+    },
+    {
+      "relativePath": "counter/3.png",
+      "action": "skipped",
+      "before": 1380,
+      "after": 1380
+    },
+    {
+      "relativePath": "counter/4.png",
+      "action": "skipped",
+      "before": 1456,
+      "after": 1456
+    },
+    {
+      "relativePath": "course-filter/1.jpg",
+      "action": "converted",
+      "before": 475315,
+      "after": 135265
+    },
+    {
+      "relativePath": "course-filter/2.jpg",
+      "action": "optimized",
+      "before": 241963,
+      "after": 25824
+    },
+    {
+      "relativePath": "course-filter/3.jpg",
+      "action": "optimized",
+      "before": 223389,
+      "after": 24205
+    },
+    {
+      "relativePath": "course-filter/4.jpg",
+      "action": "optimized",
+      "before": 328001,
+      "after": 37887
+    },
+    {
+      "relativePath": "course-filter/5.jpg",
+      "action": "optimized",
+      "before": 279049,
+      "after": 33757
+    },
+    {
+      "relativePath": "course-filter/6.jpg",
+      "action": "optimized",
+      "before": 239641,
+      "after": 27733
+    },
+    {
+      "relativePath": "course-single/1.jpg",
+      "action": "optimized",
+      "before": 352961,
+      "after": 71175
+    },
+    {
+      "relativePath": "course-single/user.jpg",
+      "action": "skipped",
+      "before": 16674,
+      "after": 16674
+    },
+    {
+      "relativePath": "course-single/user2.jpg",
+      "action": "skipped",
+      "before": 16268,
+      "after": 16268
+    },
+    {
+      "relativePath": "course-single/user3.jpg",
+      "action": "skipped",
+      "before": 14038,
+      "after": 14038
+    },
+    {
+      "relativePath": "course-single/user4.jpg",
+      "action": "skipped",
+      "before": 16505,
+      "after": 16505
+    },
+    {
+      "relativePath": "course-single/user5.jpg",
+      "action": "skipped",
+      "before": 15071,
+      "after": 15071
+    },
+    {
+      "relativePath": "course/1.png",
+      "action": "optimized",
+      "before": 361569,
+      "after": 106559
+    },
+    {
+      "relativePath": "course/2.png",
+      "action": "optimized",
+      "before": 439462,
+      "after": 119691
+    },
+    {
+      "relativePath": "course/3.png",
+      "action": "optimized",
+      "before": 383561,
+      "after": 109120
+    },
+    {
+      "relativePath": "course/4.png",
+      "action": "optimized",
+      "before": 453902,
+      "after": 126883
+    },
+    {
+      "relativePath": "course/beg.png",
+      "action": "skipped",
+      "before": 1027,
+      "after": 1027
+    },
+    {
+      "relativePath": "course/small-image/1.png",
+      "action": "skipped",
+      "before": 1879,
+      "after": 1879
+    },
+    {
+      "relativePath": "course/small-image/2.png",
+      "action": "skipped",
+      "before": 1747,
+      "after": 1747
+    },
+    {
+      "relativePath": "course/small-image/3.png",
+      "action": "skipped",
+      "before": 1676,
+      "after": 1676
+    },
+    {
+      "relativePath": "course/small-image/4.png",
+      "action": "skipped",
+      "before": 1759,
+      "after": 1759
+    },
+    {
+      "relativePath": "course/small-image/5.png",
+      "action": "skipped",
+      "before": 1708,
+      "after": 1708
+    },
+    {
+      "relativePath": "courses/course-capf.png",
+      "action": "converted",
+      "before": 2451811,
+      "after": 180821
+    },
+    {
+      "relativePath": "courses/course-indian-air-force.png",
+      "action": "converted",
+      "before": 2325448,
+      "after": 162117
+    },
+    {
+      "relativePath": "courses/course-indian-army.jpg",
+      "action": "optimized",
+      "before": 140493,
+      "after": 84853
+    },
+    {
+      "relativePath": "courses/course-indian-army.png",
+      "action": "converted",
+      "before": 2704841,
+      "after": 194757
+    },
+    {
+      "relativePath": "courses/course-indian-navy.png",
+      "action": "converted",
+      "before": 2525140,
+      "after": 168628
+    },
+    {
+      "relativePath": "courses/course-rpf.png",
+      "action": "converted",
+      "before": 3380737,
+      "after": 192730
+    },
+    {
+      "relativePath": "courses/course-sub-inspector.png",
+      "action": "converted",
+      "before": 2081839,
+      "after": 128885
+    },
+    {
+      "relativePath": "courses/course-tnusrb-constable.jpg",
+      "action": "skipped",
+      "before": 68795,
+      "after": 68795
+    },
+    {
+      "relativePath": "courses/course-tnusrb-constable.png",
+      "action": "converted",
+      "before": 2976801,
+      "after": 181201
+    },
+    {
+      "relativePath": "cta.jpg",
+      "action": "skipped",
+      "before": 12437,
+      "after": 12437
+    },
+    {
+      "relativePath": "facilities/facility-computer-lab.jpg",
+      "action": "skipped",
+      "before": 48259,
+      "after": 48259
+    },
+    {
+      "relativePath": "facilities/facility-library.jpg",
+      "action": "optimized",
+      "before": 204274,
+      "after": 33111
+    },
+    {
+      "relativePath": "fav.png",
+      "action": "skipped",
+      "before": 1293,
+      "after": 1293
+    },
+    {
+      "relativePath": "featured/1.png",
+      "action": "skipped",
+      "before": 14642,
+      "after": 14642
+    },
+    {
+      "relativePath": "featured/2.png",
+      "action": "skipped",
+      "before": 12261,
+      "after": 12261
+    },
+    {
+      "relativePath": "featured/3.png",
+      "action": "skipped",
+      "before": 15085,
+      "after": 15085
+    },
+    {
+      "relativePath": "featured/4.png",
+      "action": "skipped",
+      "before": 14379,
+      "after": 14379
+    },
+    {
+      "relativePath": "featured/5.png",
+      "action": "skipped",
+      "before": 14595,
+      "after": 14595
+    },
+    {
+      "relativePath": "featured/6.png",
+      "action": "skipped",
+      "before": 9782,
+      "after": 9782
+    },
+    {
+      "relativePath": "footer-logo.png",
+      "action": "skipped",
+      "before": 2761,
+      "after": 2761
+    },
+    {
+      "relativePath": "footer-logo2.png",
+      "action": "skipped",
+      "before": 2698,
+      "after": 2698
+    },
+    {
+      "relativePath": "gallery/gallery-academy-campus.jpg",
+      "action": "optimized",
+      "before": 738361,
+      "after": 160757
+    },
+    {
+      "relativePath": "gallery/gallery-boys-hostel.jpg",
+      "action": "optimized",
+      "before": 478248,
+      "after": 90054
+    },
+    {
+      "relativePath": "gallery/gallery-classroom-lecture.jpg",
+      "action": "optimized",
+      "before": 1254987,
+      "after": 133238
+    },
+    {
+      "relativePath": "gallery/gallery-classroom-session.jpg",
+      "action": "optimized",
+      "before": 532631,
+      "after": 108545
+    },
+    {
+      "relativePath": "gallery/gallery-defence-forces.jpg",
+      "action": "optimized",
+      "before": 251512,
+      "after": 53102
+    },
+    {
+      "relativePath": "gallery/gallery-long-jump-practice.jpg",
+      "action": "optimized",
+      "before": 271205,
+      "after": 87597
+    },
+    {
+      "relativePath": "gallery/gallery-outdoor-obstacle-course.jpg",
+      "action": "optimized",
+      "before": 323244,
+      "after": 63695
+    },
+    {
+      "relativePath": "gallery/gallery-rope-climbing-practice.jpg",
+      "action": "skipped",
+      "before": 65879,
+      "after": 65879
+    },
+    {
+      "relativePath": "gallery/gallery-smart-class-lecture.jpg",
+      "action": "optimized",
+      "before": 313705,
+      "after": 46317
+    },
+    {
+      "relativePath": "gallery/gallery-sports-ground.jpg",
+      "action": "optimized",
+      "before": 271205,
+      "after": 87597
+    },
+    {
+      "relativePath": "gallery/gallery-student-briefing.jpg",
+      "action": "optimized",
+      "before": 508830,
+      "after": 91144
+    },
+    {
+      "relativePath": "gallery/gallery-training-ground-facility.jpg",
+      "action": "optimized",
+      "before": 432926,
+      "after": 71866
+    },
+    {
+      "relativePath": "gallery/gallery-yoga-breathing.jpg",
+      "action": "optimized",
+      "before": 162054,
+      "after": 91494
+    },
+    {
+      "relativePath": "hero/01.png",
+      "action": "optimized",
+      "before": 1478086,
+      "after": 130260
+    },
+    {
+      "relativePath": "hero/02.png",
+      "action": "optimized",
+      "before": 729703,
+      "after": 184716
+    },
+    {
+      "relativePath": "hero/03.png",
+      "action": "skipped",
+      "before": 5937,
+      "after": 5937
+    },
+    {
+      "relativePath": "hero/04.png",
+      "action": "skipped",
+      "before": 577,
+      "after": 577
+    },
+    {
+      "relativePath": "hero/05.png",
+      "action": "skipped",
+      "before": 1814,
+      "after": 1814
+    },
+    {
+      "relativePath": "hero/shape_03.png",
+      "action": "skipped",
+      "before": 902,
+      "after": 902
+    },
+    {
+      "relativePath": "hero/shape_04.png",
+      "action": "skipped",
+      "before": 1822,
+      "after": 1822
+    },
+    {
+      "relativePath": "hero/shape_05.png",
+      "action": "skipped",
+      "before": 1179,
+      "after": 1179
+    },
+    {
+      "relativePath": "hero/star-police-academy-campus-hero.jpg",
+      "action": "optimized",
+      "before": 2735187,
+      "after": 157940
+    },
+    {
+      "relativePath": "hero/star-police-hero-bg.jpg",
+      "action": "optimized",
+      "before": 1682506,
+      "after": 176215
+    },
+    {
+      "relativePath": "home4/backdrop.png",
+      "action": "optimized",
+      "before": 272936,
+      "after": 130162
+    },
+    {
+      "relativePath": "home4/blog/medium-shot-graduate.png",
+      "action": "skipped",
+      "before": 62671,
+      "after": 62671
+    },
+    {
+      "relativePath": "home4/blog/portrait-young-student.png",
+      "action": "skipped",
+      "before": 71077,
+      "after": 71077
+    },
+    {
+      "relativePath": "home4/blog/talking-audience.png",
+      "action": "optimized",
+      "before": 316066,
+      "after": 63994
+    },
+    {
+      "relativePath": "home4/blog/young-woman.png",
+      "action": "skipped",
+      "before": 78862,
+      "after": 78862
+    },
+    {
+      "relativePath": "home4/catagories/1.png",
+      "action": "skipped",
+      "before": 24713,
+      "after": 24713
+    },
+    {
+      "relativePath": "home4/catagories/2.png",
+      "action": "skipped",
+      "before": 31158,
+      "after": 31158
+    },
+    {
+      "relativePath": "home4/catagories/3.png",
+      "action": "skipped",
+      "before": 24207,
+      "after": 24207
+    },
+    {
+      "relativePath": "home4/catagories/4.png",
+      "action": "skipped",
+      "before": 16804,
+      "after": 16804
+    },
+    {
+      "relativePath": "home4/catagories/5.png",
+      "action": "skipped",
+      "before": 27791,
+      "after": 27791
+    },
+    {
+      "relativePath": "home4/catagories/6.png",
+      "action": "skipped",
+      "before": 15759,
+      "after": 15759
+    },
+    {
+      "relativePath": "home4/course/clock.png",
+      "action": "skipped",
+      "before": 4842,
+      "after": 4842
+    },
+    {
+      "relativePath": "home4/course/headphone.png",
+      "action": "skipped",
+      "before": 4938,
+      "after": 4938
+    },
+    {
+      "relativePath": "home4/course/phone.png",
+      "action": "skipped",
+      "before": 65061,
+      "after": 65061
+    },
+    {
+      "relativePath": "home4/course/smiling-man.png",
+      "action": "optimized",
+      "before": 991514,
+      "after": 252436
+    },
+    {
+      "relativePath": "home4/course/talent.png",
+      "action": "skipped",
+      "before": 5012,
+      "after": 5012
+    },
+    {
+      "relativePath": "home4/ellipse.png",
+      "action": "skipped",
+      "before": 4260,
+      "after": 4260
+    },
+    {
+      "relativePath": "home4/hero.png",
+      "action": "optimized",
+      "before": 347265,
+      "after": 108106
+    },
+    {
+      "relativePath": "home4/hero2.png",
+      "action": "optimized",
+      "before": 478957,
+      "after": 118209
+    },
+    {
+      "relativePath": "home4/languages/jade.png",
+      "action": "skipped",
+      "before": 7163,
+      "after": 7163
+    },
+    {
+      "relativePath": "home4/languages/java.png",
+      "action": "skipped",
+      "before": 4869,
+      "after": 4869
+    },
+    {
+      "relativePath": "home4/languages/mysql.png",
+      "action": "skipped",
+      "before": 5395,
+      "after": 5395
+    },
+    {
+      "relativePath": "home4/languages/python.png",
+      "action": "skipped",
+      "before": 4740,
+      "after": 4740
+    },
+    {
+      "relativePath": "home4/languages/react.png",
+      "action": "skipped",
+      "before": 6532,
+      "after": 6532
+    },
+    {
+      "relativePath": "home4/languages/sass.png",
+      "action": "skipped",
+      "before": 6415,
+      "after": 6415
+    },
+    {
+      "relativePath": "home4/languages/swift.png",
+      "action": "skipped",
+      "before": 5153,
+      "after": 5153
+    },
+    {
+      "relativePath": "home4/map.png",
+      "action": "optimized",
+      "before": 128722,
+      "after": 93175
+    },
+    {
+      "relativePath": "home4/placeholder/backdrop.png",
+      "action": "converted",
+      "before": 14208,
+      "after": 11602
+    },
+    {
+      "relativePath": "home4/placeholder/blog/medium-shot-graduate.png",
+      "action": "skipped",
+      "before": 1391,
+      "after": 1391
+    },
+    {
+      "relativePath": "home4/placeholder/blog/portrait-young-student.png",
+      "action": "skipped",
+      "before": 1391,
+      "after": 1391
+    },
+    {
+      "relativePath": "home4/placeholder/blog/talking-audience.png",
+      "action": "skipped",
+      "before": 4913,
+      "after": 4913
+    },
+    {
+      "relativePath": "home4/placeholder/blog/young-woman.png",
+      "action": "skipped",
+      "before": 1391,
+      "after": 1391
+    },
+    {
+      "relativePath": "home4/placeholder/catagories/1.png",
+      "action": "skipped",
+      "before": 1340,
+      "after": 1340
+    },
+    {
+      "relativePath": "home4/placeholder/catagories/2.png",
+      "action": "skipped",
+      "before": 1687,
+      "after": 1687
+    },
+    {
+      "relativePath": "home4/placeholder/catagories/3.png",
+      "action": "skipped",
+      "before": 1273,
+      "after": 1273
+    },
+    {
+      "relativePath": "home4/placeholder/catagories/4.png",
+      "action": "skipped",
+      "before": 1405,
+      "after": 1405
+    },
+    {
+      "relativePath": "home4/placeholder/catagories/5.png",
+      "action": "skipped",
+      "before": 1350,
+      "after": 1350
+    },
+    {
+      "relativePath": "home4/placeholder/catagories/6.png",
+      "action": "skipped",
+      "before": 1172,
+      "after": 1172
+    },
+    {
+      "relativePath": "home4/placeholder/course/clock.png",
+      "action": "skipped",
+      "before": 544,
+      "after": 544
+    },
+    {
+      "relativePath": "home4/placeholder/course/headphone.png",
+      "action": "skipped",
+      "before": 510,
+      "after": 510
+    },
+    {
+      "relativePath": "home4/placeholder/course/phone.png",
+      "action": "skipped",
+      "before": 4339,
+      "after": 4339
+    },
+    {
+      "relativePath": "home4/placeholder/course/smiling-man.png",
+      "action": "skipped",
+      "before": 7269,
+      "after": 7269
+    },
+    {
+      "relativePath": "home4/placeholder/course/talent.png",
+      "action": "skipped",
+      "before": 510,
+      "after": 510
+    },
+    {
+      "relativePath": "home4/placeholder/ellipse.png",
+      "action": "skipped",
+      "before": 1000,
+      "after": 1000
+    },
+    {
+      "relativePath": "home4/placeholder/hero.png",
+      "action": "skipped",
+      "before": 4956,
+      "after": 4956
+    },
+    {
+      "relativePath": "home4/placeholder/hero2.png",
+      "action": "skipped",
+      "before": 6573,
+      "after": 6573
+    },
+    {
+      "relativePath": "home4/placeholder/languages/jade.png",
+      "action": "skipped",
+      "before": 657,
+      "after": 657
+    },
+    {
+      "relativePath": "home4/placeholder/languages/java.png",
+      "action": "skipped",
+      "before": 570,
+      "after": 570
+    },
+    {
+      "relativePath": "home4/placeholder/languages/mysql.png",
+      "action": "skipped",
+      "before": 568,
+      "after": 568
+    },
+    {
+      "relativePath": "home4/placeholder/languages/python.png",
+      "action": "skipped",
+      "before": 588,
+      "after": 588
+    },
+    {
+      "relativePath": "home4/placeholder/languages/react.png",
+      "action": "skipped",
+      "before": 764,
+      "after": 764
+    },
+    {
+      "relativePath": "home4/placeholder/languages/sass.png",
+      "action": "skipped",
+      "before": 681,
+      "after": 681
+    },
+    {
+      "relativePath": "home4/placeholder/languages/swift.png",
+      "action": "skipped",
+      "before": 764,
+      "after": 764
+    },
+    {
+      "relativePath": "home4/placeholder/map.png",
+      "action": "skipped",
+      "before": 4904,
+      "after": 4904
+    },
+    {
+      "relativePath": "home4/placeholder/students/Layer 8.png",
+      "action": "skipped",
+      "before": 2936,
+      "after": 2936
+    },
+    {
+      "relativePath": "home4/placeholder/students/Shape.png",
+      "action": "skipped",
+      "before": 4356,
+      "after": 4356
+    },
+    {
+      "relativePath": "home4/placeholder/students/man-taking-e-leraning-courses.png",
+      "action": "skipped",
+      "before": 2936,
+      "after": 2936
+    },
+    {
+      "relativePath": "home4/placeholder/students/smiling-man-freelancer-working-laptop-communicating-online-using-software.png",
+      "action": "skipped",
+      "before": 2936,
+      "after": 2936
+    },
+    {
+      "relativePath": "home4/placeholder/testimonials/1.png",
+      "action": "skipped",
+      "before": 449,
+      "after": 449
+    },
+    {
+      "relativePath": "home4/placeholder/testimonials/2.png",
+      "action": "skipped",
+      "before": 449,
+      "after": 449
+    },
+    {
+      "relativePath": "home4/placeholder/testimonials/3.png",
+      "action": "skipped",
+      "before": 449,
+      "after": 449
+    },
+    {
+      "relativePath": "home4/placeholder/trending/guitarman.png",
+      "action": "skipped",
+      "before": 2936,
+      "after": 2936
+    },
+    {
+      "relativePath": "home4/placeholder/trending/man.png",
+      "action": "skipped",
+      "before": 2936,
+      "after": 2936
+    },
+    {
+      "relativePath": "home4/placeholder/trending/smiling-man-using-software.png",
+      "action": "skipped",
+      "before": 2936,
+      "after": 2936
+    },
+    {
+      "relativePath": "home4/students/Layer 8.png",
+      "action": "optimized",
+      "before": 166921,
+      "after": 50344
+    },
+    {
+      "relativePath": "home4/students/Shape.png",
+      "action": "optimized",
+      "before": 106387,
+      "after": 75790
+    },
+    {
+      "relativePath": "home4/students/man-taking-e-leraning-courses.png",
+      "action": "optimized",
+      "before": 166351,
+      "after": 47397
+    },
+    {
+      "relativePath": "home4/students/smiling-man-freelancer-working-laptop-communicating-online-using-software.png",
+      "action": "optimized",
+      "before": 170501,
+      "after": 201680
+    },
+    {
+      "relativePath": "home4/testimonials/1.png",
+      "action": "skipped",
+      "before": 11740,
+      "after": 11740
+    },
+    {
+      "relativePath": "home4/testimonials/2.png",
+      "action": "skipped",
+      "before": 12031,
+      "after": 12031
+    },
+    {
+      "relativePath": "home4/testimonials/3.png",
+      "action": "skipped",
+      "before": 11236,
+      "after": 11236
+    },
+    {
+      "relativePath": "home4/trending/guitarman.png",
+      "action": "optimized",
+      "before": 166921,
+      "after": 50344
+    },
+    {
+      "relativePath": "home4/trending/man.png",
+      "action": "optimized",
+      "before": 166351,
+      "after": 47397
+    },
+    {
+      "relativePath": "home4/trending/smiling-man-using-software.png",
+      "action": "optimized",
+      "before": 170501,
+      "after": 201680
+    },
+    {
+      "relativePath": "home5/about.png",
+      "action": "optimized",
+      "before": 475179,
+      "after": 124578
+    },
+    {
+      "relativePath": "home5/banner-bg.png",
+      "action": "optimized",
+      "before": 351188,
+      "after": 35213
+    },
+    {
+      "relativePath": "home5/blog/1.png",
+      "action": "optimized",
+      "before": 173445,
+      "after": 47019
+    },
+    {
+      "relativePath": "home5/blog/2.png",
+      "action": "optimized",
+      "before": 151453,
+      "after": 45634
+    },
+    {
+      "relativePath": "home5/blog/3.png",
+      "action": "optimized",
+      "before": 185808,
+      "after": 53039
+    },
+    {
+      "relativePath": "home5/blog/4.png",
+      "action": "optimized",
+      "before": 188372,
+      "after": 58368
+    },
+    {
+      "relativePath": "home5/check-icon.png",
+      "action": "skipped",
+      "before": 3202,
+      "after": 3202
+    },
+    {
+      "relativePath": "home5/hero.png",
+      "action": "optimized",
+      "before": 550071,
+      "after": 122080
+    },
+    {
+      "relativePath": "home5/instructor/1.png",
+      "action": "skipped",
+      "before": 54284,
+      "after": 54284
+    },
+    {
+      "relativePath": "home5/instructor/2.png",
+      "action": "skipped",
+      "before": 57705,
+      "after": 57705
+    },
+    {
+      "relativePath": "home5/instructor/3.png",
+      "action": "skipped",
+      "before": 60757,
+      "after": 60757
+    },
+    {
+      "relativePath": "home5/instructor/4.png",
+      "action": "skipped",
+      "before": 64638,
+      "after": 64638
+    },
+    {
+      "relativePath": "home5/journey/1.png",
+      "action": "optimized",
+      "before": 137204,
+      "after": 170787
+    },
+    {
+      "relativePath": "home5/journey/2.png",
+      "action": "optimized",
+      "before": 170795,
+      "after": 57059
+    },
+    {
+      "relativePath": "home5/journey/3.png",
+      "action": "optimized",
+      "before": 195490,
+      "after": 56807
+    },
+    {
+      "relativePath": "home5/journey/4.png",
+      "action": "optimized",
+      "before": 211897,
+      "after": 65051
+    },
+    {
+      "relativePath": "home5/pricing-bg.png",
+      "action": "optimized",
+      "before": 807098,
+      "after": 94982
+    },
+    {
+      "relativePath": "home5/quote.png",
+      "action": "skipped",
+      "before": 3544,
+      "after": 3544
+    },
+    {
+      "relativePath": "home5/services/ask.png",
+      "action": "skipped",
+      "before": 4647,
+      "after": 4647
+    },
+    {
+      "relativePath": "home5/services/flag.png",
+      "action": "skipped",
+      "before": 3830,
+      "after": 3830
+    },
+    {
+      "relativePath": "home5/services/setting.png",
+      "action": "skipped",
+      "before": 5114,
+      "after": 5114
+    },
+    {
+      "relativePath": "home5/services/tv.png",
+      "action": "skipped",
+      "before": 3439,
+      "after": 3439
+    },
+    {
+      "relativePath": "home5/smiling-man.png",
+      "action": "optimized",
+      "before": 984802,
+      "after": 277149
+    },
+    {
+      "relativePath": "home5/testimonials-dp.png",
+      "action": "optimized",
+      "before": 131212,
+      "after": 139156
+    },
+    {
+      "relativePath": "home5/trending/1.png",
+      "action": "optimized",
+      "before": 176496,
+      "after": 49988
+    },
+    {
+      "relativePath": "home5/trending/2.png",
+      "action": "optimized",
+      "before": 175700,
+      "after": 50286
+    },
+    {
+      "relativePath": "home5/trending/3.png",
+      "action": "optimized",
+      "before": 208899,
+      "after": 61864
+    },
+    {
+      "relativePath": "home5/trending/4.png",
+      "action": "optimized",
+      "before": 223009,
+      "after": 62256
+    },
+    {
+      "relativePath": "home5/trending/5.png",
+      "action": "optimized",
+      "before": 224016,
+      "after": 66696
+    },
+    {
+      "relativePath": "home5/trending/6.png",
+      "action": "optimized",
+      "before": 211563,
+      "after": 58275
+    },
+    {
+      "relativePath": "home6/Video icon.png",
+      "action": "skipped",
+      "before": 3198,
+      "after": 3198
+    },
+    {
+      "relativePath": "home6/academics/1.png",
+      "action": "optimized",
+      "before": 110335,
+      "after": 122488
+    },
+    {
+      "relativePath": "home6/academics/2.png",
+      "action": "optimized",
+      "before": 187389,
+      "after": 60810
+    },
+    {
+      "relativePath": "home6/academics/3.png",
+      "action": "optimized",
+      "before": 191818,
+      "after": 62467
+    },
+    {
+      "relativePath": "home6/academics/4.png",
+      "action": "optimized",
+      "before": 165172,
+      "after": 199066
+    },
+    {
+      "relativePath": "home6/academics/card-icons/Business Icon.png",
+      "action": "skipped",
+      "before": 3607,
+      "after": 3607
+    },
+    {
+      "relativePath": "home6/academics/card-icons/Pen Icon.png",
+      "action": "skipped",
+      "before": 3432,
+      "after": 3432
+    },
+    {
+      "relativePath": "home6/academics/card-icons/System Icon.png",
+      "action": "skipped",
+      "before": 3940,
+      "after": 3940
+    },
+    {
+      "relativePath": "home6/af/Basketball.png",
+      "action": "skipped",
+      "before": 4065,
+      "after": 4065
+    },
+    {
+      "relativePath": "home6/af/Cap.png",
+      "action": "skipped",
+      "before": 3909,
+      "after": 3909
+    },
+    {
+      "relativePath": "home6/af/alarm clock.png",
+      "action": "skipped",
+      "before": 4350,
+      "after": 4350
+    },
+    {
+      "relativePath": "home6/af/award.png",
+      "action": "skipped",
+      "before": 4728,
+      "after": 4728
+    },
+    {
+      "relativePath": "home6/bannerBg-mobile.jpg",
+      "action": "optimized",
+      "before": 368536,
+      "after": 87291
+    },
+    {
+      "relativePath": "home6/bannerBg.jpg",
+      "action": "optimized",
+      "before": 95370,
+      "after": 60531
+    },
+    {
+      "relativePath": "home6/blog/max.png",
+      "action": "optimized",
+      "before": 136077,
+      "after": 163005
+    },
+    {
+      "relativePath": "home6/blog/min1.png",
+      "action": "skipped",
+      "before": 43477,
+      "after": 43477
+    },
+    {
+      "relativePath": "home6/blog/min2.png",
+      "action": "skipped",
+      "before": 39140,
+      "after": 39140
+    },
+    {
+      "relativePath": "home6/blog/min3.png",
+      "action": "skipped",
+      "before": 44655,
+      "after": 44655
+    },
+    {
+      "relativePath": "home6/campus/students-walking.jpg",
+      "action": "optimized",
+      "before": 116487,
+      "after": 117452
+    },
+    {
+      "relativePath": "home6/counter/Book Icon.png",
+      "action": "skipped",
+      "before": 5477,
+      "after": 5477
+    },
+    {
+      "relativePath": "home6/counter/Cap.png",
+      "action": "skipped",
+      "before": 5815,
+      "after": 5815
+    },
+    {
+      "relativePath": "home6/counter/Events Icon.png",
+      "action": "skipped",
+      "before": 5672,
+      "after": 5672
+    },
+    {
+      "relativePath": "home6/counter/award.png",
+      "action": "skipped",
+      "before": 7457,
+      "after": 7457
+    },
+    {
+      "relativePath": "home6/courses/1.png",
+      "action": "optimized",
+      "before": 214851,
+      "after": 61450
+    },
+    {
+      "relativePath": "home6/courses/2.png",
+      "action": "optimized",
+      "before": 175025,
+      "after": 52307
+    },
+    {
+      "relativePath": "home6/courses/3.png",
+      "action": "optimized",
+      "before": 210110,
+      "after": 62453
+    },
+    {
+      "relativePath": "home6/events/1.png",
+      "action": "optimized",
+      "before": 166770,
+      "after": 197678
+    },
+    {
+      "relativePath": "home6/events/2.png",
+      "action": "optimized",
+      "before": 140770,
+      "after": 40869
+    },
+    {
+      "relativePath": "home6/events/3.png",
+      "action": "optimized",
+      "before": 166049,
+      "after": 44129
+    },
+    {
+      "relativePath": "home6/events/events-bg.png",
+      "action": "optimized",
+      "before": 270651,
+      "after": 117329
+    },
+    {
+      "relativePath": "home6/gallary/1.png",
+      "action": "optimized",
+      "before": 135038,
+      "after": 162575
+    },
+    {
+      "relativePath": "home6/gallary/2.png",
+      "action": "optimized",
+      "before": 132937,
+      "after": 148945
+    },
+    {
+      "relativePath": "home6/gallary/3.png",
+      "action": "optimized",
+      "before": 104134,
+      "after": 110787
+    },
+    {
+      "relativePath": "home6/gallary/4.png",
+      "action": "optimized",
+      "before": 160601,
+      "after": 185407
+    },
+    {
+      "relativePath": "home6/gallary/5.png",
+      "action": "optimized",
+      "before": 140107,
+      "after": 161383
+    },
+    {
+      "relativePath": "home6/gallary/6.png",
+      "action": "optimized",
+      "before": 133093,
+      "after": 156959
+    },
+    {
+      "relativePath": "home6/overview/standing.png",
+      "action": "optimized",
+      "before": 365913,
+      "after": 102505
+    },
+    {
+      "relativePath": "home6/video-bg.png",
+      "action": "optimized",
+      "before": 1848877,
+      "after": 201381
+    },
+    {
+      "relativePath": "instructor/01.jpg",
+      "action": "skipped",
+      "before": 26799,
+      "after": 26799
+    },
+    {
+      "relativePath": "instructor/02.jpg",
+      "action": "skipped",
+      "before": 19675,
+      "after": 19675
+    },
+    {
+      "relativePath": "instructor/03.jpg",
+      "action": "skipped",
+      "before": 6711,
+      "after": 6711
+    },
+    {
+      "relativePath": "instructor/04.jpg",
+      "action": "skipped",
+      "before": 21621,
+      "after": 21621
+    },
+    {
+      "relativePath": "instructor/05.jpg",
+      "action": "skipped",
+      "before": 23475,
+      "after": 23475
+    },
+    {
+      "relativePath": "instructor/06.jpg",
+      "action": "skipped",
+      "before": 21776,
+      "after": 21776
+    },
+    {
+      "relativePath": "instructor/07.jpg",
+      "action": "skipped",
+      "before": 20864,
+      "after": 20864
+    },
+    {
+      "relativePath": "instructor/08.jpg",
+      "action": "skipped",
+      "before": 32324,
+      "after": 32324
+    },
+    {
+      "relativePath": "instructor/09.jpg",
+      "action": "skipped",
+      "before": 29042,
+      "after": 29042
+    },
+    {
+      "relativePath": "instructor/10.jpg",
+      "action": "skipped",
+      "before": 23466,
+      "after": 23466
+    },
+    {
+      "relativePath": "instructor/11.jpg",
+      "action": "skipped",
+      "before": 27267,
+      "after": 27267
+    },
+    {
+      "relativePath": "instructor/12.jpg",
+      "action": "skipped",
+      "before": 17457,
+      "after": 17457
+    },
+    {
+      "relativePath": "instructors/1.jpg",
+      "action": "skipped",
+      "before": 76532,
+      "after": 76532
+    },
+    {
+      "relativePath": "instructors/10.png",
+      "action": "skipped",
+      "before": 41361,
+      "after": 41361
+    },
+    {
+      "relativePath": "instructors/11.png",
+      "action": "skipped",
+      "before": 38132,
+      "after": 38132
+    },
+    {
+      "relativePath": "instructors/12.png",
+      "action": "skipped",
+      "before": 33095,
+      "after": 33095
+    },
+    {
+      "relativePath": "instructors/2.jpg",
+      "action": "skipped",
+      "before": 79759,
+      "after": 79759
+    },
+    {
+      "relativePath": "instructors/3.jpg",
+      "action": "optimized",
+      "before": 123941,
+      "after": 14626
+    },
+    {
+      "relativePath": "instructors/4.jpg",
+      "action": "skipped",
+      "before": 65663,
+      "after": 65663
+    },
+    {
+      "relativePath": "instructors/5.jpg",
+      "action": "optimized",
+      "before": 95636,
+      "after": 12642
+    },
+    {
+      "relativePath": "instructors/6.jpg",
+      "action": "optimized",
+      "before": 82274,
+      "after": 10511
+    },
+    {
+      "relativePath": "instructors/7.jpg",
+      "action": "optimized",
+      "before": 100447,
+      "after": 12725
+    },
+    {
+      "relativePath": "instructors/8.jpg",
+      "action": "optimized",
+      "before": 93910,
+      "after": 12133
+    },
+    {
+      "relativePath": "instructors/9.png",
+      "action": "skipped",
+      "before": 31145,
+      "after": 31145
+    },
+    {
+      "relativePath": "kids-logo.png",
+      "action": "skipped",
+      "before": 2756,
+      "after": 2756
+    },
+    {
+      "relativePath": "line.png",
+      "action": "skipped",
+      "before": 1701,
+      "after": 1701
+    },
+    {
+      "relativePath": "login/1.jpg",
+      "action": "optimized",
+      "before": 30233,
+      "after": 5031
+    },
+    {
+      "relativePath": "logo-four.png",
+      "action": "skipped",
+      "before": 5503,
+      "after": 5503
+    },
+    {
+      "relativePath": "logo-light.png",
+      "action": "skipped",
+      "before": 2787,
+      "after": 2787
+    },
+    {
+      "relativePath": "logo.png",
+      "action": "skipped",
+      "before": 3037,
+      "after": 3037
+    },
+    {
+      "relativePath": "logo2.png",
+      "action": "skipped",
+      "before": 2925,
+      "after": 2925
+    },
+    {
+      "relativePath": "logos/favicon.png",
+      "action": "skipped",
+      "before": 5264,
+      "after": 5264
+    },
+    {
+      "relativePath": "logos/footer-light-logo.png",
+      "action": "skipped",
+      "before": 39552,
+      "after": 39552
+    },
+    {
+      "relativePath": "logos/logo-inner.png",
+      "action": "skipped",
+      "before": 24634,
+      "after": 24634
+    },
+    {
+      "relativePath": "logos/star-police-academy-logo-footer.png",
+      "action": "optimized",
+      "before": 1323575,
+      "after": 135821
+    },
+    {
+      "relativePath": "logos/star-police-academy-logo.png",
+      "action": "optimized",
+      "before": 1452926,
+      "after": 158631
+    },
+    {
+      "relativePath": "portfolio/portfolio-01.jpg",
+      "action": "skipped",
+      "before": 62915,
+      "after": 62915
+    },
+    {
+      "relativePath": "portfolio/portfolio-02.jpg",
+      "action": "optimized",
+      "before": 108545,
+      "after": 107578
+    },
+    {
+      "relativePath": "preload.png",
+      "action": "skipped",
+      "before": 1293,
+      "after": 1293
+    },
+    {
+      "relativePath": "profile/1.jpg",
+      "action": "optimized",
+      "before": 151777,
+      "after": 19039
+    },
+    {
+      "relativePath": "profile/2.png",
+      "action": "skipped",
+      "before": 4098,
+      "after": 4098
+    },
+    {
+      "relativePath": "profile/3.png",
+      "action": "skipped",
+      "before": 3894,
+      "after": 3894
+    },
+    {
+      "relativePath": "profile/4.png",
+      "action": "skipped",
+      "before": 3899,
+      "after": 3899
+    },
+    {
+      "relativePath": "related-course/1.jpg",
+      "action": "skipped",
+      "before": 21857,
+      "after": 21857
+    },
+    {
+      "relativePath": "related-course/2.jpg",
+      "action": "skipped",
+      "before": 16058,
+      "after": 16058
+    },
+    {
+      "relativePath": "related-course/3.jpg",
+      "action": "skipped",
+      "before": 18460,
+      "after": 18460
+    },
+    {
+      "relativePath": "service/1.png",
+      "action": "optimized",
+      "before": 151642,
+      "after": 46403
+    },
+    {
+      "relativePath": "service/2.png",
+      "action": "optimized",
+      "before": 157738,
+      "after": 49044
+    },
+    {
+      "relativePath": "service/3.png",
+      "action": "optimized",
+      "before": 177879,
+      "after": 54623
+    },
+    {
+      "relativePath": "service/4.png",
+      "action": "optimized",
+      "before": 146102,
+      "after": 201888
+    },
+    {
+      "relativePath": "service/service-01.jpg",
+      "action": "skipped",
+      "before": 39591,
+      "after": 39591
+    },
+    {
+      "relativePath": "service/service-02.jpg",
+      "action": "optimized",
+      "before": 230806,
+      "after": 42481
+    },
+    {
+      "relativePath": "service/service-03.jpg",
+      "action": "optimized",
+      "before": 300521,
+      "after": 62765
+    },
+    {
+      "relativePath": "service/service-04.jpg",
+      "action": "optimized",
+      "before": 251512,
+      "after": 53102
+    },
+    {
+      "relativePath": "service/top1.jpg",
+      "action": "optimized",
+      "before": 389744,
+      "after": 91840
+    },
+    {
+      "relativePath": "service/top3.jpg",
+      "action": "optimized",
+      "before": 355347,
+      "after": 82818
+    },
+    {
+      "relativePath": "service/top4.jpg",
+      "action": "optimized",
+      "before": 361001,
+      "after": 84788
+    },
+    {
+      "relativePath": "service/top5.jpg",
+      "action": "optimized",
+      "before": 359662,
+      "after": 83905
+    },
+    {
+      "relativePath": "slider/1.jpg",
+      "action": "optimized",
+      "before": 152596,
+      "after": 50033
+    },
+    {
+      "relativePath": "slider/1.png",
+      "action": "optimized",
+      "before": 1911274,
+      "after": 203198
+    },
+    {
+      "relativePath": "slider/11.jpg",
+      "action": "skipped",
+      "before": 75458,
+      "after": 75458
+    },
+    {
+      "relativePath": "slider/12.jpg",
+      "action": "skipped",
+      "before": 77255,
+      "after": 77255
+    },
+    {
+      "relativePath": "slider/2.jpg",
+      "action": "optimized",
+      "before": 856194,
+      "after": 54959
+    },
+    {
+      "relativePath": "tab/1.png",
+      "action": "skipped",
+      "before": 884,
+      "after": 884
+    },
+    {
+      "relativePath": "tab/2.png",
+      "action": "skipped",
+      "before": 1060,
+      "after": 1060
+    },
+    {
+      "relativePath": "tab/3.png",
+      "action": "skipped",
+      "before": 902,
+      "after": 902
+    },
+    {
+      "relativePath": "tab/4.png",
+      "action": "skipped",
+      "before": 819,
+      "after": 819
+    },
+    {
+      "relativePath": "tab/shape_01.png",
+      "action": "skipped",
+      "before": 824,
+      "after": 824
+    },
+    {
+      "relativePath": "tab/shape_02.png",
+      "action": "skipped",
+      "before": 2699,
+      "after": 2699
+    },
+    {
+      "relativePath": "tab/shape_03.png",
+      "action": "skipped",
+      "before": 10720,
+      "after": 10720
+    },
+    {
+      "relativePath": "testimonial/1.png",
+      "action": "skipped",
+      "before": 4179,
+      "after": 4179
+    },
+    {
+      "relativePath": "testimonial/2.png",
+      "action": "skipped",
+      "before": 5096,
+      "after": 5096
+    },
+    {
+      "relativePath": "testimonial/3.png",
+      "action": "skipped",
+      "before": 4775,
+      "after": 4775
+    },
+    {
+      "relativePath": "testimonial/bg.jpg",
+      "action": "optimized",
+      "before": 34269,
+      "after": 6308
+    },
+    {
+      "relativePath": "testimonial/bg3.png",
+      "action": "optimized",
+      "before": 9523,
+      "after": 7256
+    },
+    {
+      "relativePath": "testimonial/coma.png",
+      "action": "skipped",
+      "before": 1173,
+      "after": 1173
+    },
+    {
+      "relativePath": "testimonial/poly.png",
+      "action": "skipped",
+      "before": 123,
+      "after": 123
+    },
+    {
+      "relativePath": "testimonial/testimonial.png",
+      "action": "optimized",
+      "before": 109983,
+      "after": 146625
+    },
+    {
+      "relativePath": "topics/1.png",
+      "action": "skipped",
+      "before": 2652,
+      "after": 2652
+    },
+    {
+      "relativePath": "topics/2.png",
+      "action": "skipped",
+      "before": 2744,
+      "after": 2744
+    },
+    {
+      "relativePath": "topics/3.png",
+      "action": "skipped",
+      "before": 2883,
+      "after": 2883
+    },
+    {
+      "relativePath": "topics/4.png",
+      "action": "skipped",
+      "before": 2648,
+      "after": 2648
+    },
+    {
+      "relativePath": "topics/icon.png",
+      "action": "skipped",
+      "before": 2946,
+      "after": 2946
+    },
+    {
+      "relativePath": "topics/icon2.png",
+      "action": "skipped",
+      "before": 3044,
+      "after": 3044
+    },
+    {
+      "relativePath": "topics/icon3.png",
+      "action": "skipped",
+      "before": 3188,
+      "after": 3188
+    }
+  ]
+}

@@ -1,0 +1,318 @@
+/* Star Police Academy — Brand Guidelines
+   Colors: primary blues, secondary reds, accent teal/gold
+   Fonts: Livvic (headlines), Montserrat (body)
+   Icons: Material Symbols Outlined, weight 300, opsz 24
+*/
+:root {
+  --spa-primary: #3a57b8;
+  --spa-primary-dark: #031552;
+  --spa-primary-mid: #041c6b;
+  --spa-primary-deeper: #020f3a;
+  --spa-primary-light: #6c82d1;
+  --spa-primary-pale: #9aaaf0;
+  --spa-secondary: #cc0000;
+  --spa-secondary-bright: #ff4d4d;
+  --spa-secondary-dark: #990000;
+  --spa-accent-teal: #00c9a7;
+  --spa-accent-gold: #ffc300;
+  --spa-accent-gold-light: #ffd700;
+  --spa-accent-orange: #ff9f1c;
+  --spa-text: #191919;
+  --spa-text-alt: #1a1a1a;
+  --spa-text-muted: #5b5f64;
+  --spa-bg-light: #f5f5f5;
+  --spa-border: #e0e0e0;
+  --spa-headline-font: "Livvic", sans-serif;
+  --spa-body-font: "Montserrat", sans-serif;
+}
+
+/* Material Symbols — brand icon style */
+.material-symbols-outlined {
+  direction: ltr;
+  display: inline-block;
+  font-family: "Material Symbols Outlined";
+  font-feature-settings: "liga";
+  font-size: 24px;
+  font-style: normal;
+  font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 24;
+  font-weight: normal;
+  letter-spacing: normal;
+  line-height: 1;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+}
+
+body.star-site,
+html {
+  color: var(--spa-text);
+  font-family: var(--spa-body-font);
+}
+
+body.star-site h1,
+body.star-site h2,
+body.star-site h3,
+body.star-site h4,
+body.star-site h5,
+body.star-site h6,
+body.star-site .hero3__title,
+body.star-site .react__tittle,
+body.star-site .about__title,
+body.star-site .slider-title,
+body.star-site .footer-top-cta h3,
+body.star-site .footer-top-cta h4,
+body.star-site .breadcrumbs-title,
+body.star-site .footer-title {
+  font-family: var(--spa-headline-font);
+  color: var(--spa-text-alt);
+}
+
+body.star-site p,
+body.star-site li,
+body.star-site .footer-subtitle,
+body.star-site .footer-menu a,
+body.star-site .hero3__paragraph,
+body.star-site .about__paragraph {
+  font-family: var(--spa-body-font);
+}
+
+/* Hero */
+body.star-site .exact-spa-hero__title,
+body.star-site .hero3__area.exact-spa-hero .hero3__title {
+  color: #ffffff;
+}
+
+body.star-site .exact-spa-hero__overlay {
+  background: linear-gradient(
+    180deg,
+    rgba(3, 21, 82, 0.82) 0%,
+    rgba(4, 28, 107, 0.68) 50%,
+    rgba(2, 15, 58, 0.82) 100%
+  ) !important;
+}
+
+/* Template utility classes → brand palette */
+body.star-site .primary-color {
+  color: var(--spa-primary) !important;
+}
+
+body.star-site .secondary-color {
+  color: var(--spa-primary-dark) !important;
+}
+
+/* Links & buttons — primary blue */
+body.star-site a {
+  color: var(--spa-primary);
+}
+
+body.star-site a:hover,
+body.star-site a:active {
+  color: var(--spa-primary-light);
+}
+
+body.star-site .react-btn,
+body.star-site .echooling-white-button,
+body.star-site .react__title__section a,
+body.star-site .react__title__section2 a,
+body.star-site .react-footer-two .footer-top-cta a,
+body.star-site .react-footer-two .footer-top-cta .col-lg-5 a,
+body.star-site .exact-home-page .react-filter button.active,
+body.star-site .exact-home-page .accordion__wrapper-1 .exact-read-more-btn:hover,
+body.star-site .campus_sec .more-about:hover,
+body.star-site .about__area.about__area_one ul li .more-about:hover,
+body.star-site .popular__course__area .view-courses:hover,
+body.star-site .react-upcoming__event .event__card .event__card--link:hover {
+  background: var(--spa-primary) !important;
+  border-color: var(--spa-primary) !important;
+  color: #ffffff !important;
+}
+
+body.star-site .exact-home-header .react-logins a {
+  background: var(--spa-secondary, #cc0000) !important;
+  border-color: var(--spa-secondary, #cc0000) !important;
+  color: #ffffff !important;
+}
+
+body.star-site .react-btn:hover,
+body.star-site .exact-home-header .react-logins a:hover {
+  background: var(--spa-secondary-dark, #990000) !important;
+  border-color: var(--spa-secondary-dark, #990000) !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+body.star-site .react-footer-two .footer-top-cta a:hover {
+  background: var(--spa-accent-gold, #ffc300) !important;
+  border-color: var(--spa-accent-gold, #ffc300) !important;
+  color: var(--spa-primary-dark, #031552) !important;
+}
+
+body.star-site .react-btn-border:hover {
+  background: var(--spa-primary) !important;
+  border-color: var(--spa-primary) !important;
+  color: #ffffff !important;
+}
+
+/* Secondary red — eyebrows, labels, nav hover */
+body.star-site .exact-home-page .react__subtitle,
+body.star-site .exact-home-page .react__title__section h6,
+body.star-site .exact-home-page .accordion__wrapper-1 h6,
+body.star-site .exact-home-page .instructors_lefts h6,
+body.star-site .exact-about-page .exact-coaching-eyebrow,
+body.star-site .exact-about-page .react__title__section-all h6,
+body.star-site .react__title__section-all h6,
+body.star-site .about2__area .about__content h6,
+body.star-site .about__area h2 em,
+body.star-site .about2__area h2 em,
+body.star-site .react-blog__area .react__title__section h6,
+body.star-site .react-blog__area .blog__card--date,
+body.star-site .react-clients .react__title__section h6,
+body.star-site .star-eyebrow {
+  color: var(--spa-secondary) !important;
+}
+
+body.star-site .exact-home-header .react-menus > li:hover > a,
+body.star-site .exact-home-header .react-menus li a:hover,
+body.star-site .exact-home-header .react-menus li a.react-current-page,
+body.star-site .react-header .react-menus li a:hover {
+  color: var(--spa-secondary) !important;
+}
+
+/* Headings & nav text */
+body.star-site .exact-home-page .react__title__section h2,
+body.star-site .exact-home-page .react__title__section .react__tittle,
+body.star-site .exact-home-page .about2__area .about__title,
+body.star-site .exact-home-page .accordion__wrapper-1 h2,
+body.star-site .exact-home-page .instructors_lefts h2,
+body.star-site .exact-home-page .react-menus > li > a,
+body.star-site .exact-home-header .search-form .search-btn,
+body.star-site .react__title__section-all h2,
+body.star-site .about2__area h2 {
+  color: var(--spa-text-alt) !important;
+}
+
+/* Body copy */
+body.star-site .exact-home-page .hero3__paragraph,
+body.star-site .exact-home-page .about__paragraph {
+  color: var(--spa-text-muted);
+}
+
+body.star-site .exact-home-header .react-menus a[aria-disabled="true"] {
+  cursor: default;
+}
+
+body.star-site .react-footer a[aria-disabled="true"] {
+  cursor: default;
+}
+
+body.star-site .react-footer-two .footer-subtitle,
+body.star-site .react-footer-two .footer-menu a {
+  color: #e0e0e0 !important;
+}
+
+body.star-site .react-footer-two .footer-menu a:hover,
+body.star-site .react-footer-two .footer-menu a:focus {
+  color: var(--spa-accent-gold, #ffc300) !important;
+}
+
+/* Accent highlights — teal/gold for special emphasis */
+body.star-site .exact-home-page .hero3__title em,
+body.star-site .exact-home-page .about2__area .about__title em {
+  color: var(--spa-accent-teal) !important;
+  font-style: normal;
+}
+
+body.star-site .exact-home-page .react_populars_topics .item__inner a:hover,
+body.star-site .exact-home-page .react-course-filter .case-title a:hover,
+body.star-site .popular__course__area .course__item .react-course-title a:hover,
+body.star-site .react-blog__area .blog__card--title a:hover {
+  color: var(--spa-primary) !important;
+}
+
+/* Section backgrounds */
+body.star-site .exact-home-page > .react-course-filter,
+body.star-site .exact-about-page > .react_populars_topics_about .exact-coaching-headband,
+body.star-site .exact-about-page .student_satisfaction-section,
+body.star-site .react-blog__area.graybg-home {
+  background-color: var(--spa-bg-light) !important;
+}
+
+body.star-site .exact-about-page .exact-coaching-headband {
+  background: var(--spa-bg-light) !important;
+}
+
+body.star-site .exact-about-page .exact-coaching-headings .react__tittle {
+  color: var(--spa-text-alt) !important;
+}
+
+/* Footer */
+body.star-site .react-footer-two {
+  background: var(--spa-primary-deeper) !important;
+}
+
+body.star-site .react-footer-two .footer-top-cta {
+  background: linear-gradient(
+    135deg,
+    var(--spa-secondary-bright, #ff4d4d) 0%,
+    var(--spa-secondary, #cc0000) 55%,
+    var(--spa-secondary-dark, #990000) 100%
+  ) !important;
+  border: 0 !important;
+}
+
+body.star-site .react-footer-two .footer-top-cta h4,
+body.star-site .react-footer-two .footer-top-cta h3 {
+  color: #ffffff !important;
+}
+
+body.star-site .react-footer-two .footer-top-cta h4 {
+  color: var(--spa-accent-gold, #ffc300) !important;
+}
+
+body.star-site .react-footer-two .footer-top-cta a,
+body.star-site .react-footer-two .footer-top-cta .col-lg-5 a {
+  background: #ffffff !important;
+  border-color: #ffffff !important;
+  color: var(--spa-secondary-dark, #990000) !important;
+}
+
+body.star-site .react-footer-two .copyright {
+  background: var(--spa-primary-dark) !important;
+}
+
+/* Breadcrumbs & inner pages */
+body.star-site .react-breadcrumbs .breadcrumbs-title {
+  color: #ffffff;
+}
+
+body.star-site .react-breadcrumbs .back-nav ul li a:hover {
+  color: var(--spa-accent-gold) !important;
+}
+
+/* Blog cards, course cards — date badges */
+body.star-site .react-blog__area.graybg-home .b_date,
+body.star-site .count__area .count__width {
+  background: var(--spa-secondary) !important;
+}
+
+body.star-site .react-blog__area .react__title__section h2,
+body.star-site .react-blog__area.graybg-home .blog__card--title a {
+  color: var(--spa-primary-dark) !important;
+}
+
+/* Override template deep blue #00306E */
+body.star-site .react-btn-border,
+body.star-site .react-header .searchbar-part .react-login a,
+body.star-site .react-blog__area.graybg-home .blog__card--title a {
+  color: var(--spa-primary-dark) !important;
+}
+
+/* Mobile menu active link */
+body.star-site .react-header .react-menus li ul li a.react-current-page,
+body.star-site .react-header .react-menus li ul li.menu-active > a {
+  color: var(--spa-secondary, #cc0000) !important;
+}
+
+body.star-site .react-header .react-menus li ul li a:hover {
+  color: var(--spa-primary) !important;
+}

@@ -1,0 +1,38 @@
+import mongoose from "mongoose";
+
+const userSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true, trim: true },
+    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    password: { type: String, required: true },
+    role: {
+      type: String,
+      enum: ["superadmin", "admin", "staff", "student"],
+      required: true,
+    },
+    isActive: { type: Boolean, default: false },
+    username: { type: String, trim: true, lowercase: true, default: undefined },
+    permissions: { type: [String], default: [] },
+    sidebarHiddenItems: { type: [String], default: [] },
+    staffType: {
+      type: String,
+      enum: ["physical", "subject"],
+      default: null,
+    },
+    subjectIds: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Subject" }], default: [] },
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
+    emailVerified: { type: Boolean, default: false },
+    authTokenHash: { type: String, default: null },
+    authTokenExpires: { type: Date, default: null },
+    authTokenPurpose: { type: String, enum: ["setup", "reset"], default: null },
+    otpHash: { type: String, default: null },
+    otpExpires: { type: Date, default: null },
+    pendingPasswordHash: { type: String, default: null },
+  },
+  { timestamps: true }
+);
+
+userSchema.index({ role: 1, createdAt: -1 });
+userSchema.index({ username: 1 }, { unique: true, sparse: true });
+
+export default mongoose.model("User", userSchema);

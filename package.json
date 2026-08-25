@@ -1,0 +1,36 @@
+{
+  "name": "workspace",
+  "version": "1.0.0",
+  "description": "Next.js and Node site for Star Police Academy using the migrated responsive design system.",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node scripts/build-achiever-image-map.js && NODE_ENV=development node server.js",
+    "prebuild": "node scripts/prepare-public.js",
+    "build:panel": "npm --prefix starpolice_panel-master/package install --no-audit --no-fund && npm --prefix starpolice_panel-master/package run build && node scripts/copy-panel-build.js",
+    "optimize:images": "node scripts/optimize-images.js",
+    "build": "npm run build:panel && next build",
+    "start": "NODE_ENV=production node server.js",
+    "test": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Deepankarthikeyan/echooling.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Deepankarthikeyan/echooling/issues"
+  },
+  "homepage": "https://github.com/Deepankarthikeyan/echooling#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "next": "^16.2.9",
+    "nodemailer": "^9.0.3",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.3"
+  }
+}
