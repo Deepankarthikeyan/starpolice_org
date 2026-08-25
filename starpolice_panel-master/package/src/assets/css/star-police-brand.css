@@ -612,8 +612,13 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #6c757d;
+  color: #000;
   margin-bottom: 0.35rem;
+}
+
+.spa-messenger-audience .form-select,
+.spa-messenger-audience .form-select option {
+  color: #000;
 }
 
 .spa-messenger-sidebar.is-group-only {
@@ -807,6 +812,7 @@
   padding: 0.7rem 0.85rem;
   border-radius: 1rem;
   background: #fff;
+  color: #000;
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
 }
 
@@ -818,12 +824,13 @@
   font-size: 0.75rem;
   font-weight: 700;
   margin-bottom: 0.2rem;
+  color: #000;
 }
 
 .spa-messenger-bubble small {
   display: block;
   margin-top: 0.35rem;
-  color: #6b7785;
+  color: #000;
   font-size: 0.72rem;
 }
 
