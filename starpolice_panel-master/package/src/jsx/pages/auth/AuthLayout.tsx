@@ -21,7 +21,7 @@ const AuthLayout = ({ panel, title, subtitle, children, footer }: AuthLayoutProp
             <div className="spa-auth-card row g-0 overflow-hidden">
               <div className="col-lg-6 spa-auth-brand">
                 <div className="spa-auth-brand-inner">
-                  <img src={academyLogo} alt="Star Police Academy, Vellore" className="spa-auth-full-logo" />
+                  <img src={academyLogo} alt="Star Police Academy, Vellore" className="spa-auth-blue-logo" />
                   <p>
                     {panel === "student"
                       ? "Your study hub for materials, calendar, and admin interaction."
@@ -40,7 +40,7 @@ const AuthLayout = ({ panel, title, subtitle, children, footer }: AuthLayoutProp
               <div className="col-lg-6 spa-auth-form-wrap">
                 <div className="spa-auth-form-inner">
                   <div className="spa-auth-mobile-brand">
-                    <img src={academyLogo} alt="Star Police Academy, Vellore" className="spa-auth-full-logo" />
+                    <img src={academyLogo} alt="Star Police Academy, Vellore" className="spa-auth-blue-logo" />
                   </div>
                   <h2>{title}</h2>
                   <p className="spa-auth-subtitle">{subtitle}</p>
