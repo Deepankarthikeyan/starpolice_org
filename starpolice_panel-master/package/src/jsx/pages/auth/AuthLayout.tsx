@@ -1,4 +1,4 @@
-import academyLogo from "../../../assets/images/star-police-academy-logo.png";
+import academyLogo from "../../../assets/images/star-police-academy-logo-white.png";
 import adminVector from "../../../assets/images/svg/admin-panel.svg";
 
 interface AuthLayoutProps {
