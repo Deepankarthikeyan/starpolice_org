@@ -4,7 +4,7 @@
   "description": "Next.js and Node site for Star Police Academy using the migrated responsive design system.",
   "main": "server.js",
   "scripts": {
-    "dev": "node scripts/build-achiever-image-map.js && NODE_ENV=development node server.js",
+    "dev": "node scripts/build-achiever-image-map.js && node server.js",
     "prebuild": "node scripts/prepare-public.js",
     "build:panel": "npm --prefix starpolice_panel-master/package install --no-audit --no-fund && npm --prefix starpolice_panel-master/package run build && node scripts/copy-panel-build.js",
     "optimize:images": "node scripts/optimize-images.js",
