@@ -578,6 +578,37 @@
   overflow-y: auto;
 }
 
+select,
+select option,
+.form-select,
+.form-select option {
+  color: #000;
+}
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #59636e #e9edf2;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e9edf2;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #59636e;
+  border: 2px solid #e9edf2;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3f4852;
+}
+
 .spa-messenger-card {
   overflow: hidden;
 }
