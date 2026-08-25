@@ -44,6 +44,9 @@ iframe {
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 1.25rem;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  background: #123d73;
 }
 
 .spa-auth-mobile-brand .spa-auth-logo-small {
@@ -55,7 +58,7 @@ iframe {
 .spa-auth-mobile-brand p {
   margin: 0;
   font-weight: 700;
-  color: #123d73;
+  color: #fff;
   font-size: 1.05rem;
 }
 

@@ -43,8 +43,8 @@
 }
 
 .spa-auth-logo-small {
-  width: 4.5rem;
-  height: 4.5rem;
+  width: 8rem;
+  height: 8rem;
   object-fit: contain;
   margin-bottom: 1.25rem;
 }
@@ -67,12 +67,33 @@
 .spa-auth-brand h1 {
   font-size: 2rem;
   font-weight: 700;
+  color: #fff;
   margin-bottom: 1rem;
 }
 
 .spa-auth-brand p {
+  color: #fff;
   opacity: 0.9;
   line-height: 1.7;
+}
+
+.spa-auth-mobile-brand p {
+  color: #fff;
+}
+
+.star-police-brand-logo,
+.star-police-logo-full,
+.spa-sidebar-brand-logo {
+  color: #fff !important;
+}
+
+.star-police-logo-full,
+.spa-sidebar-brand-logo {
+  width: auto !important;
+  max-width: 100% !important;
+  height: auto !important;
+  max-height: 4.5rem !important;
+  object-fit: contain;
 }
 
 .spa-auth-badges {

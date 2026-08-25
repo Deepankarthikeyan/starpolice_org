@@ -34,5 +34,9 @@ const userSchema = new mongoose.Schema(
 
 userSchema.index({ role: 1, createdAt: -1 });
 userSchema.index({ username: 1 }, { unique: true, sparse: true });
+userSchema.index(
+  { role: 1 },
+  { unique: true, partialFilterExpression: { role: "superadmin" }, name: "one_superadmin_only" }
+);
 
 export default mongoose.model("User", userSchema);

@@ -123,6 +123,11 @@ router.get("/setup", requireDb, async (_req, res) => {
   try {
     res.json(await getSetupStatus());
   } catch (error) {
+    if (error?.code === 11000 && error?.keyPattern?.role) {
+      return res.status(409).json({
+        message: "A super admin has already been created. Use the admin login page.",
+      });
+    }
     res.status(500).json({ message: error.message });
   }
 });

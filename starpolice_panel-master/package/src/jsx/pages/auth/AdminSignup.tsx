@@ -54,8 +54,8 @@ const AdminSignup = ({ setAuth }: Props) => {
     return (
       <AuthLayout
         panel="admin"
-        title="Signup Closed"
-        subtitle="A super admin already exists. Ask them to create your admin account."
+        title="Super Admin Already Created"
+        subtitle="Only one super admin account can be created for this academy."
         footer={
           <p className="text-center mt-3 mb-0">
             <Link to="/admin/login" className="spa-auth-link">
@@ -65,7 +65,7 @@ const AdminSignup = ({ setAuth }: Props) => {
         }
       >
         <div className="alert alert-info">
-          Admin accounts are created by the super admin from User Management after login.
+          This setup link is closed because a super admin already exists. Sign in as the super admin to create other accounts.
         </div>
       </AuthLayout>
     );
