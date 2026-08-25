@@ -49,17 +49,10 @@ iframe {
   background: #123d73;
 }
 
-.spa-auth-mobile-brand .spa-auth-logo-small {
-  width: 2.75rem;
-  height: 2.75rem;
+.spa-auth-mobile-brand .spa-auth-full-logo {
+  width: 100%;
+  max-width: 18rem;
   margin-bottom: 0;
-}
-
-.spa-auth-mobile-brand p {
-  margin: 0;
-  font-weight: 700;
-  color: #fff;
-  font-size: 1.05rem;
 }
 
 .spa-messenger-back {

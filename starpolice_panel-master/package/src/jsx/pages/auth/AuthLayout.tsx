@@ -1,4 +1,4 @@
-import emblem from "../../../assets/images/star-police-academy-emblem.png";
+import academyLogo from "../../../assets/images/star-police-academy-logo.png";
 import adminVector from "../../../assets/images/svg/admin-panel.svg";
 
 interface AuthLayoutProps {
@@ -21,8 +21,7 @@ const AuthLayout = ({ panel, title, subtitle, children, footer }: AuthLayoutProp
             <div className="spa-auth-card row g-0 overflow-hidden">
               <div className="col-lg-6 spa-auth-brand">
                 <div className="spa-auth-brand-inner">
-                  <img src={emblem} alt="Star Police Academy" className="spa-auth-logo-small" />
-                  <h1>Star Police Academy</h1>
+                  <img src={academyLogo} alt="Star Police Academy, Vellore" className="spa-auth-full-logo" />
                   <p>
                     {panel === "student"
                       ? "Your study hub for materials, calendar, and admin interaction."
@@ -41,8 +40,7 @@ const AuthLayout = ({ panel, title, subtitle, children, footer }: AuthLayoutProp
               <div className="col-lg-6 spa-auth-form-wrap">
                 <div className="spa-auth-form-inner">
                   <div className="spa-auth-mobile-brand">
-                    <img src={emblem} alt="Star Police Academy" className="spa-auth-logo-small" />
-                    <p>Star Police Academy</p>
+                    <img src={academyLogo} alt="Star Police Academy, Vellore" className="spa-auth-full-logo" />
                   </div>
                   <h2>{title}</h2>
                   <p className="spa-auth-subtitle">{subtitle}</p>
