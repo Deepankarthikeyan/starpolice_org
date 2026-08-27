@@ -33,6 +33,7 @@ function PermissionChecklist({
     role === "student"
       ? STUDENT_PERMISSIONS
       : ADMIN_PERMISSIONS.filter((option) =>
+          option.key !== "admin:users" &&
           (role === "admin" ? ADMIN_ROLE_PERMISSION_KEYS : STAFF_ADMIN_PERMISSION_KEYS).includes(option.key)
         );
 

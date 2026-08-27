@@ -97,6 +97,9 @@ const AdminMenuList = (auth?: AuthUser | null, panel: PanelType = "admin") => {
   ];
 
   return items.filter((item) => {
+    if (auth?.role === "superadmin") {
+      return item.permission === "admin:users";
+    }
     if (!hasPermission(auth, item.permission)) {
       return false;
     }
