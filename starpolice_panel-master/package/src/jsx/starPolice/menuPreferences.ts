@@ -62,6 +62,7 @@ export function getSidebarMenuOptions(panel: PanelType, auth?: AuthUser | null):
 
   return adminItems
     .filter((item) => {
+      if (item.to === "user-management") return false;
       if (!hasPermission(auth, item.permission as never)) return false;
       if (isStaff && item.examType) return staffExamTypes.includes(item.examType as never);
       if (isStaff && item.to === "student-performance") return false;
