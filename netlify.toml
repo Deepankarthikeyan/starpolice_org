@@ -47,3 +47,9 @@
   from = "/student/*"
   to = "/panel/index.html"
   status = 200
+
+[[redirects]]
+  from = "/auth/*"
+  to = "/panel/index.html"
+  status = 200
+  force = true
