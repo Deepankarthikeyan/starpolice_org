@@ -4,7 +4,7 @@ services:
   - type: web
     name: starpolice-api
     runtime: docker
-    rootDir: server
+    rootDir: starpolice_panel-master/server
     plan: free
     dockerfilePath: ./Dockerfile
     healthCheckPath: /api/health
