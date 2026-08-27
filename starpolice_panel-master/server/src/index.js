@@ -126,8 +126,8 @@ async function start() {
       "Email delivery NOT configured. Set RESEND_API_KEY or SMTP_HOST+SMTP_USER in environment. Invite/reset links will only appear in the UI.",
     );
   }
-  app.listen(PORT, () => {
-    console.log(`API server running on http://localhost:${PORT}`);
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`API server running on 0.0.0.0:${PORT}`);
   });
 
   void connectDatabaseInBackground();
