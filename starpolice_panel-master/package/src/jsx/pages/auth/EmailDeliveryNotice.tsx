@@ -2,6 +2,7 @@ interface EmailDeliveryNoticeProps {
   devMode?: boolean;
   setupUrl?: string;
   delivered?: boolean;
+  deliveryError?: string;
   variant?: "info" | "warning";
 }
 
@@ -9,6 +10,7 @@ export function EmailDeliveryNotice({
   devMode,
   setupUrl,
   delivered,
+  deliveryError,
   variant = "warning",
 }: EmailDeliveryNoticeProps) {
   if (delivered) {
@@ -27,9 +29,12 @@ export function EmailDeliveryNotice({
     <div className={`alert alert-${variant} py-2 small mb-0`}>
       <strong>
         {devMode
-          ? "Email delivery is not configured on this server."
+          ? deliveryError
+            ? "Email could not be delivered."
+            : "Email delivery is not configured on this server."
           : "Email could not be delivered."}
       </strong>
+      {deliveryError && <p className="mb-2 mt-1">{deliveryError}</p>}
       <p className="mb-2 mt-1">
         Share this link with the user so they can set their password and complete verification:
       </p>

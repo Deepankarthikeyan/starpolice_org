@@ -336,6 +336,7 @@ export const api = {
       delivered?: boolean;
       devMode?: boolean;
       setupUrl?: string;
+      deliveryError?: string;
     }>("/api/auth/forgot-password", {
       method: "POST",
       body: JSON.stringify({ email, panel, clientUrl: window.location.origin }),
@@ -373,6 +374,7 @@ export const api = {
       delivered?: boolean;
       devMode?: boolean;
       setupUrl?: string;
+      deliveryError?: string;
     }>(`/api/users/${id}/resend-invite`, {
       method: "PATCH",
       body: JSON.stringify({ clientUrl: window.location.origin }),

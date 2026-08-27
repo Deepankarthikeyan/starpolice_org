@@ -30,6 +30,7 @@ const ForgotPassword = ({ panel }: Props) => {
   const [setupUrl, setSetupUrl] = useState("");
   const [devMode, setDevMode] = useState(false);
   const [delivered, setDelivered] = useState(false);
+  const [deliveryError, setDeliveryError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (event: FormEvent) => {
@@ -40,6 +41,7 @@ const ForgotPassword = ({ panel }: Props) => {
     setSetupUrl("");
     setDevMode(false);
     setDelivered(false);
+    setDeliveryError("");
 
     try {
       validateEmailOrThrow(email);
@@ -58,6 +60,7 @@ const ForgotPassword = ({ panel }: Props) => {
       setSetupUrl(result.setupUrl || "");
       setDevMode(Boolean(result.devMode));
       setDelivered(Boolean(result.delivered));
+      setDeliveryError(result.deliveryError || "");
       if (result.devMode) {
         notify.info("Email is not configured. Use the setup link shown on this page.");
       } else {
@@ -89,7 +92,12 @@ const ForgotPassword = ({ panel }: Props) => {
       {success && <div className="alert alert-success py-2">{success}</div>}
       {(devMode && setupUrl) && (
         <div className="mb-3">
-          <EmailDeliveryNotice devMode={devMode} setupUrl={setupUrl} delivered={delivered} />
+          <EmailDeliveryNotice
+            devMode={devMode}
+            setupUrl={setupUrl}
+            delivered={delivered}
+            deliveryError={deliveryError}
+          />
         </div>
       )}
       <form onSubmit={onSubmit} noValidate>

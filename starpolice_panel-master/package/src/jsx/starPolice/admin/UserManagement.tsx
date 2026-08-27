@@ -94,6 +94,7 @@ const UserManagement = () => {
     setupUrl?: string;
     devMode?: boolean;
     delivered?: boolean;
+    deliveryError?: string;
   } | null>(null);
 
   const refreshSubjects = async () => {
@@ -471,6 +472,7 @@ const UserManagement = () => {
                       devMode={inviteNotice.devMode}
                       setupUrl={inviteNotice.setupUrl}
                       delivered={inviteNotice.delivered}
+                      deliveryError={inviteNotice.deliveryError}
                     />
                   )}
                 </div>
