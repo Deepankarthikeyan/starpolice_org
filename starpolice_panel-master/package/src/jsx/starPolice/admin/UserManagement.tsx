@@ -182,6 +182,7 @@ const UserManagement = () => {
         setupUrl: result.setupUrl,
         devMode: result.devMode,
         delivered: result.delivered,
+        deliveryError: result.deliveryError,
       });
       notify.success(result.message || "Account created.");
     } catch (err) {

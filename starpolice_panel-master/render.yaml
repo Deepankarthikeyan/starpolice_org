@@ -13,7 +13,7 @@ services:
       - key: CLIENT_URL
         value: https://starpoliceacademy.in
       - key: EMAIL_FROM
-        value: "Star Police Academy <onboarding@resend.dev>"
+        value: "Star Police Academy <info@starpoliceacademy.in>"
       - key: RESEND_API_KEY
         sync: false
       - key: JWT_SECRET

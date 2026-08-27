@@ -409,6 +409,7 @@ export const api = {
       delivered?: boolean;
       devMode?: boolean;
       setupUrl?: string;
+      deliveryError?: string;
     }>("/api/users", {
       method: "POST",
       body: JSON.stringify({
