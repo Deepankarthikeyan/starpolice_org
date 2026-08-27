@@ -1,4 +1,4 @@
-export const SUPERADMIN_ONLY_PERMISSIONS = ["admin:users", "admin:onboarding", "admin:master"];
+export const SUPERADMIN_ONLY_PERMISSIONS = ["admin:users"];
 export const ADMIN_ONLY_PERMISSIONS = ["admin:leads"];
 
 export const ADMIN_PERMISSIONS = [

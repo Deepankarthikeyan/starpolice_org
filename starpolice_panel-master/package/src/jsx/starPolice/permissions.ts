@@ -27,8 +27,6 @@ export type PermissionKey = AdminPermissionKey | StudentPermissionKey;
 
 export const SUPERADMIN_ONLY_PERMISSIONS: readonly PermissionKey[] = [
   "admin:users",
-  "admin:onboarding",
-  "admin:master",
 ];
 
 export const ADMIN_ONLY_PERMISSIONS: readonly PermissionKey[] = ["admin:leads"];
