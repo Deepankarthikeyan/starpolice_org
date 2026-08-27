@@ -1,0 +1,22 @@
+# Render Blueprint — production API
+# MONGODB_URI is optional: unset uses embedded MongoDB. Set Atlas for permanent storage.
+services:
+  - type: web
+    name: starpolice-api
+    runtime: docker
+    rootDir: server
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: CLIENT_URL
+        value: https://starpoliceacademy.in
+      - key: EMAIL_FROM
+        value: "Star Police Academy <noreply@starpoliceacademy.in>"
+      - key: RESEND_API_KEY
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGODB_URI
+        sync: false

@@ -1,0 +1,605 @@
+import { useState, useEffect, useContext, type MouseEvent } from "react";
+import { Link } from "react-router-dom";
+import { Dropdown } from "react-bootstrap";
+import { ThemeContext } from "../../../context/ThemeContext";
+import { api } from "../../starPolice/api";
+import type { AppNotification } from "../../starPolice/types";
+
+/// Image
+import profile from "../../../assets/images/user.jpg";
+import avatar from "../../../assets/images/avatar/1.jpg";
+import avatar2 from "../../../assets/images/avatar/2.jpg";
+import avatar3 from "../../../assets/images/avatar/3.jpg";
+import avatar4 from "../../../assets/images/avatar/4.jpg";
+import LogoutPage from "./Logout";
+
+// Type for props (onNote function)
+interface Header2Props {
+  onNote: () => void;
+}
+
+const searchList = [
+  { image: avatar, title: "Benjamin" },
+  { image: avatar2, title: "Oliver" },
+  { image: avatar3, title: "Lucas" },
+  { image: avatar4, title: "Harry" },
+  { image: avatar2, title: "Oliver" },
+  { image: avatar4, title: "Harry" },
+  { image: avatar, title: "Benjamin" },
+  { image: avatar3, title: "Lucas" },
+];
+
+export function SideBarAdd() {
+  setTimeout(() => {
+    const walletopen = document.querySelector(".wallet-open");
+    const ele = walletopen as HTMLElement;
+    if (ele?.classList.contains("active")) {
+      ele.classList.remove("active");
+    } else {
+      ele.classList.add("active");
+    }
+  }, 200);
+}
+
+const Header2: React.FC<Header2Props> = ({ onNote }) => {
+  const { auth } = useContext(ThemeContext);
+  const [notifications, setNotifications] = useState<AppNotification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  const loadNotifications = async () => {
+    if (!auth?.token) return;
+    const [items, unread] = await Promise.all([
+      api.getNotifications(),
+      api.getUnreadNotificationCount(),
+    ]);
+    setNotifications(items);
+    setUnreadCount(unread.count);
+  };
+
+  useEffect(() => {
+    loadNotifications().catch(console.error);
+    const interval = setInterval(() => {
+      loadNotifications().catch(console.error);
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [auth?.token]);
+
+  const notificationIconClass = (type: AppNotification["type"]) => {
+    if (type === "message") return "media-info";
+    if (type === "upload") return "media-success";
+    if (type === "alert") return "media-danger";
+    return "media-primary";
+  };
+
+  const markAllRead = async (event: MouseEvent) => {
+    event.preventDefault();
+    try {
+      await api.markAllNotificationsRead();
+      await loadNotifications();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // State for header fixed position
+  const [headerFix, setheaderFix] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setheaderFix(window.scrollY > 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  // Fullscreen functionality
+
+  const [fullscreen, setFullscreen] = useState(false);
+  const EnterFullScreen = () => {
+    setFullscreen(!fullscreen);
+
+    if (fullscreen) {
+      document.body.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
+  const [themeMode, setThemeMode] = useState<boolean>(false);
+  const handleThemeMode = () => {
+    if (document.body.getAttribute("data-theme-version")?.includes("light")) {
+      document.body.setAttribute("data-theme-version", "dark");
+      setThemeMode(true);
+    } else {
+      document.body.setAttribute("data-theme-version", "light");
+      setThemeMode(false);
+    }
+  };
+
+  const path = window.location.pathname.split("/");
+  const name = path[path.length - 1].split("-");
+  const filterName = name.length >= 3 ? name.filter((_, i) => i > 0) : name;
+  const finalName = filterName.includes("app")
+    ? filterName.filter((f) => f !== "app")
+    : filterName.includes("ui")
+    ? filterName.filter((f) => f !== "ui")
+    : filterName.includes("uc")
+    ? filterName.filter((f) => f !== "uc")
+    : filterName.includes("basic")
+    ? filterName.filter((f) => f !== "basic")
+    : filterName.includes("jquery")
+    ? filterName.filter((f) => f !== "jquery")
+    : filterName.includes("table")
+    ? filterName.filter((f) => f !== "table")
+    : filterName.includes("page")
+    ? filterName.filter((f) => f !== "page")
+    : filterName.includes("email")
+    ? filterName.filter((f) => f !== "email")
+    : filterName.includes("ecom")
+    ? filterName.filter((f) => f !== "ecom")
+    : filterName.includes("chart")
+    ? filterName.filter((f) => f !== "chart")
+    : filterName.includes("editor")
+    ? filterName.filter((f) => f !== "editor")
+    : filterName;
+
+  return (
+    <div className={`header ${headerFix ? "sticky" : ""}`}>
+      <div className="header-content">
+        <nav className="navbar navbar-expand">
+          <div className="collapse navbar-collapse justify-content-between">
+            <div className="header-left">
+              <div
+                className="dashboard_bar"
+                style={{ textTransform: "capitalize" }}
+              >
+                {finalName.join(" ").length === 0
+                  ? "Dashboard"
+                  : finalName.join(" ") === "dashboard dark"
+                  ? "Dashboard"
+                  : finalName.join(" ")}
+              </div>
+            </div>
+            <ul className="navbar-nav header-right">
+              <Dropdown
+                as="li"
+                className="nav-item notification_dropdown search-area-header"
+              >
+                <Dropdown.Toggle as="div" className="nav-link i-false">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M27.6 25.8L22 20.2C23.3 18.5 24.1 16.4 24.1 14.1C24.1 8.60001 19.6 4.10001 14.1 4.10001C8.6 4.10001 4 8.60001 4 14.1C4 19.6 8.5 24.1 14 24.1C16.3 24.1 18.5 23.3 20.2 21.9L25.8 27.5C26 27.7 26.4 27.9 26.7 27.9C27 27.9 27.3 27.8 27.6 27.5C28.1 27.1 28.1 26.3 27.6 25.8ZM6.5 14.1C6.5 10 9.9 6.60001 14 6.60001C18.1 6.60001 21.5 10 21.5 14.1C21.5 18.2 18.1 21.6 14 21.6C9.9 21.6 6.5 18.3 6.5 14.1Z"
+                      fill="#A098AE"
+                    />
+                  </svg>
+                </Dropdown.Toggle>
+                <Dropdown.Menu
+                  className="dropdown-menu-end p-0 rounded"
+                  align={"end"}
+                >
+                  <div className="card mb-0">
+                    <div className="card-body px-0">
+                      <div className="px-3">
+                        <div className="input-group search-area w-100">
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Search here..."
+                          />
+                          <span className="input-group-text">
+                            <Link to={"#"}>
+                              <svg
+                                width="15"
+                                height="15"
+                                viewBox="0 0 18 18"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M17.5605 15.4395L13.7527 11.6317C14.5395 10.446 15 9.02625 15 7.5C15 3.3645 11.6355 0 7.5 0C3.3645 0 0 3.3645 0 7.5C0 11.6355 3.3645 15 7.5 15C9.02625 15 10.446 14.5395 11.6317 13.7527L15.4395 17.5605C16.0245 18.1462 16.9755 18.1462 17.5605 17.5605C18.1462 16.9747 18.1462 16.0252 17.5605 15.4395V15.4395ZM2.25 7.5C2.25 4.605 4.605 2.25 7.5 2.25C10.395 2.25 12.75 4.605 12.75 7.5C12.75 10.395 10.395 12.75 7.5 12.75C4.605 12.75 2.25 10.395 2.25 7.5V7.5Z"
+                                  fill="#01A3FF"
+                                ></path>
+                              </svg>
+                            </Link>
+                          </span>
+                        </div>
+                        <h6 className="my-2 mt-3">Recently Searched:</h6>
+                      </div>
+                      <div className="dlab-scroll px-3 mt-3 height300">
+                        {searchList.map((item, index) => (
+                          <ul
+                            className="d-flex align-items-center mb-3"
+                            key={index}
+                          >
+                            <li>
+                              <img
+                                src={item.image}
+                                className="avatar avatar-sm"
+                                alt=""
+                              />
+                              <Link to={"#"} className="ms-2">
+                                {item.title}
+                              </Link>
+                            </li>
+                            <li className="ms-auto">
+                              <i className="fa-solid fa-trash"></i>
+                            </li>
+                          </ul>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </Dropdown.Menu>
+              </Dropdown>
+              <li className="nav-item dropdown notification_dropdown">
+                <Link
+                  to={"#"}
+                  className="nav-link  menu-wallet"
+                  onClick={SideBarAdd}
+                >
+                  <svg
+                    id="Layer_2"
+                    enableBackground="new 0 0 512 512"
+                    height="18"
+                    viewBox="0 0 512 512"
+                    width="18"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g>
+                      <path d="m174 240h-108c-36.393 0-66-29.607-66-66v-108c0-36.393 29.607-66 66-66h108c36.393 0 66 29.607 66 66v108c0 36.393-29.607 66-66 66zm-108-208c-18.748 0-34 15.252-34 34v108c0 18.748 15.252 34 34 34h108c18.748 0 34-15.252 34-34v-108c0-18.748-15.252-34-34-34z" />
+                      <path d="m446 240h-108c-36.393 0-66-29.607-66-66v-108c0-36.393 29.607-66 66-66h108c36.393 0 66 29.607 66 66v108c0 36.393-29.607 66-66 66zm-108-208c-18.748 0-34 15.252-34 34v108c0 18.748 15.252 34 34 34h108c18.748 0 34-15.252 34-34v-108c0-18.748-15.252-34-34-34z" />
+                      <path d="m392 512c-66.168 0-120-53.832-120-120s53.832-120 120-120 120 53.832 120 120-53.832 120-120 120zm0-208c-48.523 0-88 39.477-88 88s39.477 88 88 88 88-39.477 88-88-39.477-88-88-88z" />
+                      <path d="m174 512h-108c-36.393 0-66-29.607-66-66v-108c0-36.393 29.607-66 66-66h108c36.393 0 66 29.607 66 66v108c0 36.393-29.607 66-66 66zm-108-208c-18.748 0-34 15.252-34 34v108c0 18.748 15.252 34 34 34h108c18.748 0 34-15.252 34-34v-108c0-18.748-15.252-34-34-34z" />
+                    </g>
+                  </svg>
+                </Link>
+              </li>
+              <li className="nav-item dropdown notification_dropdown">
+                <Link
+                  to={"#"}
+                  className={`nav-link bell dz-theme-mode 
+					 ${themeMode ? "active" : ""}
+					`}
+                  onClick={() => handleThemeMode()}
+                >
+                  <i id="icon-light-1">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="feather feather-sun"
+                    >
+                      <circle cx="12" cy="12" r="5"></circle>
+                      <line x1="12" y1="1" x2="12" y2="3"></line>
+                      <line x1="12" y1="21" x2="12" y2="23"></line>
+                      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                      <line x1="1" y1="12" x2="3" y2="12"></line>
+                      <line x1="21" y1="12" x2="23" y2="12"></line>
+                      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                  </i>
+                  <i id="icon-dark-1">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="feather feather-moon"
+                    >
+                      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                  </i>
+                </Link>
+              </li>
+              <li className="nav-item dropdown notification_dropdown">
+                <Link
+                  to={"#"}
+                  className="nav-link bell dz-fullscreen"
+                  onClick={EnterFullScreen}
+                >
+                  <svg
+                    id="icon-full-1"
+                    viewBox="0 0 24 24"
+                    width="20"
+                    height="20"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="css-i6dzq1"
+                  >
+                    <path
+                      d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"
+                      style={{
+                        strokeDasharray: "37, 57",
+                        strokeDashoffset: "0",
+                      }}
+                    ></path>
+                  </svg>
+                  <svg
+                    id="icon-minimize-1"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="A098AE"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-minimize"
+                  >
+                    <path
+                      d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"
+                      style={{
+                        strokeDasharray: "37, 57",
+                        strokeDashoffset: "0",
+                      }}
+                    ></path>
+                  </svg>
+                </Link>
+              </li>
+              <Dropdown
+                as="li"
+                className="nav-item dropdown notification_dropdown "
+              >
+                <Dropdown.Toggle
+                  variant=""
+                  as="a"
+                  className="nav-link bell bell-link i-false c-pointer nav-action"
+                  onClick={() => onNote()}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#A098AE"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-message-square"
+                  >
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                  </svg>
+                </Dropdown.Toggle>
+              </Dropdown>
+              <Dropdown
+                as="li"
+                className="nav-item bell-icon blink notification_dropdown"
+              >
+                <Dropdown.Toggle
+                  className="nav-link i-false c-pointer"
+                  variant=""
+                  as="a"
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M25.3677 18.9391V9.86768C25.3677 4.70215 21.1655 0.5 16 0.5C10.8345 0.5 6.63232 4.70215 6.63232 9.86768V18.9397C4.96704 19.4224 3.73828 20.9544 3.73828 22.8374C3.73828 25.0386 5.5293 26.8296 7.73096 26.8296H11.377V26.877C11.377 29.4263 13.4507 31.5 16 31.5C18.5493 31.5 20.6231 29.4263 20.6231 26.8769V26.8296H24.2691C26.4707 26.8296 28.2617 25.0386 28.2617 22.7583C28.2617 20.9406 27.033 19.4198 25.3677 18.9391ZM9.63232 9.86768C9.63232 6.35645 12.4888 3.5 16 3.5C19.5112 3.5 22.3677 6.35645 22.3677 9.86768V18.7661H9.63232V9.86768ZM17.6231 26.8769C17.6231 27.772 16.895 28.5 16 28.5C15.105 28.5 14.377 27.772 14.377 26.8769V26.8296H17.623V26.8769H17.6231ZM24.269 23.8296H7.73096C7.1836 23.8296 6.73828 23.3843 6.73828 22.7583C6.73828 22.2114 7.18359 21.7661 7.73096 21.7661H24.2691C24.8164 21.7661 25.2617 22.2114 25.2617 22.8374C25.2617 23.3843 24.8164 23.8296 24.269 23.8296Z"
+                      fill="#A098AE"
+                    />
+                  </svg>
+                  {unreadCount > 0 && (
+                    <span className="badge light text-white bg-primary rounded-circle position-absolute top-0 end-0">
+                      {unreadCount}
+                    </span>
+                  )}
+                </Dropdown.Toggle>
+                <Dropdown.Menu
+                  align="end"
+                  className="dropdown-menu mt-2 dropdown-menu-end of-visible"
+                >
+                  <div className="dropdown-header">
+                    <h4 className="title mb-0">Notification</h4>
+                  </div>
+                  <div
+                    id="DZ_W_Notification1"
+                    className="widget-media dlab-scroll p-3"
+                    style={{ height: "380px" }}
+                  >
+                    <ul className="timeline">
+                      {notifications.length === 0 ? (
+                        <li className="p-3 text-muted text-center">No notifications yet.</li>
+                      ) : (
+                        notifications.map((item) => (
+                          <li key={item.id}>
+                            <div className="timeline-panel">
+                              <div
+                                className={`media me-2 ${notificationIconClass(item.type)}`}
+                              >
+                                {item.type === "upload" ? (
+                                  <i className="fa fa-file" />
+                                ) : item.type === "message" ? (
+                                  <i className="fa fa-comment" />
+                                ) : (
+                                  <i className="fa fa-bell" />
+                                )}
+                              </div>
+                              <div className="media-body">
+                                <h6 className="mb-1">{item.title}</h6>
+                                <p className="mb-1 small">{item.message}</p>
+                                <small className="d-block">
+                                  {new Date(item.createdAt).toLocaleString()}
+                                </small>
+                              </div>
+                            </div>
+                          </li>
+                        ))
+                      )}
+                    </ul>
+                  </div>
+
+                  <Link className="all-notification" to="#" onClick={markAllRead}>
+                    Mark all as read <i className="ti-arrow-right" />
+                  </Link>
+                </Dropdown.Menu>
+              </Dropdown>
+
+              <li className="nav-item ">
+                <Dropdown className="dropdown header-profile2">
+                  <Dropdown.Toggle
+                    variant=""
+                    as="a"
+                    className="nav-link i-false c-pointer ms-0"
+                  >
+                    <div className="header-info2 d-flex align-items-center">
+                      <img src={profile} alt="" />
+                    </div>
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu
+                    align="end"
+                    className="mt-1 dropdown-menu dropdown-menu-end"
+                  >
+                    <div className="card mb-0">
+                      <div className="card-header p-3">
+                        <ul className="d-flex align-items-center">
+                          <li>
+                            <img src={profile} className="ms-0" alt="" />
+                          </li>
+                          <li className="ms-2">
+                            <h4 className="mb-0">Nella Vita</h4>
+                            <span>Admin</span>
+                          </li>
+                        </ul>
+                      </div>
+                      <div className="card-body p-3">
+                        <Link
+                          to="/app-profile"
+                          className="dropdown-item ai-icon"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24px"
+                            height="24px"
+                            viewBox="0 0 24 24"
+                            version="1.1"
+                            className="svg-main-icon"
+                          >
+                            <g
+                              stroke="none"
+                              strokeWidth="1"
+                              fill="none"
+                              fillRule="evenodd"
+                            >
+                              <polygon points="0 0 24 0 24 24 0 24" />
+                              <path
+                                d="M12,11 C9.790861,11 8,9.209139 8,7 C8,4.790861 9.790861,3 12,3 C14.209139,3 16,4.790861 16,7 C16,9.209139 14.209139,11 12,11 Z"
+                                fill="#000000"
+                                fillRule="nonzero"
+                                opacity="0.3"
+                              />
+                              <path
+                                d="M3.00065168,20.1992055 C3.38825852,15.4265159 7.26191235,13 11.9833413,13 C16.7712164,13 20.7048837,15.2931929 20.9979143,20.2 C21.0095879,20.3954741 20.9979143,21 20.2466999,21 C16.541124,21 11.0347247,21 3.72750223,21 C3.47671215,21 2.97953825,20.45918 3.00065168,20.1992055 Z"
+                                fill="var(--primary)"
+                                fillRule="nonzero"
+                              />
+                            </g>
+                          </svg>
+                          <span className="ms-2">Profile </span>
+                        </Link>
+                        <Link to="/chat" className="dropdown-item ai-icon ">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24px"
+                            height="24px"
+                            viewBox="0 0 24 24"
+                            version="1.1"
+                            className="svg-main-icon"
+                          >
+                            <g
+                              stroke="none"
+                              strokeWidth="1"
+                              fill="none"
+                              fillRule="evenodd"
+                            >
+                              <rect x="0" y="0" width="24" height="24" />
+                              <path
+                                d="M21.9999843,15.009808 L22.0249378,15 L22.0249378,19.5857864 C22.0249378,20.1380712 21.5772226,20.5857864 21.0249378,20.5857864 C20.7597213,20.5857864 20.5053674,20.4804296 20.317831,20.2928932 L18.0249378,18 L5,18 C3.34314575,18 2,16.6568542 2,15 L2,6 C2,4.34314575 3.34314575,3 5,3 L19,3 C20.6568542,3 22,4.34314575 22,6 L22,15 C22,15.0032706 21.9999948,15.0065399 21.9999843,15.009808 Z M6.16794971,10.5547002 C7.67758127,12.8191475 9.64566871,14 12,14 C14.3543313,14 16.3224187,12.8191475 17.8320503,10.5547002 C18.1384028,10.0951715 18.0142289,9.47430216 17.5547002,9.16794971 C17.0951715,8.86159725 16.4743022,8.98577112 16.1679497,9.4452998 C15.0109146,11.1808525 13.6456687,12 12,12 C10.3543313,12 8.9890854,11.1808525 7.83205029,9.4452998 C7.52569784,8.98577112 6.90482849,8.86159725 6.4452998,9.16794971 C5.98577112,9.47430216 5.86159725,10.0951715 6.16794971,10.5547002 Z"
+                                fill="var(--primary)"
+                              />
+                            </g>
+                          </svg>
+                          <span className="ms-2">Message </span>
+                        </Link>
+                        <Link
+                          to="/email-inbox"
+                          className="dropdown-item ai-icon"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24px"
+                            height="24px"
+                            viewBox="0 0 24 24"
+                            version="1.1"
+                            className="svg-main-icon"
+                          >
+                            <g
+                              stroke="none"
+                              strokeWidth="1"
+                              fill="none"
+                              fillRule="evenodd"
+                            >
+                              <rect x="0" y="0" width="24" height="24" />
+                              <path
+                                d="M21,12.0829584 C20.6747915,12.0283988 20.3407122,12 20,12 C16.6862915,12 14,14.6862915 14,18 C14,18.3407122 14.0283988,18.6747915 14.0829584,19 L5,19 C3.8954305,19 3,18.1045695 3,17 L3,8 C3,6.8954305 3.8954305,6 5,6 L19,6 C20.1045695,6 21,6.8954305 21,8 L21,12.0829584 Z M18.1444251,7.83964668 L12,11.1481833 L5.85557487,7.83964668 C5.4908718,7.6432681 5.03602525,7.77972206 4.83964668,8.14442513 C4.6432681,8.5091282 4.77972206,8.96397475 5.14442513,9.16035332 L11.6444251,12.6603533 C11.8664074,12.7798822 12.1335926,12.7798822 12.3555749,12.6603533 L18.8555749,9.16035332 C19.2202779,8.96397475 19.3567319,8.5091282 19.1603533,8.14442513 C18.9639747,7.77972206 18.5091282,7.6432681 18.1444251,7.83964668 Z"
+                                fill="#000000"
+                              />
+                              <circle
+                                fill="var(--primary)"
+                                opacity="0.3"
+                                cx="19.5"
+                                cy="17.5"
+                                r="2.5"
+                              />
+                            </g>
+                          </svg>
+                          <span className="ms-2">Inbox </span>
+                        </Link>
+                      </div>
+                      <div className="card-footer text-center p-3">
+                        <LogoutPage />
+                      </div>
+                    </div>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+  );
+};
+
+export default Header2;
