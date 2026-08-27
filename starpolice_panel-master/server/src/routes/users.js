@@ -168,7 +168,9 @@ router.post(
         deliveryError: emailResult?.deliveryError,
         message: emailResult?.delivered
           ? "Account created. An email has been sent to set up the password and activate panel access."
-          : emailResult?.devMode
+          : emailResult?.deliveryError
+            ? "Account created, but the invite email could not be delivered. Check the API email configuration."
+            : emailResult?.devMode
             ? "Account created. Email is not configured — add RESEND_API_KEY or SMTP settings to server/.env and restart the API."
             : "Account created but email could not be sent. Check server email configuration.",
       });
@@ -344,6 +346,8 @@ router.patch(
       res.json({
         message: emailResult?.delivered
           ? "Invite email sent."
+          : emailResult?.deliveryError
+            ? "Invite email could not be delivered. Check the API email configuration."
           : "Email is not configured. Add RESEND_API_KEY or SMTP settings to the API server and restart.",
         inviteSent: true,
         delivered: emailResult?.delivered ?? false,

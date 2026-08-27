@@ -344,6 +344,8 @@ router.post("/forgot-password", requireDb, async (req, res) => {
     const result = await handleForgotPassword(email, panel, clientUrl);
     const message = result.delivered
       ? "Password reset link sent to your email. Check your inbox and spam folder."
+      : result.deliveryError
+        ? "Password reset email could not be delivered. Check the API email configuration."
       : result.devMode
         ? "Email is not configured on this server. Ask your administrator to add email settings to the API."
         : "Email could not be sent. Contact your administrator.";
