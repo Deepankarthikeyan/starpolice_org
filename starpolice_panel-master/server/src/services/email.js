@@ -11,8 +11,8 @@ function getClientUrl(requestedUrl) {
 }
 
 export function getEmailProvider() {
-  if (process.env.RESEND_API_KEY?.trim()) return "resend";
   if (process.env.SMTP_HOST?.trim() && process.env.SMTP_USER?.trim()) return "smtp";
+  if (process.env.RESEND_API_KEY?.trim()) return "resend";
   return null;
 }
 
