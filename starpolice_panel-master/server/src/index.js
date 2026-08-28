@@ -22,7 +22,7 @@ import subjectRoutes from "./routes/subjects.js";
 import examRoutes from "./routes/exams.js";
 import questionPaperRoutes from "./routes/questionPapers.js";
 import { uploadDir } from "./middleware/upload.js";
-import { isEmailConfigured, getEmailProvider, getEmailDiagnostics } from "./services/email.js";
+import { isEmailConfigured, getEmailProvider, getEmailDiagnostics, warmEmailTransport } from "./services/email.js";
 import { backfillAttendancePermission } from "./migrations/backfillAttendancePermission.js";
 import { backfillQuestionsPermission } from "./migrations/backfillQuestionsPermission.js";
 import { stripLeadsFromStaff } from "./migrations/stripLeadsFromStaff.js";
@@ -125,6 +125,7 @@ async function start() {
   getJwtSecret();
   if (isEmailConfigured()) {
     console.log(`Email delivery enabled (${getEmailProvider()})`);
+    void warmEmailTransport();
   } else {
     console.warn(
       "Email delivery NOT configured. Set RESEND_API_KEY or SMTP_HOST+SMTP_USER in environment. Invite/reset links will only appear in the UI.",

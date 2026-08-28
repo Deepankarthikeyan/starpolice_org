@@ -237,7 +237,7 @@ async function request<T>(path: string, options: RequestInit = {}, panel?: Panel
 
       if (!response.ok) {
         if (isWakeUpStatus(response.status) && attempt < maxAttempts) {
-          await sleep(attempt * 10000);
+          await sleep(2000 * attempt);
           continue;
         }
         let message = publicApiErrorMessage(response.status, data.message);
@@ -252,7 +252,7 @@ async function request<T>(path: string, options: RequestInit = {}, panel?: Panel
       const isNetworkError = error instanceof TypeError;
       if (isNetworkError && attempt < maxAttempts) {
         lastError = new Error(publicApiErrorMessage(503, ""));
-        await sleep(attempt * 10000);
+        await sleep(2000 * attempt);
         continue;
       }
       if (error instanceof Error) {

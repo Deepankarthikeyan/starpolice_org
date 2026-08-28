@@ -43,18 +43,17 @@ test("getEmailDiagnostics warns about Resend test sender", async () => {
   );
 });
 
-test("getEmailDiagnostics warns about malformed EMAIL_FROM value", async () => {
+test("SMTP uses Gmail address when EMAIL_FROM domain differs", async () => {
   restoreEnv();
   process.env.SMTP_HOST = "smtp.gmail.com";
-  process.env.SMTP_USER = "test@gmail.com";
+  process.env.SMTP_USER = "deepankarthikeyan2000@gmail.com";
   process.env.SMTP_PASS = "app-password";
-  process.env.EMAIL_FROM = "EMAIL_FROM=Star Police Academy <test@gmail.com>";
+  process.env.EMAIL_FROM = "Star Police Academy <noreply@starpoliceacademy.in>";
 
   const { getEmailDiagnostics } = await import("./email.js");
   const diagnostics = getEmailDiagnostics();
   assert.equal(diagnostics.provider, "smtp");
-  assert.equal(diagnostics.from, "Star Police Academy <test@gmail.com>");
   assert.ok(
-    diagnostics.warnings.some((warning) => warning.includes('EMAIL_FROM value includes "EMAIL_FROM="'))
+    diagnostics.warnings.some((warning) => warning.includes("Gmail SMTP sends as deepankarthikeyan2000@gmail.com"))
   );
 });

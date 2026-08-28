@@ -31,6 +31,7 @@ const SetupPassword = () => {
   const [validating, setValidating] = useState(true);
   const [invalid, setInvalid] = useState(false);
   const [otpDevCode, setOtpDevCode] = useState("");
+  const [deliveryError, setDeliveryError] = useState("");
 
   useEffect(() => {
     if (!token) {
@@ -63,6 +64,7 @@ const SetupPassword = () => {
       setMaskedEmail(result.email);
       setStep("otp");
       setOtpDevCode(result.otp || "");
+      setDeliveryError(result.deliveryError || "");
       if (result.delivered) {
         notify.success("Verification code sent to your email.");
       } else {
@@ -100,6 +102,7 @@ const SetupPassword = () => {
     try {
       const result = await api.resendOtp(token);
       setOtpDevCode(result.otp || "");
+      setDeliveryError(result.deliveryError || "");
       if (result.delivered) {
         notify.success("A new verification code has been sent.");
       } else {
@@ -159,6 +162,11 @@ const SetupPassword = () => {
       {step === "otp" && otpDevCode && (
         <div className="alert alert-warning py-2 small">
           Email delivery is not configured. Use this verification code: <strong>{otpDevCode}</strong>
+        </div>
+      )}
+      {deliveryError && !otpDevCode && (
+        <div className="alert alert-warning py-2 small">
+          {deliveryError}
         </div>
       )}
 

@@ -164,12 +164,12 @@ router.post(
         inviteSent: true,
         delivered: emailResult?.delivered ?? false,
         devMode: emailResult?.devMode ?? false,
-        setupUrl: emailResult?.devMode ? emailResult?.setupUrl : undefined,
+        setupUrl: emailResult?.delivered ? undefined : emailResult?.setupUrl,
         deliveryError: emailResult?.deliveryError,
         message: emailResult?.delivered
-          ? "Account created. An email has been sent to set up the password and activate panel access."
+          ? `Account created. Invite email sent to ${user.email}.`
           : emailResult?.deliveryError
-            ? "Account created, but the invite email could not be delivered. Check the API email configuration."
+            ? `Account created, but email could not be sent: ${emailResult.deliveryError}`
             : emailResult?.devMode
             ? "Account created. Email is not configured — add RESEND_API_KEY or SMTP settings to server/.env and restart the API."
             : "Account created but email could not be sent. Check server email configuration.",
@@ -352,7 +352,7 @@ router.patch(
         inviteSent: true,
         delivered: emailResult?.delivered ?? false,
         devMode: emailResult?.devMode ?? false,
-        setupUrl: emailResult?.devMode ? emailResult?.setupUrl : undefined,
+        setupUrl: emailResult?.delivered ? undefined : emailResult?.setupUrl,
         deliveryError: emailResult?.deliveryError,
       });
     } catch (error) {

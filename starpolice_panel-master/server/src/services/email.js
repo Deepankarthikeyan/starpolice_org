@@ -44,17 +44,40 @@ export function isEmailConfigured() {
   return getEmailProviders().length > 0;
 }
 
-function getFromAddressForProvider(provider) {
-  const from = readEnv("EMAIL_FROM");
-  if (from) return from;
+function extractEmailAddress(value) {
+  const trimmed = (value || "").trim();
+  const match = trimmed.match(/<([^>]+@[^>]+)>/);
+  return (match ? match[1] : trimmed).trim().toLowerCase();
+}
 
-  if (provider === "resend") {
+function getFromAddressForProvider(provider) {
+  const configuredFrom = readEnv("EMAIL_FROM");
+  const smtpUser = readEnv("SMTP_USER");
+
+  if (provider === "smtp") {
+    if (!smtpUser) {
+      return configuredFrom || "noreply@starpolice.academy";
+    }
+    const smtpEmail = extractEmailAddress(smtpUser.includes("@") ? smtpUser : smtpUser);
+    if (!configuredFrom) {
+      return `Star Police Academy <${smtpEmail}>`;
+    }
+    const fromEmail = extractEmailAddress(configuredFrom);
+    const fromDomain = fromEmail.split("@")[1];
+    const smtpDomain = smtpEmail.split("@")[1];
+    if (fromDomain && smtpDomain && fromDomain !== smtpDomain) {
+      return `Star Police Academy <${smtpEmail}>`;
+    }
+    return configuredFrom;
+  }
+
+  if (!configuredFrom) {
     throw new Error(
       "EMAIL_FROM is required for Resend. Verify your domain in Resend and set EMAIL_FROM to an address on that domain."
     );
   }
 
-  return readEnv("SMTP_USER") || "noreply@starpolice.academy";
+  return configuredFrom;
 }
 
 export function getEmailDiagnostics() {
@@ -102,8 +125,14 @@ export function getEmailDiagnostics() {
     warnings.push("SMTP_PASS is missing — add your Gmail app password on Render.");
   }
 
-  if (process.env.SMTP_HOST?.trim() && process.env.SMTP_USER?.trim() && !process.env.SMTP_PASS?.trim()) {
-    warnings.push("SMTP_USER is set but SMTP_PASS is missing — SMTP cannot send until the app password is added.");
+  if (readEnv("SMTP_HOST") && readEnv("SMTP_USER") && readEnv("SMTP_PASS") && readEnv("EMAIL_FROM")) {
+    const fromEmail = extractEmailAddress(readEnv("EMAIL_FROM"));
+    const smtpEmail = extractEmailAddress(readEnv("SMTP_USER"));
+    if (fromEmail.split("@")[1] !== smtpEmail.split("@")[1]) {
+      warnings.push(
+        `EMAIL_FROM uses ${fromEmail} but Gmail SMTP sends as ${smtpEmail}. Invite emails will use ${smtpEmail} as the sender.`
+      );
+    }
   }
 
   return {
@@ -113,6 +142,19 @@ export function getEmailDiagnostics() {
     from: from || null,
     warnings,
   };
+}
+
+export async function warmEmailTransport() {
+  if (!isSmtpConfigured()) return;
+  try {
+    const transport = getTransporter();
+    if (transport) {
+      await transport.verify();
+      console.log("[email] SMTP connection verified");
+    }
+  } catch (error) {
+    console.error("[email] SMTP verify failed:", error.message);
+  }
 }
 
 function getTransporter() {
@@ -127,6 +169,9 @@ function getTransporter() {
     host: readEnv("SMTP_HOST"),
     port,
     secure: port === 465,
+    connectionTimeout: 10_000,
+    greetingTimeout: 10_000,
+    socketTimeout: 15_000,
     auth: {
       user: readEnv("SMTP_USER"),
       pass: readEnv("SMTP_PASS"),
@@ -141,8 +186,11 @@ function humanizeDeliveryError(error) {
   if (/only send testing emails to your own email/i.test(message)) {
     return "Resend test mode only delivers to the Resend account email. Verify your domain in Resend or configure Gmail SMTP on the API server.";
   }
-  if (/domain is not verified/i.test(message) || /not verified/i.test(message)) {
-    return "The sending domain is not verified in Resend. Verify starpoliceacademy.in in Resend or configure Gmail SMTP on the API server.";
+  if (/invalid login|username and password not accepted|authentication failed/i.test(message)) {
+    return "Gmail SMTP login failed. Check SMTP_USER and SMTP_PASS (16-character app password) on the API server.";
+  }
+  if (/mail from|sender address|from address|not authorized to send/i.test(message)) {
+    return "Gmail rejected the sender address. Use your Gmail address as EMAIL_FROM when sending through Gmail SMTP.";
   }
   return message;
 }

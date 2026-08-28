@@ -172,11 +172,30 @@ const UserManagement = () => {
         createPermissions,
         createAccountType === "staff" ? createSubjectIds : undefined
       );
+      const createdUser: ManagedUser = {
+        id: result.id,
+        name: result.name,
+        email: result.email,
+        role: result.role,
+        isActive: result.isActive,
+        permissions: result.permissions,
+        staffType: result.staffType,
+        subjectIds: result.subjectIds,
+        subjectNames: result.subjectNames,
+        createdAt: result.createdAt,
+      };
+      if (createAccountType === "admin") {
+        setAdmins((prev) => [createdUser, ...prev]);
+      } else if (createAccountType === "staff") {
+        setStaff((prev) => [createdUser, ...prev]);
+      } else {
+        setStudents((prev) => [createdUser, ...prev]);
+      }
       setName("");
       setEmail("");
       setCreateSubjectIds([]);
       setCreatePermissions(defaultPermissionsForRole(createAccountType));
-      await loadUsers();
+      void loadUsers();
       setInviteNotice({
         message: result.message || "Account created.",
         setupUrl: result.setupUrl,
