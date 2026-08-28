@@ -34,6 +34,16 @@ import {
 
 const API_BASE = import.meta.env.VITE_API_URL || "";
 
+/** Base URL for invite/setup links — includes /panel on Vite preview, root on production. */
+export function getPanelClientUrl(): string {
+  const { origin, pathname } = window.location;
+  const panelBase = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
+  if (panelBase && panelBase !== "/" && pathname.startsWith(panelBase)) {
+    return `${origin}${panelBase}`;
+  }
+  return origin;
+}
+
 function resolvePanelFromPath(pathname: string): PanelType {
   if (pathname.startsWith("/student")) return "student";
   if (pathname.startsWith("/staff")) return "staff";
@@ -339,7 +349,7 @@ export const api = {
       deliveryError?: string;
     }>("/api/auth/forgot-password", {
       method: "POST",
-      body: JSON.stringify({ email, panel, clientUrl: window.location.origin }),
+      body: JSON.stringify({ email, panel, clientUrl: getPanelClientUrl() }),
     });
   },
 
@@ -391,7 +401,7 @@ export const api = {
       deliveryError?: string;
     }>(`/api/users/${id}/resend-invite`, {
       method: "PATCH",
-      body: JSON.stringify({ clientUrl: window.location.origin }),
+      body: JSON.stringify({ clientUrl: getPanelClientUrl() }),
     });
   },
 
@@ -432,7 +442,7 @@ export const api = {
         role,
         permissions,
         subjectIds,
-        clientUrl: window.location.origin,
+        clientUrl: getPanelClientUrl(),
       }),
     });
   },
@@ -1089,7 +1099,7 @@ function buildStudentOnboardingFormData(
   formData.append("residenceType", form.residenceType || "");
   formData.append("paymentStatus", form.paymentStatus || "Pending");
   formData.append("materials", JSON.stringify(form.materials || []));
-  formData.append("clientUrl", window.location.origin);
+  formData.append("clientUrl", getPanelClientUrl());
 
   if (form.password) {
     formData.append("password", form.password);
