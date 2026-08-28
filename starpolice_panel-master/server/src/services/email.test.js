@@ -42,3 +42,19 @@ test("getEmailDiagnostics warns about Resend test sender", async () => {
     diagnostics.warnings.some((warning) => warning.includes("onboarding@resend.dev"))
   );
 });
+
+test("getEmailDiagnostics warns about malformed EMAIL_FROM value", async () => {
+  restoreEnv();
+  process.env.SMTP_HOST = "smtp.gmail.com";
+  process.env.SMTP_USER = "test@gmail.com";
+  process.env.SMTP_PASS = "app-password";
+  process.env.EMAIL_FROM = "EMAIL_FROM=Star Police Academy <test@gmail.com>";
+
+  const { getEmailDiagnostics } = await import("./email.js");
+  const diagnostics = getEmailDiagnostics();
+  assert.equal(diagnostics.provider, "smtp");
+  assert.equal(diagnostics.from, "Star Police Academy <test@gmail.com>");
+  assert.ok(
+    diagnostics.warnings.some((warning) => warning.includes('EMAIL_FROM value includes "EMAIL_FROM="'))
+  );
+});

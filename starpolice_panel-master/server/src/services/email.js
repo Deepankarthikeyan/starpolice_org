@@ -10,16 +10,23 @@ function getClientUrl(requestedUrl) {
   return (process.env.CLIENT_URL || "http://localhost:5173").replace(/\/$/, "");
 }
 
+function normalizeEnvValue(value) {
+  if (typeof value !== "string") return "";
+  const trimmed = value.trim();
+  const keyPrefix = trimmed.match(/^(?:EMAIL_FROM|SMTP_[A-Z_]+|CLIENT_URL|RESEND_API_KEY)=(.*)$/i);
+  return keyPrefix ? keyPrefix[1].trim() : trimmed;
+}
+
+function readEnv(name) {
+  return normalizeEnvValue(process.env[name] || "");
+}
+
 function isSmtpConfigured() {
-  return Boolean(
-    process.env.SMTP_HOST?.trim() &&
-      process.env.SMTP_USER?.trim() &&
-      process.env.SMTP_PASS?.trim()
-  );
+  return Boolean(readEnv("SMTP_HOST") && readEnv("SMTP_USER") && readEnv("SMTP_PASS"));
 }
 
 function isResendConfigured() {
-  return Boolean(process.env.RESEND_API_KEY?.trim());
+  return Boolean(readEnv("RESEND_API_KEY"));
 }
 
 export function getEmailProviders() {
@@ -38,7 +45,7 @@ export function isEmailConfigured() {
 }
 
 function getFromAddressForProvider(provider) {
-  const from = process.env.EMAIL_FROM?.trim();
+  const from = readEnv("EMAIL_FROM");
   if (from) return from;
 
   if (provider === "resend") {
@@ -47,13 +54,13 @@ function getFromAddressForProvider(provider) {
     );
   }
 
-  return process.env.SMTP_USER || "noreply@starpolice.academy";
+  return readEnv("SMTP_USER") || "noreply@starpolice.academy";
 }
 
 export function getEmailDiagnostics() {
   const providers = getEmailProviders();
   const warnings = [];
-  const from = process.env.EMAIL_FROM?.trim() || "";
+  const from = readEnv("EMAIL_FROM");
 
   if (!providers.length) {
     warnings.push(
@@ -81,6 +88,20 @@ export function getEmailDiagnostics() {
     );
   }
 
+  if (process.env.EMAIL_FROM?.trim() && /^EMAIL_FROM=/i.test(process.env.EMAIL_FROM.trim())) {
+    warnings.push(
+      'EMAIL_FROM value includes "EMAIL_FROM=" — set the value to only: Star Police Academy <your@gmail.com>'
+    );
+  }
+
+  if (readEnv("SMTP_USER") && !readEnv("SMTP_HOST")) {
+    warnings.push("SMTP_HOST is missing — add SMTP_HOST=smtp.gmail.com on Render.");
+  }
+
+  if (readEnv("SMTP_HOST") && readEnv("SMTP_USER") && !readEnv("SMTP_PASS")) {
+    warnings.push("SMTP_PASS is missing — add your Gmail app password on Render.");
+  }
+
   if (process.env.SMTP_HOST?.trim() && process.env.SMTP_USER?.trim() && !process.env.SMTP_PASS?.trim()) {
     warnings.push("SMTP_USER is set but SMTP_PASS is missing — SMTP cannot send until the app password is added.");
   }
@@ -101,14 +122,14 @@ function getTransporter() {
     return null;
   }
 
-  const port = Number(process.env.SMTP_PORT || 587);
+  const port = Number(readEnv("SMTP_PORT") || 587);
   transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
+    host: readEnv("SMTP_HOST"),
     port,
     secure: port === 465,
     auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS || "",
+      user: readEnv("SMTP_USER"),
+      pass: readEnv("SMTP_PASS"),
     },
   });
 
@@ -137,7 +158,7 @@ function purposeLabel(purpose) {
 }
 
 async function sendViaResend({ to, subject, html, text, from }) {
-  const apiKey = process.env.RESEND_API_KEY?.trim();
+  const apiKey = readEnv("RESEND_API_KEY");
   if (!apiKey) return null;
 
   const response = await fetch("https://api.resend.com/emails", {
