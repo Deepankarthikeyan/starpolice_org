@@ -2,6 +2,44 @@
 
 Panel invite and forgot-password emails are sent by the **API server** (`server/`). Without configuration, links only appear on screen — they are **not** sent to inbox.
 
+## Troubleshooting: only one email receives messages
+
+If OTP emails arrive for `deepankarthikeyan2000@gmail.com` but invite emails do not reach other addresses, the API is almost certainly using **Resend test mode** (`onboarding@resend.dev`) or an **unverified domain**.
+
+Check:
+
+```text
+https://starpolice-api.onrender.com/api/health
+```
+
+If you see `"provider":"resend"` and warnings about domain verification, fix it with one of these options:
+
+### Option A — Gmail SMTP (recommended for production)
+
+1. Enable 2-Step Verification on your Google account
+2. Create an **App Password**: Google Account → Security → App passwords
+3. In **Render → starpolice-api → Environment**, set:
+
+```env
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your@gmail.com
+SMTP_PASS=your-16-character-app-password
+EMAIL_FROM=Star Police Academy <your@gmail.com>
+CLIENT_URL=https://starpoliceacademy.in
+```
+
+4. **Manual Deploy → Deploy latest commit**
+5. Health check should show `"provider":"smtp"` and no email warnings
+
+SMTP is preferred when both SMTP and Resend are configured.
+
+### Option B — Verify domain in Resend
+
+1. In [resend.com](https://resend.com), add and verify `starpoliceacademy.in`
+2. Set `EMAIL_FROM=Star Police Academy <info@starpoliceacademy.in>`
+3. Redeploy the API
+
 ## Production deployment
 
 Netlify hosts the panel only. Add the email variables to **Render → starpolice-api → Environment**, not to Netlify and not only to a local `server/.env` file. Save the variables and use **Manual Deploy → Deploy latest commit** to restart the API.

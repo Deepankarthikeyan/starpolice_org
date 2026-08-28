@@ -10,20 +10,94 @@ function getClientUrl(requestedUrl) {
   return (process.env.CLIENT_URL || "http://localhost:5173").replace(/\/$/, "");
 }
 
+function isSmtpConfigured() {
+  return Boolean(
+    process.env.SMTP_HOST?.trim() &&
+      process.env.SMTP_USER?.trim() &&
+      process.env.SMTP_PASS?.trim()
+  );
+}
+
+function isResendConfigured() {
+  return Boolean(process.env.RESEND_API_KEY?.trim());
+}
+
+export function getEmailProviders() {
+  const providers = [];
+  if (isSmtpConfigured()) providers.push("smtp");
+  if (isResendConfigured()) providers.push("resend");
+  return providers;
+}
+
 export function getEmailProvider() {
-  if (process.env.SMTP_HOST?.trim() && process.env.SMTP_USER?.trim()) return "smtp";
-  if (process.env.RESEND_API_KEY?.trim()) return "resend";
-  return null;
+  return getEmailProviders()[0] || null;
 }
 
 export function isEmailConfigured() {
-  return Boolean(getEmailProvider());
+  return getEmailProviders().length > 0;
+}
+
+function getFromAddressForProvider(provider) {
+  const from = process.env.EMAIL_FROM?.trim();
+  if (from) return from;
+
+  if (provider === "resend") {
+    throw new Error(
+      "EMAIL_FROM is required for Resend. Verify your domain in Resend and set EMAIL_FROM to an address on that domain."
+    );
+  }
+
+  return process.env.SMTP_USER || "noreply@starpolice.academy";
+}
+
+export function getEmailDiagnostics() {
+  const providers = getEmailProviders();
+  const warnings = [];
+  const from = process.env.EMAIL_FROM?.trim() || "";
+
+  if (!providers.length) {
+    warnings.push(
+      "Email is not configured. Add SMTP_USER + SMTP_PASS (Gmail app password) or RESEND_API_KEY on the API server."
+    );
+  }
+
+  if (isSmtpConfigured() && !from) {
+    warnings.push("EMAIL_FROM is not set; SMTP will use SMTP_USER as the sender address.");
+  }
+
+  if (isResendConfigured() && !from) {
+    warnings.push("EMAIL_FROM is required for Resend delivery.");
+  }
+
+  if (/onboarding@resend\.dev/i.test(from)) {
+    warnings.push(
+      "EMAIL_FROM uses onboarding@resend.dev — Resend only delivers to the Resend account owner's email. Verify starpoliceacademy.in in Resend or switch to Gmail SMTP."
+    );
+  }
+
+  if (from && /@starpoliceacademy\.in/i.test(from) && isResendConfigured() && !isSmtpConfigured()) {
+    warnings.push(
+      "EMAIL_FROM uses starpoliceacademy.in with Resend only. Verify the domain in Resend, or add Gmail SMTP (SMTP_USER + SMTP_PASS) for reliable delivery."
+    );
+  }
+
+  if (process.env.SMTP_HOST?.trim() && process.env.SMTP_USER?.trim() && !process.env.SMTP_PASS?.trim()) {
+    warnings.push("SMTP_USER is set but SMTP_PASS is missing — SMTP cannot send until the app password is added.");
+  }
+
+  return {
+    configured: providers.length > 0,
+    provider: providers[0] || null,
+    providers,
+    from: from || null,
+    warnings,
+  };
 }
 
 function getTransporter() {
   if (transporter) return transporter;
 
-  if (getEmailProvider() !== "smtp") {
+  if (!isSmtpConfigured()) {
     return null;
   }
 
@@ -41,17 +115,15 @@ function getTransporter() {
   return transporter;
 }
 
-function getFromAddress() {
-  const from = process.env.EMAIL_FROM?.trim();
-  if (from) return from;
-
-  if (getEmailProvider() === "resend") {
-    throw new Error(
-      "EMAIL_FROM is required for Resend. Verify your domain in Resend and set EMAIL_FROM to an address on that domain."
-    );
+function humanizeDeliveryError(error) {
+  const message = error?.message || String(error);
+  if (/only send testing emails to your own email/i.test(message)) {
+    return "Resend test mode only delivers to the Resend account email. Verify your domain in Resend or configure Gmail SMTP on the API server.";
   }
-
-  return process.env.SMTP_USER || "noreply@starpolice.academy";
+  if (/domain is not verified/i.test(message) || /not verified/i.test(message)) {
+    return "The sending domain is not verified in Resend. Verify starpoliceacademy.in in Resend or configure Gmail SMTP on the API server.";
+  }
+  return message;
 }
 
 function panelLabel(panel) {
@@ -162,9 +234,7 @@ export async function sendPasswordEmail({
       <p>If you did not request this, you can ignore this email.</p>
     `;
 
-  const from = getFromAddress();
   const mailPayload = {
-    from,
     to,
     subject,
     text: textLines.join("\n"),
@@ -176,36 +246,44 @@ export async function sendPasswordEmail({
     return { delivered: false, devMode: true, setupUrl, otp: isOtpOnly ? otp : undefined };
   }
 
-  try {
-    let result = null;
+  const providers = getEmailProviders();
+  const errors = [];
 
-    if (getEmailProvider() === "resend") {
-      result = await sendViaResend({
-        to,
-        subject,
-        html: mailPayload.html,
-        text: mailPayload.text,
-        from,
-      });
-    } else {
-      result = await sendViaSmtp(mailPayload);
+  for (const provider of providers) {
+    try {
+      const from = getFromAddressForProvider(provider);
+      const payload = { ...mailPayload, from };
+      const result =
+        provider === "resend"
+          ? await sendViaResend({
+              to,
+              subject,
+              html: payload.html,
+              text: payload.text,
+              from,
+            })
+          : await sendViaSmtp(payload);
+
+      if (!result) {
+        throw new Error(`${provider} provider is not available.`);
+      }
+
+      console.log(`[email] Sent via ${result.provider} to ${to} (id: ${result.id || "ok"})`);
+      return { delivered: true, devMode: false, provider: result.provider };
+    } catch (error) {
+      const friendlyError = humanizeDeliveryError(error);
+      console.error(`[email] Delivery failed via ${provider}:`, friendlyError);
+      errors.push(`${provider}: ${friendlyError}`);
     }
-
-    if (!result) {
-      throw new Error("Email provider is not available.");
-    }
-
-    console.log(`[email] Sent via ${result.provider} to ${to} (id: ${result.id || "ok"})`);
-    return { delivered: true, devMode: false, provider: result.provider };
-  } catch (error) {
-    console.error("[email] Delivery failed:", error.message);
-    logDevFallback({ to, subject, setupUrl, otp: isOtpOnly ? otp : undefined, error: error.message });
-    return {
-      delivered: false,
-      devMode: true,
-      setupUrl,
-      otp: isOtpOnly ? otp : undefined,
-      deliveryError: error.message,
-    };
   }
+
+  const deliveryError = errors.join(" | ");
+  logDevFallback({ to, subject, setupUrl, otp: isOtpOnly ? otp : undefined, error: deliveryError });
+  return {
+    delivered: false,
+    devMode: true,
+    setupUrl,
+    otp: isOtpOnly ? otp : undefined,
+    deliveryError,
+  };
 }

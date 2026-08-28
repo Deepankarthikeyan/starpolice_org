@@ -366,10 +366,18 @@ router.post("/request-otp", requireDb, async (req, res) => {
       return res.status(400).json({ message: "Token is required." });
     }
     const result = await requestOtpForToken(token, password, confirmPassword);
+    const delivered = result.emailResult?.delivered ?? false;
     res.json({
-      message: "Verification code sent to your email.",
+      message: delivered
+        ? "Verification code sent to your email."
+        : result.emailResult?.deliveryError
+          ? "Verification code could not be delivered. Check the API email configuration."
+          : "Email is not configured on this server. Ask your administrator to add email settings to the API.",
       email: result.email,
+      delivered,
       devMode: result.emailResult?.devMode ?? false,
+      deliveryError: result.emailResult?.deliveryError,
+      otp: result.emailResult?.devMode ? result.emailResult?.otp : undefined,
     });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -383,10 +391,18 @@ router.post("/resend-otp", requireDb, async (req, res) => {
       return res.status(400).json({ message: "Token is required." });
     }
     const result = await resendOtpForToken(token);
+    const delivered = result.emailResult?.delivered ?? false;
     res.json({
-      message: "A new verification code has been sent to your email.",
+      message: delivered
+        ? "A new verification code has been sent to your email."
+        : result.emailResult?.deliveryError
+          ? "Verification code could not be delivered. Check the API email configuration."
+          : "Email is not configured on this server. Ask your administrator to add email settings to the API.",
       email: result.email,
+      delivered,
       devMode: result.emailResult?.devMode ?? false,
+      deliveryError: result.emailResult?.deliveryError,
+      otp: result.emailResult?.devMode ? result.emailResult?.otp : undefined,
     });
   } catch (error) {
     res.status(400).json({ message: error.message });

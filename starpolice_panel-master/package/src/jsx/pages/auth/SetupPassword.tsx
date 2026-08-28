@@ -30,6 +30,7 @@ const SetupPassword = () => {
   const [loading, setLoading] = useState(false);
   const [validating, setValidating] = useState(true);
   const [invalid, setInvalid] = useState(false);
+  const [otpDevCode, setOtpDevCode] = useState("");
 
   useEffect(() => {
     if (!token) {
@@ -61,9 +62,11 @@ const SetupPassword = () => {
       const result = await api.requestOtp(token, password, confirmPassword);
       setMaskedEmail(result.email);
       setStep("otp");
-      notify.success("Verification code sent to your email.");
-      if (result.devMode) {
-        notify.info("SMTP is not configured. Check the API server console for the verification code.");
+      setOtpDevCode(result.otp || "");
+      if (result.delivered) {
+        notify.success("Verification code sent to your email.");
+      } else {
+        notify.warning(result.message || "Verification code could not be delivered.");
       }
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to send verification code";
@@ -96,9 +99,11 @@ const SetupPassword = () => {
     setError("");
     try {
       const result = await api.resendOtp(token);
-      notify.success("A new verification code has been sent.");
-      if (result.devMode) {
-        notify.info("SMTP is not configured. Check the API server console for the verification code.");
+      setOtpDevCode(result.otp || "");
+      if (result.delivered) {
+        notify.success("A new verification code has been sent.");
+      } else {
+        notify.warning(result.message || "Verification code could not be delivered.");
       }
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to resend code";
@@ -151,6 +156,11 @@ const SetupPassword = () => {
   return (
     <AuthLayout panel={panel} title={title} subtitle={subtitle}>
       {error && <div className="alert alert-danger py-2">{error}</div>}
+      {step === "otp" && otpDevCode && (
+        <div className="alert alert-warning py-2 small">
+          Email delivery is not configured. Use this verification code: <strong>{otpDevCode}</strong>
+        </div>
+      )}
 
       {step === "password" ? (
         <form onSubmit={onRequestOtp}>

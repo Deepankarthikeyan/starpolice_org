@@ -22,7 +22,7 @@ import subjectRoutes from "./routes/subjects.js";
 import examRoutes from "./routes/exams.js";
 import questionPaperRoutes from "./routes/questionPapers.js";
 import { uploadDir } from "./middleware/upload.js";
-import { isEmailConfigured, getEmailProvider } from "./services/email.js";
+import { isEmailConfigured, getEmailProvider, getEmailDiagnostics } from "./services/email.js";
 import { backfillAttendancePermission } from "./migrations/backfillAttendancePermission.js";
 import { backfillQuestionsPermission } from "./migrations/backfillQuestionsPermission.js";
 import { stripLeadsFromStaff } from "./migrations/stripLeadsFromStaff.js";
@@ -48,6 +48,7 @@ app.use("/uploads", express.static(uploadDir));
 app.get("/api/health", (_req, res) => {
   const mongoIssue = getMongoUriIssue();
   const connected = isDbConnected();
+  const emailDiagnostics = getEmailDiagnostics();
   res.json({
     status: mongoIssue ? "misconfigured" : connected ? "ok" : "starting",
     database: connected ? "mongodb" : mongoIssue ? "missing" : "connecting",
@@ -55,8 +56,11 @@ app.get("/api/health", (_req, res) => {
     setupRequired: mongoIssue,
     jwt: Boolean(process.env.JWT_SECRET?.trim()),
     email: {
-      configured: isEmailConfigured(),
-      provider: getEmailProvider(),
+      configured: emailDiagnostics.configured,
+      provider: emailDiagnostics.provider,
+      providers: emailDiagnostics.providers,
+      from: emailDiagnostics.from,
+      warnings: emailDiagnostics.warnings,
     },
     build: process.env.RENDER_GIT_COMMIT?.slice(0, 7) || "local",
     features: {

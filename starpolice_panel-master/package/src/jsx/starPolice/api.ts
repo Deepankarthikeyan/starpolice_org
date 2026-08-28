@@ -344,14 +344,28 @@ export const api = {
   },
 
   requestOtp(token: string, password: string, confirmPassword: string) {
-    return request<{ message: string; email: string; devMode?: boolean }>("/api/auth/request-otp", {
+    return request<{
+      message: string;
+      email: string;
+      delivered?: boolean;
+      devMode?: boolean;
+      deliveryError?: string;
+      otp?: string;
+    }>("/api/auth/request-otp", {
       method: "POST",
       body: JSON.stringify({ token, password, confirmPassword }),
     });
   },
 
   resendOtp(token: string) {
-    return request<{ message: string; email: string; devMode?: boolean }>("/api/auth/resend-otp", {
+    return request<{
+      message: string;
+      email: string;
+      delivered?: boolean;
+      devMode?: boolean;
+      deliveryError?: string;
+      otp?: string;
+    }>("/api/auth/resend-otp", {
       method: "POST",
       body: JSON.stringify({ token }),
     });

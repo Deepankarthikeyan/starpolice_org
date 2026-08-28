@@ -21,4 +21,8 @@ export const notify = {
   info(message: string) {
     toast.info(message, defaultOptions);
   },
+
+  warning(message: string) {
+    toast.warning(message, { ...defaultOptions, autoClose: 5000 });
+  },
 };

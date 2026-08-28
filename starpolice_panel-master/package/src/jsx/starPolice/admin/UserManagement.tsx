@@ -134,7 +134,7 @@ const UserManagement = () => {
 
   useEffect(() => {
     if (!inviteNotice) return;
-    if (inviteNotice.devMode && inviteNotice.setupUrl) return;
+    if (!inviteNotice.delivered) return;
 
     const timer = window.setTimeout(() => setInviteNotice(null), 3000);
     return () => window.clearTimeout(timer);
@@ -184,7 +184,11 @@ const UserManagement = () => {
         delivered: result.delivered,
         deliveryError: result.deliveryError,
       });
-      notify.success(result.message || "Account created.");
+      if (result.delivered) {
+        notify.success(result.message || "Account created.");
+      } else {
+        notify.warning(result.message || "Account created, but the invite email could not be delivered.");
+      }
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to create user";
       setError(message);
@@ -212,8 +216,13 @@ const UserManagement = () => {
         setupUrl: result.setupUrl,
         devMode: result.devMode,
         delivered: result.delivered,
+        deliveryError: result.deliveryError,
       });
-      notify.success(result.message);
+      if (result.delivered) {
+        notify.success(result.message);
+      } else {
+        notify.warning(result.message || "Invite email could not be delivered.");
+      }
     } catch (err) {
       notify.error(err, "Failed to send invite email");
     }
@@ -468,13 +477,19 @@ const UserManagement = () => {
                   >
                     {inviteNotice.message}
                   </div>
-                  {inviteNotice.devMode && inviteNotice.setupUrl && (
+                  {(!inviteNotice.delivered || inviteNotice.deliveryError) && inviteNotice.setupUrl && (
                     <EmailDeliveryNotice
                       devMode={inviteNotice.devMode}
                       setupUrl={inviteNotice.setupUrl}
                       delivered={inviteNotice.delivered}
                       deliveryError={inviteNotice.deliveryError}
                     />
+                  )}
+                  {!inviteNotice.delivered && inviteNotice.deliveryError && !inviteNotice.setupUrl && (
+                    <div className="alert alert-warning py-2 small mb-0">
+                      <strong>Email could not be delivered.</strong>
+                      <p className="mb-0 mt-1">{inviteNotice.deliveryError}</p>
+                    </div>
                   )}
                 </div>
               )}
