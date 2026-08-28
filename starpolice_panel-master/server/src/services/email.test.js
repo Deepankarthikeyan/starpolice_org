@@ -43,8 +43,22 @@ test("getEmailDiagnostics warns about Resend test sender", async () => {
   );
 });
 
+test("Render production prefers Resend over SMTP", async () => {
+  restoreEnv();
+  process.env.RENDER = "true";
+  process.env.SMTP_HOST = "smtp.gmail.com";
+  process.env.SMTP_USER = "test@gmail.com";
+  process.env.SMTP_PASS = "app-password";
+  process.env.RESEND_API_KEY = "re_test";
+
+  const { getEmailProviders, getEmailProvider } = await import("./email.js");
+  assert.deepEqual(getEmailProviders(), ["resend"]);
+  assert.equal(getEmailProvider(), "resend");
+});
+
 test("SMTP uses Gmail address when EMAIL_FROM domain differs", async () => {
   restoreEnv();
+  delete process.env.RENDER;
   process.env.SMTP_HOST = "smtp.gmail.com";
   process.env.SMTP_USER = "deepankarthikeyan2000@gmail.com";
   process.env.SMTP_PASS = "app-password";

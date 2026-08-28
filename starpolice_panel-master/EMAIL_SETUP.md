@@ -40,6 +40,28 @@ SMTP is preferred when both SMTP and Resend are configured.
 2. Set `EMAIL_FROM=Star Police Academy <info@starpoliceacademy.in>`
 3. Redeploy the API
 
+## Render production (starpolice-api)
+
+**Gmail SMTP does not work on Render** — outbound ports 587/465 are blocked, causing `Connection timeout`.
+
+Use **Resend API** instead (HTTPS, works on Render):
+
+1. Log in at [resend.com](https://resend.com) with your Gmail
+2. **Domains** → add `starpoliceacademy.in` → add the DNS records Resend shows (in Netlify → Domain → DNS)
+3. Wait for domain verification (5–30 minutes)
+4. In **Render → starpolice-api → Environment**, set:
+
+```env
+RESEND_API_KEY=re_your_key_here
+EMAIL_FROM=Star Police Academy <info@starpoliceacademy.in>
+CLIENT_URL=https://starpoliceacademy.in
+```
+
+5. Remove or ignore `SMTP_*` variables on Render (they cannot work there)
+6. **Manual Deploy** → Deploy latest commit
+
+Verify: `https://starpolice-api.onrender.com/api/health` should show `"provider":"resend"` with no warnings.
+
 ## Production deployment
 
 Netlify hosts the panel only. Add the email variables to **Render → starpolice-api → Environment**, not to Netlify and not only to a local `server/.env` file. Save the variables and use **Manual Deploy → Deploy latest commit** to restart the API.

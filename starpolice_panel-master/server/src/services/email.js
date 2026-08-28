@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { isRenderProduction } from "../config/production.js";
 
 let transporter = null;
 
@@ -31,6 +32,11 @@ function isResendConfigured() {
 
 export function getEmailProviders() {
   const providers = [];
+  // Render blocks outbound SMTP (ports 587/465) — use Resend HTTPS API instead.
+  if (isRenderProduction()) {
+    if (isResendConfigured()) providers.push("resend");
+    return providers;
+  }
   if (isSmtpConfigured()) providers.push("smtp");
   if (isResendConfigured()) providers.push("resend");
   return providers;
@@ -125,6 +131,16 @@ export function getEmailDiagnostics() {
     warnings.push("SMTP_PASS is missing — add your Gmail app password on Render.");
   }
 
+  if (isRenderProduction() && isSmtpConfigured() && !isResendConfigured()) {
+    warnings.push(
+      "Render blocks Gmail SMTP (connection timeout). Add RESEND_API_KEY on Render and verify starpoliceacademy.in at resend.com."
+    );
+  }
+
+  if (isRenderProduction() && isResendConfigured() && isSmtpConfigured()) {
+    warnings.push("Gmail SMTP is ignored on Render. Emails are sent via Resend API.");
+  }
+
   if (readEnv("SMTP_HOST") && readEnv("SMTP_USER") && readEnv("SMTP_PASS") && readEnv("EMAIL_FROM")) {
     const fromEmail = extractEmailAddress(readEnv("EMAIL_FROM"));
     const smtpEmail = extractEmailAddress(readEnv("SMTP_USER"));
@@ -133,6 +149,12 @@ export function getEmailDiagnostics() {
         `EMAIL_FROM uses ${fromEmail} but Gmail SMTP sends as ${smtpEmail}. Invite emails will use ${smtpEmail} as the sender.`
       );
     }
+  }
+
+  if (isResendConfigured() && from && /@gmail\.com/i.test(extractEmailAddress(from))) {
+    warnings.push(
+      "Resend cannot send from @gmail.com to all users. Verify starpoliceacademy.in in Resend and set EMAIL_FROM to info@starpoliceacademy.in."
+    );
   }
 
   return {
@@ -145,7 +167,7 @@ export function getEmailDiagnostics() {
 }
 
 export async function warmEmailTransport() {
-  if (!isSmtpConfigured()) return;
+  if (!isSmtpConfigured() || isRenderProduction()) return;
   try {
     const transport = getTransporter();
     if (transport) {
@@ -188,6 +210,12 @@ function humanizeDeliveryError(error) {
   }
   if (/invalid login|username and password not accepted|authentication failed/i.test(message)) {
     return "Gmail SMTP login failed. Check SMTP_USER and SMTP_PASS (16-character app password) on the API server.";
+  }
+  if (/connection timeout|ETIMEDOUT|ECONNREFUSED|ESOCKET/i.test(message)) {
+    return "Render blocks Gmail SMTP. Add RESEND_API_KEY on Render, verify starpoliceacademy.in at resend.com, and redeploy.";
+  }
+  if (/domain is not verified/i.test(message) || /not verified/i.test(message)) {
+    return "The sending domain is not verified in Resend. Verify starpoliceacademy.in at resend.com.";
   }
   if (/mail from|sender address|from address|not authorized to send/i.test(message)) {
     return "Gmail rejected the sender address. Use your Gmail address as EMAIL_FROM when sending through Gmail SMTP.";
