@@ -46,7 +46,9 @@ function getFromAddress() {
   if (from) return from;
 
   if (getEmailProvider() === "resend") {
-    return "Star Police Academy <onboarding@resend.dev>";
+    throw new Error(
+      "EMAIL_FROM is required for Resend. Verify your domain in Resend and set EMAIL_FROM to an address on that domain."
+    );
   }
 
   return process.env.SMTP_USER || "noreply@starpolice.academy";
