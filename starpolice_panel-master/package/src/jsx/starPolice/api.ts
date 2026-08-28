@@ -201,6 +201,14 @@ async function legacyMessageContacts(
   return users.map((user) => managedUserToMessagingContact(user, "student"));
 }
 
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function isWakeUpStatus(status: number) {
+  return status === 502 || status === 503 || status === 504 || status >= 500;
+}
+
 async function request<T>(path: string, options: RequestInit = {}, panel?: PanelType): Promise<T> {
   const token = getToken(panel);
   const headers = new Headers(options.headers);
@@ -212,23 +220,49 @@ async function request<T>(path: string, options: RequestInit = {}, panel?: Panel
     headers.set("Authorization", `Bearer ${token}`);
   }
 
-  const response = await fetch(`${API_BASE}${path}`, {
-    ...options,
-    headers,
-  });
+  const maxAttempts = 3;
+  let lastError: Error | null = null;
 
-  const contentType = response.headers.get("content-type") || "";
-  const data = contentType.includes("application/json")
-    ? await response.json().catch(() => ({}))
-    : {};
-  if (!response.ok) {
-    let message = publicApiErrorMessage(response.status, data.message);
-    if (isSessionInvalid(response.status, message)) {
-      handleInvalidSession(panel);
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    try {
+      const response = await fetch(`${API_BASE}${path}`, {
+        ...options,
+        headers,
+      });
+
+      const contentType = response.headers.get("content-type") || "";
+      const data = contentType.includes("application/json")
+        ? await response.json().catch(() => ({}))
+        : {};
+
+      if (!response.ok) {
+        if (isWakeUpStatus(response.status) && attempt < maxAttempts) {
+          await sleep(attempt * 10000);
+          continue;
+        }
+        let message = publicApiErrorMessage(response.status, data.message);
+        if (isSessionInvalid(response.status, message)) {
+          handleInvalidSession(panel);
+        }
+        throw new Error(message);
+      }
+
+      return data as T;
+    } catch (error) {
+      const isNetworkError = error instanceof TypeError;
+      if (isNetworkError && attempt < maxAttempts) {
+        lastError = new Error(publicApiErrorMessage(503, ""));
+        await sleep(attempt * 10000);
+        continue;
+      }
+      if (error instanceof Error) {
+        throw error;
+      }
+      lastError = new Error("Request failed");
     }
-    throw new Error(message);
   }
-  return data as T;
+
+  throw lastError ?? new Error(publicApiErrorMessage(503, ""));
 }
 
 function uploadWithProgress<T>(
