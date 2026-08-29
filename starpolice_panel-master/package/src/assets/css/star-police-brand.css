@@ -2741,3 +2741,120 @@ html {
   opacity: 1;
   box-shadow: 0 0 0 2px rgba(18, 61, 115, 0.2);
 }
+
+.spa-user-management-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: calc(100dvh - 9.75rem);
+  overflow: hidden;
+}
+
+.spa-user-management-alert {
+  flex-shrink: 0;
+  margin-bottom: 0.75rem;
+}
+
+.spa-user-management-layout {
+  display: grid;
+  grid-template-columns: minmax(18rem, 24rem) minmax(0, 1fr);
+  gap: 1.25rem;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.spa-user-management-column {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}
+
+.spa-user-management-card {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  margin-bottom: 0;
+  overflow: hidden;
+}
+
+.spa-user-management-card-header {
+  flex-shrink: 0;
+}
+
+.spa-user-management-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.spa-user-management-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.spa-user-management-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid #d7dee8;
+  border-radius: 999px;
+  background: #fff;
+  color: #334155;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.2;
+  padding: 0.45rem 0.85rem;
+  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.spa-user-management-tab:hover {
+  border-color: var(--primary, #123d73);
+  color: var(--primary, #123d73);
+}
+
+.spa-user-management-tab.is-active {
+  border-color: var(--primary, #123d73);
+  background: rgba(18, 61, 115, 0.08);
+  color: var(--primary, #123d73);
+}
+
+.spa-user-management-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.35rem;
+  height: 1.35rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background: rgba(18, 61, 115, 0.12);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.spa-user-management-list-head h5 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+@media (max-width: 1199.98px) {
+  .spa-user-management-page {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .spa-user-management-layout {
+    grid-template-columns: 1fr;
+    overflow: visible;
+  }
+
+  .spa-user-management-card {
+    min-height: 22rem;
+    max-height: min(34rem, calc(100dvh - 12rem));
+  }
+}

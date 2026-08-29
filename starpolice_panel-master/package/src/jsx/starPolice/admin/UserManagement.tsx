@@ -19,6 +19,7 @@ import { validateEmailOrThrow } from "../emailValidation";
 import { EmailDeliveryNotice } from "../../pages/auth/EmailDeliveryNotice";
 
 type CreateAccountType = "student" | "admin" | "staff";
+type UserListTab = CreateAccountType;
 
 function PermissionChecklist({
   role,
@@ -96,6 +97,7 @@ const UserManagement = () => {
     delivered?: boolean;
     deliveryError?: string;
   } | null>(null);
+  const [activeListTab, setActiveListTab] = useState<UserListTab>("student");
 
   const refreshSubjects = async () => {
     const subjectData = await api.getSubjects();
@@ -195,6 +197,7 @@ const UserManagement = () => {
       setEmail("");
       setCreateSubjectIds([]);
       setCreatePermissions(defaultPermissionsForRole(createAccountType));
+      setActiveListTab(createAccountType);
       void loadUsers();
       setInviteNotice({
         message: result.message || "Account created.",
@@ -471,22 +474,31 @@ const UserManagement = () => {
     </div>
   );
 
+  const listTabUsers =
+    !isSuperAdmin || activeListTab === "student"
+      ? students
+      : activeListTab === "admin"
+        ? admins
+        : staff;
+  const listTabLabel =
+    activeListTab === "admin" ? "Admin" : activeListTab === "staff" ? "Staff" : "Student";
+
   return (
     <>
       <PageTitle motherMenu={getPanelMotherMenu(auth?.panel)} activeMenu="User Management" pageContent="" />
       {!hasPermission(auth, "admin:users") ? (
         <div className="alert alert-warning">You do not have permission to manage users.</div>
       ) : (
-        <>
-      {error && <div className="alert alert-danger">{error}</div>}
+        <div className="spa-user-management-page">
+      {error && <div className="alert alert-danger spa-user-management-alert">{error}</div>}
 
-      <div className="row">
-        <div className="col-xl-5">
-          <div className="card">
-            <div className="card-header">
+      <div className="spa-user-management-layout">
+        <div className="spa-user-management-column spa-user-management-create">
+          <div className="card spa-user-management-card">
+            <div className="card-header spa-user-management-card-header">
               <h4 className="card-title mb-0">Create Account</h4>
             </div>
-            <div className="card-body">
+            <div className="card-body spa-user-management-scroll">
               {inviteNotice && (
                 <div className="mb-3">
                   <div
@@ -512,14 +524,18 @@ const UserManagement = () => {
                   )}
                 </div>
               )}
-              <form onSubmit={onCreate}>
+              <form onSubmit={onCreate} className="spa-user-management-create-form">
                 {isSuperAdmin && (
                   <div className="mb-3">
                     <label className="form-label">Account Type</label>
                     <select
                       className="form-select"
                       value={createAccountType}
-                      onChange={(e) => setCreateAccountType(e.target.value as CreateAccountType)}
+                      onChange={(e) => {
+                        const nextType = e.target.value as CreateAccountType;
+                        setCreateAccountType(nextType);
+                        setActiveListTab(nextType);
+                      }}
                     >
                       <option value="student">Student (Student Panel)</option>
                       <option value="admin">Admin (Admin Panel)</option>
@@ -590,33 +606,52 @@ const UserManagement = () => {
           </div>
         </div>
 
-        <div className="col-xl-7">
-          {isSuperAdmin && (
-            <div className="card mb-4">
-              <div className="card-header">
-                <h4 className="card-title mb-0">Admin Accounts</h4>
+        <div className="spa-user-management-column spa-user-management-list">
+          <div className="card spa-user-management-card">
+            <div className="card-header spa-user-management-card-header">
+              {isSuperAdmin ? (
+                <div className="spa-user-management-tabs" role="tablist" aria-label="Account panels">
+                  {([
+                    { id: "admin" as const, label: "Admin Panel", count: admins.length },
+                    { id: "staff" as const, label: "Staff Panel", count: staff.length },
+                    { id: "student" as const, label: "Student Panel", count: students.length },
+                  ]).map((tab) => (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={activeListTab === tab.id}
+                      className={`spa-user-management-tab${activeListTab === tab.id ? " is-active" : ""}`}
+                      onClick={() => setActiveListTab(tab.id)}
+                    >
+                      {tab.label}
+                      <span className="spa-user-management-tab-count">{tab.count}</span>
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <h4 className="card-title mb-0">Student Accounts</h4>
+              )}
+            </div>
+            <div className="card-body spa-user-management-scroll">
+              <div className="spa-user-management-list-head">
+                <h5 className="mb-1">{listTabLabel} Accounts</h5>
+                <p className="text-muted small mb-3">
+                  {listTabUsers.length} account{listTabUsers.length === 1 ? "" : "s"} in this panel
+                </p>
               </div>
-              <div className="card-body">{renderTable(admins, true, true)}</div>
+              {renderTable(
+                listTabUsers,
+                true,
+                true,
+                activeListTab === "staff"
+              )}
             </div>
-          )}
-
-          {isSuperAdmin && (
-            <div className="card mb-4">
-              <div className="card-header">
-                <h4 className="card-title mb-0">Staff Accounts</h4>
-              </div>
-              <div className="card-body">{renderTable(staff, true, true, true)}</div>
-            </div>
-          )}
-
-          <div className="card">
-            <div className="card-header">
-              <h4 className="card-title mb-0">Student Accounts</h4>
-            </div>
-            <div className="card-body">{renderTable(students, true, true)}</div>
           </div>
         </div>
       </div>
+        </div>
+      )}
 
       {editingProfileUser && (
         <div className="modal fade show d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
@@ -766,8 +801,6 @@ const UserManagement = () => {
             </div>
           </div>
         </div>
-      )}
-        </>
       )}
     </>
   );
