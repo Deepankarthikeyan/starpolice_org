@@ -2,7 +2,7 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import StudentOnboarding from "../models/StudentOnboarding.js";
 import User from "../models/User.js";
-import { authRequired, adminPanelOnly, attachUser, superAdminOnly } from "../middleware/auth.js";
+import { authRequired, adminPanelOnly, attachUser, requirePermission } from "../middleware/auth.js";
 import { upload } from "../middleware/upload.js";
 import { defaultPermissionsForRole, sanitizePermissions } from "../permissions.js";
 import { sendSetupInvite } from "../services/passwordAuth.js";
@@ -10,6 +10,13 @@ import { validateEmailOrThrow } from "../utils/emailValidation.js";
 import { generatePlaceholderPassword } from "../utils/authTokens.js";
 
 const router = express.Router();
+
+const onboardingGuard = [
+  authRequired,
+  adminPanelOnly,
+  attachUser,
+  requirePermission("admin:onboarding"),
+];
 
 const FILE_FIELDS = [
   { name: "profilePhoto", maxCount: 1 },
@@ -526,10 +533,7 @@ async function handleCredentialSync(req, record) {
 
 router.get(
   "/",
-  authRequired,
-  adminPanelOnly,
-  attachUser,
-  superAdminOnly,
+  ...onboardingGuard,
   async (_req, res) => {
     try {
       const records = await StudentOnboarding.find()
@@ -544,10 +548,7 @@ router.get(
 
 router.get(
   "/:id",
-  authRequired,
-  adminPanelOnly,
-  attachUser,
-  superAdminOnly,
+  ...onboardingGuard,
   async (req, res) => {
     try {
       const record = await StudentOnboarding.findById(req.params.id).populate(
@@ -566,10 +567,7 @@ router.get(
 
 router.post(
   "/",
-  authRequired,
-  adminPanelOnly,
-  attachUser,
-  superAdminOnly,
+  ...onboardingGuard,
   upload.fields(FILE_FIELDS),
   async (req, res) => {
     try {
@@ -623,10 +621,7 @@ router.post(
 
 router.put(
   "/:id",
-  authRequired,
-  adminPanelOnly,
-  attachUser,
-  superAdminOnly,
+  ...onboardingGuard,
   upload.fields(FILE_FIELDS),
   async (req, res) => {
     try {
@@ -682,10 +677,7 @@ router.put(
 
 router.delete(
   "/:id",
-  authRequired,
-  adminPanelOnly,
-  attachUser,
-  superAdminOnly,
+  ...onboardingGuard,
   async (req, res) => {
     try {
       const record = await StudentOnboarding.findById(req.params.id);
