@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { PerformanceSearchField } from "../admin/PerformanceSearchField";
 import { api } from "../api";
 import { notify } from "../toast";
@@ -33,6 +33,12 @@ function parseSortValue(value: string): { sortKey: InteractionHistorySortKey; so
   };
 }
 
+function isWakeUpMessage(error: unknown) {
+  if (!(error instanceof Error)) return false;
+  const message = error.message.toLowerCase();
+  return message.includes("waking up") || message.includes("starting") || message.includes("temporarily unavailable");
+}
+
 export function InteractionHistoryPanel({ viewerRole, onOpenMessage }: InteractionHistoryPanelProps) {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -42,6 +48,8 @@ export function InteractionHistoryPanel({ viewerRole, onOpenMessage }: Interacti
   const [toDate, setToDate] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const retryCountRef = useRef(0);
 
   const { sortKey, sortDir } = parseSortValue(sortValue);
 
@@ -52,6 +60,7 @@ export function InteractionHistoryPanel({ viewerRole, onOpenMessage }: Interacti
 
   const loadHistory = async () => {
     setLoading(true);
+    setStatusMessage(null);
     try {
       const data = await api.getMessageHistory({
         search: debouncedSearch.trim() || undefined,
@@ -62,23 +71,42 @@ export function InteractionHistoryPanel({ viewerRole, onOpenMessage }: Interacti
         to: toDate || undefined,
       });
       setMessages(data);
+      retryCountRef.current = 0;
     } catch (error) {
-      notify.error(error, "Failed to load interaction history");
-      setMessages([]);
+      if (isWakeUpMessage(error) && retryCountRef.current < 2) {
+        retryCountRef.current += 1;
+        setStatusMessage("The API is waking up. Retrying automatically...");
+        window.setTimeout(() => {
+          loadHistory().catch(console.error);
+        }, 5000);
+        return;
+      }
+
+      if (isWakeUpMessage(error)) {
+        setStatusMessage("The API is still waking up. Wait about 30 seconds, then click Refresh.");
+      } else {
+        notify.error(error, "Failed to load interaction history");
+        setStatusMessage(null);
+      }
+      if (messages.length === 0) {
+        setMessages([]);
+      }
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
+    retryCountRef.current = 0;
     loadHistory().catch(console.error);
   }, [debouncedSearch, sortValue, channelFilter, fromDate, toDate]);
 
   const resultCountLabel = useMemo(() => {
+    if (statusMessage) return statusMessage;
     if (loading) return "Loading messages...";
     if (messages.length === 0) return "No messages match your search or filters.";
     return `${messages.length} message${messages.length === 1 ? "" : "s"} found`;
-  }, [loading, messages.length]);
+  }, [loading, messages.length, statusMessage]);
 
   return (
     <div className="spa-interaction-history">
@@ -139,7 +167,7 @@ export function InteractionHistoryPanel({ viewerRole, onOpenMessage }: Interacti
         </div>
 
         <div className="spa-interaction-history-meta">
-          <p className="text-muted small mb-0">{resultCountLabel}</p>
+          <p className={`small mb-0${statusMessage ? " text-warning" : " text-muted"}`}>{resultCountLabel}</p>
           <button
             type="button"
             className="btn btn-outline-secondary btn-sm"
@@ -152,10 +180,12 @@ export function InteractionHistoryPanel({ viewerRole, onOpenMessage }: Interacti
       </div>
 
       <div className="spa-interaction-history-list">
-        {loading && messages.length === 0 ? (
+        {loading && messages.length === 0 && !statusMessage ? (
           <p className="text-muted mb-0 px-3 py-4">Loading interaction history...</p>
         ) : messages.length === 0 ? (
-          <p className="text-muted mb-0 px-3 py-4">No messages match your search or filters.</p>
+          <p className="text-muted mb-0 px-3 py-4">
+            {statusMessage ?? "No messages match your search or filters."}
+          </p>
         ) : (
           messages.map((item) => {
             const canOpen = Boolean(resolveHistoryMessageNavigation(item, viewerRole));

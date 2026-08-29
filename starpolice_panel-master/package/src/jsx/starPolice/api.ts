@@ -183,12 +183,13 @@ async function legacyMessageHistory(params?: {
   from?: string;
   to?: string;
 }): Promise<ChatMessage[]> {
+  await warmApi();
   const collected: ChatMessage[] = [];
   const channel = params?.channel;
 
   if (!channel || channel === "group") {
     try {
-      const groupMessages = await request<ChatMessage[]>("/api/messages?channel=group");
+      const groupMessages = await request<ChatMessage[]>("/api/messages?channel=group", {}, undefined, 5);
       collected.push(...groupMessages);
     } catch {
       // Group messages may be unavailable for some roles.
@@ -213,8 +214,10 @@ async function legacyMessageHistory(params?: {
       }
     }
 
-    const privateResults = await Promise.all(
-      contacts.map(async (record) => {
+    const privateResults = await mapInBatches(
+      contacts,
+      4,
+      async (record) => {
         const contact = messagingRecordToContact(record);
         const queryParams = messageParamsFromContact(contact);
         const search = new URLSearchParams();
@@ -224,11 +227,12 @@ async function legacyMessageHistory(params?: {
         if (queryParams.adminUserId) search.set("adminUserId", queryParams.adminUserId);
 
         try {
-          return await request<ChatMessage[]>(`/api/messages?${search.toString()}`);
+          return await request<ChatMessage[]>(`/api/messages?${search.toString()}`, {}, undefined, 4);
         } catch {
           return [];
         }
-      }),
+      },
+      300,
     );
     collected.push(...privateResults.flat());
   }
@@ -304,11 +308,54 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function isWakeUpError(error: unknown) {
+  if (!(error instanceof Error)) return false;
+  const message = error.message.toLowerCase();
+  return message.includes("waking up") || message.includes("starting") || message.includes("temporarily unavailable");
+}
+
+async function warmApi(maxAttempts = 5) {
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    try {
+      const response = await fetch(`${API_BASE}/api/health`);
+      if (response.ok) return;
+    } catch {
+      // Retry while the hosted API cold-starts.
+    }
+    if (attempt < maxAttempts) {
+      await sleep(2500 * attempt);
+    }
+  }
+}
+
+async function mapInBatches<T, R>(
+  items: T[],
+  batchSize: number,
+  mapper: (item: T) => Promise<R>,
+  pauseMs = 250,
+): Promise<R[]> {
+  const results: R[] = [];
+  for (let index = 0; index < items.length; index += batchSize) {
+    const batch = items.slice(index, index + batchSize);
+    const batchResults = await Promise.all(batch.map(mapper));
+    results.push(...batchResults);
+    if (index + batchSize < items.length && pauseMs > 0) {
+      await sleep(pauseMs);
+    }
+  }
+  return results;
+}
+
 function isWakeUpStatus(status: number) {
   return status === 502 || status === 503 || status === 504 || status >= 500;
 }
 
-async function request<T>(path: string, options: RequestInit = {}, panel?: PanelType): Promise<T> {
+async function request<T>(
+  path: string,
+  options: RequestInit = {},
+  panel?: PanelType,
+  maxAttempts = 3,
+): Promise<T> {
   const token = getToken(panel);
   const headers = new Headers(options.headers);
 
@@ -319,7 +366,6 @@ async function request<T>(path: string, options: RequestInit = {}, panel?: Panel
     headers.set("Authorization", `Bearer ${token}`);
   }
 
-  const maxAttempts = 3;
   let lastError: Error | null = null;
 
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
@@ -336,7 +382,7 @@ async function request<T>(path: string, options: RequestInit = {}, panel?: Panel
 
       if (!response.ok) {
         if (isWakeUpStatus(response.status) && attempt < maxAttempts) {
-          await sleep(2000 * attempt);
+          await sleep(3000 * attempt);
           continue;
         }
         let message = publicApiErrorMessage(response.status, data.message);
@@ -813,7 +859,7 @@ export const api = {
     return request<ChatMessage[]>(`/api/messages${query ? `?${query}` : ""}`);
   },
 
-  getMessageHistory(params?: {
+  async getMessageHistory(params?: {
     search?: string;
     sort?: "asc" | "desc";
     sortKey?: "createdAt" | "senderName";
@@ -822,6 +868,7 @@ export const api = {
     to?: string;
     limit?: number;
   }) {
+    await warmApi();
     const search = new URLSearchParams();
     if (params?.search) search.set("search", params.search);
     if (params?.sort) search.set("sort", params.sort);
@@ -831,14 +878,20 @@ export const api = {
     if (params?.to) search.set("to", params.to);
     if (params?.limit) search.set("limit", String(params.limit));
     const query = search.toString();
-    return request<ChatMessage[]>(`/api/messages/history${query ? `?${query}` : ""}`).catch(
-      async (error) => {
-        if (!isMissingHistoryEndpoint(error)) {
-          throw error;
+    const path = `/api/messages/history${query ? `?${query}` : ""}`;
+
+    try {
+      return await request<ChatMessage[]>(path, {}, undefined, 6);
+    } catch (error) {
+      if (!isMissingHistoryEndpoint(error)) {
+        if (isWakeUpError(error)) {
+          await warmApi(6);
+          return request<ChatMessage[]>(path, {}, undefined, 6);
         }
-        return legacyMessageHistory(params);
-      },
-    );
+        throw error;
+      }
+      return legacyMessageHistory(params);
+    }
   },
 
   sendMessage(
