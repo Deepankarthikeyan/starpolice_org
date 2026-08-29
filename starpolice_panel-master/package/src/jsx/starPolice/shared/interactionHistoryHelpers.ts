@@ -1,4 +1,4 @@
-import type { ChatMessage, UserRole } from "../types";
+import type { ChatMessage, MessagingContact, UserRole } from "../types";
 import {
   GROUP_CONTACT_ID,
   adminContactId,
@@ -12,17 +12,146 @@ export type InteractionHistorySortKey = "createdAt" | "senderName";
 export type InteractionHistorySortDir = "asc" | "desc";
 export type InteractionHistoryChannelFilter = "" | "group" | "private";
 
+export type ConversationTypeFilter =
+  | ""
+  | "admin-group"
+  | "staff-group"
+  | "student-group"
+  | "admin-student"
+  | "student-admin"
+  | "admin-staff"
+  | "staff-admin"
+  | "admin-admin"
+  | "staff-student"
+  | "student-staff";
+
+export type ConversationTypeKey =
+  | "admin-group"
+  | "staff-group"
+  | "student-group"
+  | "admin-student"
+  | "staff-student"
+  | "staff-admin"
+  | "admin-admin"
+  | "private-other";
+
+export const CONVERSATION_TYPE_FILTER_OPTIONS: { value: ConversationTypeFilter; label: string }[] = [
+  { value: "", label: "All conversations" },
+  { value: "admin-group", label: "Admin → Group" },
+  { value: "staff-group", label: "Staff → Group" },
+  { value: "student-group", label: "Student → Group" },
+  { value: "admin-student", label: "Admin → Student" },
+  { value: "student-admin", label: "Student → Admin" },
+  { value: "admin-staff", label: "Admin → Staff" },
+  { value: "staff-admin", label: "Staff → Admin" },
+  { value: "admin-admin", label: "Admin → Admin" },
+  { value: "staff-student", label: "Staff → Student" },
+  { value: "student-staff", label: "Student → Staff" },
+];
+
 export type HistoryNavigation = {
   audience: InteractionAudience;
   contactId: string;
 };
 
+export type ContactNameLookup = {
+  student: (id?: string | null) => string | null;
+  staff: (id?: string | null) => string | null;
+  admin: (id?: string | null) => string | null;
+};
+
+export function buildContactNameLookup(contacts: MessagingContact[]): ContactNameLookup {
+  const students = new Map<string, string>();
+  const staff = new Map<string, string>();
+  const admins = new Map<string, string>();
+
+  for (const contact of contacts) {
+    if (contact.contactType === "student") students.set(contact.id, contact.name);
+    if (contact.contactType === "staff") staff.set(contact.id, contact.name);
+    if (contact.contactType === "admin") admins.set(contact.id, contact.name);
+  }
+
+  return {
+    student: (id) => (id ? students.get(id) ?? null : null),
+    staff: (id) => (id ? staff.get(id) ?? null : null),
+    admin: (id) => (id ? admins.get(id) ?? null : null),
+  };
+}
+
+function panelRole(role: UserRole): "admin" | "staff" | "student" {
+  if (role === "staff") return "staff";
+  if (role === "student") return "student";
+  return "admin";
+}
+
+export function getConversationType(message: ChatMessage): ConversationTypeKey {
+  if (message.channel === "group") {
+    return `${panelRole(message.senderRole)}-group`;
+  }
+
+  const hasStudent = Boolean(message.threadStudentId);
+  const hasStaff = Boolean(message.threadStaffId);
+  const hasAdmin = Boolean(message.threadAdminId);
+
+  if (hasStudent && hasStaff) return "staff-student";
+  if (hasStudent && hasAdmin && !hasStaff) return "admin-student";
+  if (hasStaff && hasAdmin && !hasStudent) return "staff-admin";
+  if (hasStudent && !hasStaff && !hasAdmin) return "admin-student";
+
+  return "private-other";
+}
+
+export function matchesConversationFilter(
+  message: ChatMessage,
+  filter: ConversationTypeFilter
+): boolean {
+  if (!filter) return true;
+
+  const type = getConversationType(message);
+
+  if (filter === "student-admin") return type === "admin-student";
+  if (filter === "student-staff") return type === "staff-student";
+
+  return type === filter;
+}
+
+export function historyConversationLabel(message: ChatMessage, names: ContactNameLookup) {
+  const type = getConversationType(message);
+
+  if (type === "admin-group") return "Admin → Group";
+  if (type === "staff-group") return "Staff → Group";
+  if (type === "student-group") return "Student → Group";
+
+  if (type === "admin-student") {
+    const studentName = names.student(message.threadStudentId);
+    return studentName ? `Admin → Student: ${studentName}` : "Admin → Student";
+  }
+
+  if (type === "staff-student") {
+    const studentName = names.student(message.threadStudentId);
+    return studentName ? `Staff → Student: ${studentName}` : "Staff → Student";
+  }
+
+  if (type === "staff-admin") {
+    const adminName = names.admin(message.threadAdminId);
+    return adminName ? `Staff → Admin: ${adminName}` : "Staff → Admin";
+  }
+
+  if (type === "admin-admin") {
+    const adminName = names.admin(message.threadAdminId);
+    return adminName ? `Admin → Admin: ${adminName}` : "Admin → Admin";
+  }
+
+  return "Private chat";
+}
+
+/** @deprecated Use historyConversationLabel instead */
 export function historyThreadLabel(message: ChatMessage) {
-  if (message.channel === "group") return "Group";
-  if (message.threadStudentId && message.threadStaffId) return "Student ↔ Staff";
-  if (message.threadStudentId && message.threadAdminId) return "Student ↔ Admin";
-  if (message.threadStaffId && message.threadAdminId) return "Staff ↔ Admin";
-  return "Private";
+  return historyConversationLabel(message, {
+    student: () => null,
+    staff: () => null,
+    admin: () => null,
+  });
 }
 
 export function resolveHistoryMessageNavigation(
@@ -63,8 +192,10 @@ export function filterAndSortMessages(
     sortKey: InteractionHistorySortKey;
     sortDir: InteractionHistorySortDir;
     channel: InteractionHistoryChannelFilter;
+    conversationType?: ConversationTypeFilter;
     fromDate: string;
     toDate: string;
+    contactNames?: ContactNameLookup;
   }
 ) {
   const query = options.search.trim().toLowerCase();
@@ -72,6 +203,10 @@ export function filterAndSortMessages(
 
   if (options.channel) {
     rows = rows.filter((item) => item.channel === options.channel);
+  }
+
+  if (options.conversationType) {
+    rows = rows.filter((item) => matchesConversationFilter(item, options.conversationType!));
   }
 
   if (options.fromDate) {
@@ -84,9 +219,21 @@ export function filterAndSortMessages(
     rows = rows.filter((item) => new Date(item.createdAt) <= to);
   }
 
+  const names = options.contactNames ?? {
+    student: () => null,
+    staff: () => null,
+    admin: () => null,
+  };
+
   if (query) {
     rows = rows.filter((item) =>
-      [item.message, item.senderName, item.senderEmail, historyThreadLabel(item)]
+      [
+        item.message,
+        item.senderName,
+        item.senderEmail,
+        historyConversationLabel(item, names),
+        getConversationType(item),
+      ]
         .join(" ")
         .toLowerCase()
         .includes(query)

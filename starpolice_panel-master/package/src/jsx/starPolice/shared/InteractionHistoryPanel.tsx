@@ -2,10 +2,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { PerformanceSearchField } from "../admin/PerformanceSearchField";
 import { api } from "../api";
 import { notify } from "../toast";
-import type { ChatMessage, UserRole } from "../types";
+import type { ChatMessage, MessagingContact, UserRole } from "../types";
 import {
-  historyThreadLabel,
+  CONVERSATION_TYPE_FILTER_OPTIONS,
+  buildContactNameLookup,
+  filterAndSortMessages,
+  historyConversationLabel,
   resolveHistoryMessageNavigation,
+  type ConversationTypeFilter,
   type InteractionHistoryChannelFilter,
   type InteractionHistorySortDir,
   type InteractionHistorySortKey,
@@ -18,6 +22,12 @@ const HISTORY_SORT_OPTIONS = [
   { key: "createdAt", dir: "asc" as const, label: "Date (Oldest first)" },
   { key: "senderName", dir: "asc" as const, label: "Sender (A → Z)" },
   { key: "senderName", dir: "desc" as const, label: "Sender (Z → A)" },
+];
+
+const CHANNEL_FILTER_OPTIONS = [
+  { value: "", label: "All chats" },
+  { value: "group", label: "Group only" },
+  { value: "private", label: "Private only" },
 ];
 
 type InteractionHistoryPanelProps = {
@@ -39,19 +49,43 @@ function isWakeUpMessage(error: unknown) {
   return message.includes("waking up") || message.includes("starting") || message.includes("temporarily unavailable");
 }
 
+async function loadAllContacts() {
+  const scopes: Array<"student" | "staff" | "admin"> = ["student", "staff", "admin"];
+  const results = await Promise.all(scopes.map((scope) => api.getMessageContacts(scope).catch(() => [])));
+  const contacts: MessagingContact[] = [];
+
+  for (const scopeContacts of results) {
+    for (const contact of scopeContacts) {
+      const exists = contacts.some(
+        (existing) => existing.id === contact.id && existing.contactType === contact.contactType
+      );
+      if (!exists) contacts.push(contact);
+    }
+  }
+
+  return contacts;
+}
+
 export function InteractionHistoryPanel({ viewerRole, onOpenMessage }: InteractionHistoryPanelProps) {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [sortValue, setSortValue] = useState("createdAt:desc");
   const [channelFilter, setChannelFilter] = useState<InteractionHistoryChannelFilter>("");
+  const [conversationFilter, setConversationFilter] = useState<ConversationTypeFilter>("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [contacts, setContacts] = useState<MessagingContact[]>([]);
   const [loading, setLoading] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const retryCountRef = useRef(0);
 
   const { sortKey, sortDir } = parseSortValue(sortValue);
+  const contactNames = useMemo(() => buildContactNameLookup(contacts), [contacts]);
+
+  useEffect(() => {
+    loadAllContacts().then(setContacts).catch(console.error);
+  }, []);
 
   useEffect(() => {
     const timeout = window.setTimeout(() => setDebouncedSearch(search), 300);
@@ -101,12 +135,27 @@ export function InteractionHistoryPanel({ viewerRole, onOpenMessage }: Interacti
     loadHistory().catch(console.error);
   }, [debouncedSearch, sortValue, channelFilter, fromDate, toDate]);
 
+  const displayedMessages = useMemo(
+    () =>
+      filterAndSortMessages(messages, {
+        search: "",
+        sortKey,
+        sortDir,
+        channel: "",
+        conversationType: conversationFilter,
+        fromDate: "",
+        toDate: "",
+        contactNames,
+      }),
+    [messages, sortKey, sortDir, conversationFilter, contactNames]
+  );
+
   const resultCountLabel = useMemo(() => {
     if (statusMessage) return statusMessage;
     if (loading) return "Loading messages...";
-    if (messages.length === 0) return "No messages match your search or filters.";
-    return `${messages.length} message${messages.length === 1 ? "" : "s"} found`;
-  }, [loading, messages.length, statusMessage]);
+    if (displayedMessages.length === 0) return "No messages match your search or filters.";
+    return `${displayedMessages.length} message${displayedMessages.length === 1 ? "" : "s"} found`;
+  }, [loading, displayedMessages.length, statusMessage]);
 
   return (
     <div className="spa-interaction-history">
@@ -115,7 +164,7 @@ export function InteractionHistoryPanel({ viewerRole, onOpenMessage }: Interacti
           <PerformanceSearchField
             value={search}
             onChange={setSearch}
-            placeholder="Search messages, senders, chat type..."
+            placeholder="Search messages, senders, conversation..."
             ariaLabel="Search interaction history"
           />
           <InteractionSortPicker
@@ -127,20 +176,25 @@ export function InteractionHistoryPanel({ viewerRole, onOpenMessage }: Interacti
         </div>
 
         <div className="spa-interaction-history-filters row g-3">
-          <div className="col-md-4">
+          <div className="col-md-6 col-lg-3">
             <InteractionFilterSelect
               id="interaction-history-channel"
               label="Chat type"
               value={channelFilter}
               onChange={(value) => setChannelFilter(value as InteractionHistoryChannelFilter)}
-              options={[
-                { value: "", label: "All chats" },
-                { value: "group", label: "Group only" },
-                { value: "private", label: "Private only" },
-              ]}
+              options={CHANNEL_FILTER_OPTIONS}
             />
           </div>
-          <div className="col-md-4">
+          <div className="col-md-6 col-lg-3">
+            <InteractionFilterSelect
+              id="interaction-history-conversation"
+              label="Conversation"
+              value={conversationFilter}
+              onChange={(value) => setConversationFilter(value as ConversationTypeFilter)}
+              options={CONVERSATION_TYPE_FILTER_OPTIONS}
+            />
+          </div>
+          <div className="col-md-6 col-lg-3">
             <label className="form-label small text-muted mb-1" htmlFor="interaction-history-from">
               From date
             </label>
@@ -152,7 +206,7 @@ export function InteractionHistoryPanel({ viewerRole, onOpenMessage }: Interacti
               onChange={(event) => setFromDate(event.target.value)}
             />
           </div>
-          <div className="col-md-4">
+          <div className="col-md-6 col-lg-3">
             <label className="form-label small text-muted mb-1" htmlFor="interaction-history-to">
               To date
             </label>
@@ -180,15 +234,16 @@ export function InteractionHistoryPanel({ viewerRole, onOpenMessage }: Interacti
       </div>
 
       <div className="spa-interaction-history-list">
-        {loading && messages.length === 0 && !statusMessage ? (
+        {loading && displayedMessages.length === 0 && !statusMessage ? (
           <p className="text-muted mb-0 px-3 py-4">Loading interaction history...</p>
-        ) : messages.length === 0 ? (
+        ) : displayedMessages.length === 0 ? (
           <p className="text-muted mb-0 px-3 py-4">
             {statusMessage ?? "No messages match your search or filters."}
           </p>
         ) : (
-          messages.map((item) => {
+          displayedMessages.map((item) => {
             const canOpen = Boolean(resolveHistoryMessageNavigation(item, viewerRole));
+            const conversationLabel = historyConversationLabel(item, contactNames);
             return (
               <button
                 key={item.id}
@@ -202,7 +257,7 @@ export function InteractionHistoryPanel({ viewerRole, onOpenMessage }: Interacti
                 <div className="spa-interaction-history-item-head">
                   <div>
                     <strong>{item.senderName}</strong>
-                    <span className="spa-interaction-history-thread">{historyThreadLabel(item)}</span>
+                    <span className="spa-interaction-history-thread">{conversationLabel}</span>
                   </div>
                   <small>{new Date(item.createdAt).toLocaleString()}</small>
                 </div>

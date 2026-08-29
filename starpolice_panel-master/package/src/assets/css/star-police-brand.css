@@ -995,15 +995,22 @@ html {
   margin-bottom: 0.35rem;
 }
 
+.spa-interaction-history-item-head > div:first-child {
+  min-width: 0;
+}
+
 .spa-interaction-history-thread {
   display: inline-block;
   margin-left: 0.5rem;
-  padding: 0.1rem 0.45rem;
+  padding: 0.15rem 0.55rem;
   border-radius: 999px;
   background: rgba(18, 61, 115, 0.1);
   color: var(--primary, #123d73);
   font-size: 0.72rem;
   font-weight: 600;
+  line-height: 1.35;
+  max-width: 100%;
+  white-space: normal;
 }
 
 .spa-interaction-history-message {
