@@ -2,12 +2,19 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import User from "../models/User.js";
 import Subject from "../models/Subject.js";
-import { authRequired, adminPanelOnly, attachUser, superAdminOnly } from "../middleware/auth.js";
+import { authRequired, adminPanelOnly, attachUser, requirePermission } from "../middleware/auth.js";
 import { defaultPermissionsForRole, sanitizePermissions } from "../permissions.js";
 import { createInvitedUser, sendSetupInvite, panelForRole } from "../services/passwordAuth.js";
 import { validateEmailOrThrow } from "../utils/emailValidation.js";
 
 const router = express.Router();
+
+const userManagementGuard = [
+  authRequired,
+  adminPanelOnly,
+  attachUser,
+  requirePermission("admin:users"),
+];
 
 function resolveRolePermissions(user) {
   if (user.role === "superadmin") {
@@ -78,10 +85,7 @@ async function validateSubjectIds(subjectIds) {
 
 router.get(
   "/",
-  authRequired,
-  adminPanelOnly,
-  attachUser,
-  superAdminOnly,
+  ...userManagementGuard,
   async (req, res) => {
     try {
       const { type } = req.query;
@@ -113,10 +117,7 @@ router.get(
 
 router.post(
   "/",
-  authRequired,
-  adminPanelOnly,
-  attachUser,
-  superAdminOnly,
+  ...userManagementGuard,
   async (req, res) => {
     try {
       const { name, email, role, permissions, subjectIds, clientUrl } = req.body;
@@ -185,10 +186,7 @@ router.post(
 
 router.patch(
   "/:id",
-  authRequired,
-  adminPanelOnly,
-  attachUser,
-  superAdminOnly,
+  ...userManagementGuard,
   async (req, res) => {
     try {
       const { name, email, password, subjectIds } = req.body;
@@ -258,10 +256,7 @@ router.patch(
 
 router.patch(
   "/:id/access",
-  authRequired,
-  adminPanelOnly,
-  attachUser,
-  superAdminOnly,
+  ...userManagementGuard,
   async (req, res) => {
     try {
       const { isActive } = req.body;
@@ -290,10 +285,7 @@ router.patch(
 
 router.patch(
   "/:id/permissions",
-  authRequired,
-  adminPanelOnly,
-  attachUser,
-  superAdminOnly,
+  ...userManagementGuard,
   async (req, res) => {
     try {
       const { permissions } = req.body;
@@ -322,10 +314,7 @@ router.patch(
 
 router.patch(
   "/:id/resend-invite",
-  authRequired,
-  adminPanelOnly,
-  attachUser,
-  superAdminOnly,
+  ...userManagementGuard,
   async (req, res) => {
     try {
       const user = await User.findById(req.params.id);
@@ -363,10 +352,7 @@ router.patch(
 
 router.delete(
   "/:id",
-  authRequired,
-  adminPanelOnly,
-  attachUser,
-  superAdminOnly,
+  ...userManagementGuard,
   async (req, res) => {
     try {
       const user = await User.findById(req.params.id);

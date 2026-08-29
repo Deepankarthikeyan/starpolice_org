@@ -263,6 +263,13 @@ router.get("/me", authRequired, async (req, res) => {
 
   const permissions = resolveRolePermissions(user);
   const staffFields = await getStaffAuthFields(user);
+  const panel = req.user.panel || "admin";
+
+  const roleChanged = user.role !== req.user.role;
+  const permissionsChanged =
+    JSON.stringify(permissions) !== JSON.stringify(req.user.permissions || []);
+  const token =
+    roleChanged || permissionsChanged ? createToken(user, panel, staffFields) : undefined;
 
   res.json({
     id: user._id.toString(),
@@ -272,8 +279,9 @@ router.get("/me", authRequired, async (req, res) => {
     isActive: user.role === "superadmin" ? true : user.isActive,
     permissions,
     sidebarHiddenItems: user.sidebarHiddenItems || [],
-    panel: req.user.panel,
+    panel,
     ...staffFields,
+    ...(token ? { token } : {}),
   });
 });
 

@@ -27,7 +27,8 @@ export function adminPanelOnly(req, res, next) {
 }
 
 export function superAdminOnly(req, res, next) {
-  if (req.user?.role !== "superadmin") {
+  const role = req.currentUser?.role ?? req.user?.role;
+  if (role !== "superadmin") {
     return res.status(403).json({ message: "Super admin access required." });
   }
   next();

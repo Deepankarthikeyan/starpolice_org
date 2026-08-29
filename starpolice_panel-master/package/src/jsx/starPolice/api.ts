@@ -110,8 +110,8 @@ export async function validateStoredSession(panel?: PanelType): Promise<AuthUser
   if (!stored?.token) return null;
 
   try {
-    const me = await request<Omit<AuthUser, "token">>("/api/auth/me", {}, resolved);
-    const refreshed: AuthUser = { ...stored, ...me, token: stored.token };
+    const me = await request<Omit<AuthUser, "token"> & { token?: string }>("/api/auth/me", {}, resolved);
+    const refreshed: AuthUser = { ...stored, ...me, token: me.token || stored.token };
     storeAuth(refreshed);
     return refreshed;
   } catch {
