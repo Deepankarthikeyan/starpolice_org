@@ -11,6 +11,7 @@ import {
   type InteractionHistorySortKey,
 } from "./interactionHistoryHelpers";
 import { InteractionSortPicker } from "./InteractionSortPicker";
+import { InteractionFilterSelect } from "./InteractionFilterSelect";
 
 const HISTORY_SORT_OPTIONS = [
   { key: "createdAt", dir: "desc" as const, label: "Date (Newest first)" },
@@ -99,19 +100,17 @@ export function InteractionHistoryPanel({ viewerRole, onOpenMessage }: Interacti
 
         <div className="spa-interaction-history-filters row g-3">
           <div className="col-md-4">
-            <label className="form-label small text-muted mb-1" htmlFor="interaction-history-channel">
-              Chat type
-            </label>
-            <select
+            <InteractionFilterSelect
               id="interaction-history-channel"
-              className="form-control"
+              label="Chat type"
               value={channelFilter}
-              onChange={(event) => setChannelFilter(event.target.value as InteractionHistoryChannelFilter)}
-            >
-              <option value="">All chats</option>
-              <option value="group">Group only</option>
-              <option value="private">Private only</option>
-            </select>
+              onChange={(value) => setChannelFilter(value as InteractionHistoryChannelFilter)}
+              options={[
+                { value: "", label: "All chats" },
+                { value: "group", label: "Group only" },
+                { value: "private", label: "Private only" },
+              ]}
+            />
           </div>
           <div className="col-md-4">
             <label className="form-label small text-muted mb-1" htmlFor="interaction-history-from">

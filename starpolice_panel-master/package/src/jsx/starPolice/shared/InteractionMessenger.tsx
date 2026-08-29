@@ -8,6 +8,7 @@ import {
   type InteractionHistorySortKey,
 } from "./interactionHistoryHelpers";
 import { InteractionSortPicker } from "./InteractionSortPicker";
+import { InteractionFilterSelect } from "./InteractionFilterSelect";
 
 export type InteractionAudience = "group" | "student" | "staff" | "admin";
 
@@ -178,21 +179,16 @@ export function InteractionMessenger({
         </div>
         {audienceOptions && audience && onAudienceChange && (
           <div className="spa-messenger-audience">
-            <label className="form-label spa-messenger-audience-label" htmlFor="interaction-audience">
-              Message to
-            </label>
-            <select
+            <InteractionFilterSelect
               id="interaction-audience"
-              className="form-select"
+              label="Message to"
               value={audience}
-              onChange={(event) => onAudienceChange(event.target.value as InteractionAudience)}
-            >
-              {audienceOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+              onChange={(value) => onAudienceChange(value as InteractionAudience)}
+              options={audienceOptions.map((option) => ({
+                value: option.value,
+                label: option.label,
+              }))}
+            />
           </div>
         )}
         {!hideContactList && (
@@ -326,20 +322,17 @@ export function InteractionMessenger({
                 </div>
                 {activeContact.kind === "group" && (
                   <div className="col-md-4">
-                    <label className="form-label small text-muted mb-1" htmlFor="thread-message-type">
-                      Message type
-                    </label>
-                    <select
+                    <InteractionFilterSelect
                       id="thread-message-type"
-                      className="form-control form-control-sm"
+                      label="Message type"
                       value={messageChannelFilter}
-                      onChange={(event) =>
-                        setMessageChannelFilter(event.target.value as InteractionHistoryChannelFilter)
-                      }
-                    >
-                      <option value="">All in thread</option>
-                      <option value="group">Group only</option>
-                    </select>
+                      onChange={(value) => setMessageChannelFilter(value as InteractionHistoryChannelFilter)}
+                      size="sm"
+                      options={[
+                        { value: "", label: "All in thread" },
+                        { value: "group", label: "Group only" },
+                      ]}
+                    />
                   </div>
                 )}
               </div>

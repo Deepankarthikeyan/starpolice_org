@@ -1103,6 +1103,44 @@ html {
   color: var(--primary, #123d73);
 }
 
+.spa-interaction-filter-field {
+  width: 100%;
+}
+
+.spa-interaction-filter-select {
+  position: relative;
+}
+
+.spa-interaction-filter-select-input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 2.35rem;
+  border-radius: 0.75rem;
+  border-color: #cbd5e1;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+}
+
+.spa-interaction-filter-select-input:focus {
+  border-color: var(--primary, #123d73);
+  box-shadow: 0 0 0 3px rgba(18, 61, 115, 0.1);
+}
+
+.spa-interaction-filter-select-icon {
+  position: absolute;
+  right: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--primary, #123d73);
+  font-size: 0.85rem;
+}
+
+.spa-messenger-audience .spa-interaction-filter-select-input {
+  border-radius: 0.5rem;
+}
+
 @media only screen and (max-width: 47.9375rem) {
   .spa-interaction-history-list {
     max-height: none;

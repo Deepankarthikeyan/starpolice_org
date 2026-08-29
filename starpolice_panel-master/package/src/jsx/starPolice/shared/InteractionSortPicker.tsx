@@ -51,7 +51,7 @@ export function InteractionSortPicker({
           <span className="spa-interaction-sort-trigger-value">{selected.label}</span>
         </span>
         <span className="spa-interaction-sort-trigger-chevron" aria-hidden="true">
-          <i className={`fa fa-chevron-${open ? "up" : "down"}`} />
+          <i className={`fa fa-angle-${open ? "up" : "down"}`} />
         </span>
       </button>
 

@@ -31,6 +31,14 @@ import {
   defaultEvents,
   getCardTypeFromGender,
 } from "./admin/performanceDefaults";
+import {
+  messageParamsFromContact,
+  messagingRecordToContact,
+} from "./shared/interactionHelpers";
+import {
+  filterAndSortMessages,
+  type InteractionHistoryChannelFilter,
+} from "./shared/interactionHistoryHelpers";
 
 const API_BASE = import.meta.env.VITE_API_URL || "";
 
@@ -144,6 +152,97 @@ function isMissingContactsEndpoint(error: unknown) {
     error instanceof Error &&
     error.message.includes("API endpoint not found")
   );
+}
+
+function isMissingHistoryEndpoint(error: unknown) {
+  return isMissingContactsEndpoint(error);
+}
+
+async function loadMessageContactsForHistory(
+  scope: "student" | "staff" | "admin",
+  panel?: PanelType,
+): Promise<MessagingContact[]> {
+  const search = new URLSearchParams();
+  search.set("scope", scope);
+  const query = search.toString();
+  return request<MessagingContact[]>(`/api/messages/contacts?${query}`, {}, panel).catch(
+    async (error) => {
+      if (!isMissingContactsEndpoint(error)) {
+        throw error;
+      }
+      return legacyMessageContacts(scope, panel);
+    },
+  );
+}
+
+async function legacyMessageHistory(params?: {
+  search?: string;
+  sort?: "asc" | "desc";
+  sortKey?: "createdAt" | "senderName";
+  channel?: "group" | "private";
+  from?: string;
+  to?: string;
+}): Promise<ChatMessage[]> {
+  const collected: ChatMessage[] = [];
+  const channel = params?.channel;
+
+  if (!channel || channel === "group") {
+    try {
+      const groupMessages = await request<ChatMessage[]>("/api/messages?channel=group");
+      collected.push(...groupMessages);
+    } catch {
+      // Group messages may be unavailable for some roles.
+    }
+  }
+
+  if (!channel || channel === "private") {
+    const contacts: MessagingContact[] = [];
+    const scopes: Array<"student" | "staff" | "admin"> = ["student", "staff", "admin"];
+
+    for (const scope of scopes) {
+      try {
+        const scopeContacts = await loadMessageContactsForHistory(scope);
+        for (const contact of scopeContacts) {
+          const exists = contacts.some(
+            (existing) => existing.id === contact.id && existing.contactType === contact.contactType,
+          );
+          if (!exists) contacts.push(contact);
+        }
+      } catch {
+        // Scope may not be available for this role.
+      }
+    }
+
+    const privateResults = await Promise.all(
+      contacts.map(async (record) => {
+        const contact = messagingRecordToContact(record);
+        const queryParams = messageParamsFromContact(contact);
+        const search = new URLSearchParams();
+        if (queryParams.channel) search.set("channel", queryParams.channel);
+        if (queryParams.studentUserId) search.set("studentUserId", queryParams.studentUserId);
+        if (queryParams.staffUserId) search.set("staffUserId", queryParams.staffUserId);
+        if (queryParams.adminUserId) search.set("adminUserId", queryParams.adminUserId);
+
+        try {
+          return await request<ChatMessage[]>(`/api/messages?${search.toString()}`);
+        } catch {
+          return [];
+        }
+      }),
+    );
+    collected.push(...privateResults.flat());
+  }
+
+  const unique = [...new Map(collected.map((item) => [item.id, item])).values()];
+
+  return filterAndSortMessages(unique, {
+    search: params?.search ?? "",
+    sortKey: params?.sortKey === "senderName" ? "senderName" : "createdAt",
+    sortDir: params?.sort ?? "desc",
+    channel: (params?.channel as InteractionHistoryChannelFilter) ?? "",
+    fromDate: params?.from ?? "",
+    toDate: params?.to ?? "",
+  });
 }
 
 function managedUserToMessagingContact(
@@ -732,7 +831,14 @@ export const api = {
     if (params?.to) search.set("to", params.to);
     if (params?.limit) search.set("limit", String(params.limit));
     const query = search.toString();
-    return request<ChatMessage[]>(`/api/messages/history${query ? `?${query}` : ""}`);
+    return request<ChatMessage[]>(`/api/messages/history${query ? `?${query}` : ""}`).catch(
+      async (error) => {
+        if (!isMissingHistoryEndpoint(error)) {
+          throw error;
+        }
+        return legacyMessageHistory(params);
+      },
+    );
   },
 
   sendMessage(
