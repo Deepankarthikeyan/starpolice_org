@@ -902,6 +902,213 @@ html {
   }
 }
 
+.spa-messenger-thread-controls {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e4eaf1;
+  background: #f8fafc;
+}
+
+.spa-messenger-thread-controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.spa-messenger-thread-controls-row .spa-performance-search-field {
+  flex: 1 1 14rem;
+  min-width: 0;
+  max-width: none;
+}
+
+.spa-messenger-thread-filters {
+  margin-top: 0.75rem;
+}
+
+.spa-interaction-history {
+  display: flex;
+  flex-direction: column;
+  min-height: 34rem;
+  background: #fff;
+}
+
+.spa-interaction-history-toolbar {
+  padding: 1rem;
+  border-bottom: 1px solid #e4eaf1;
+  background: #f8fafc;
+}
+
+.spa-interaction-history-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.spa-interaction-history-controls .spa-performance-search-field {
+  flex: 1 1 18rem;
+  min-width: 0;
+  max-width: none;
+}
+
+.spa-interaction-history-filters {
+  margin-top: 0.85rem;
+}
+
+.spa-interaction-history-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.85rem;
+}
+
+.spa-interaction-history-list {
+  overflow-y: auto;
+  max-height: 34rem;
+}
+
+.spa-interaction-history-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  border-bottom: 1px solid #e4eaf1;
+  background: #fff;
+  padding: 0.9rem 1rem;
+  transition: background-color 0.15s ease;
+}
+
+.spa-interaction-history-item:not(.is-static):not(:disabled):hover {
+  background: #f8fafc;
+}
+
+.spa-interaction-history-item:disabled {
+  cursor: default;
+}
+
+.spa-interaction-history-item-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+
+.spa-interaction-history-thread {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(18, 61, 115, 0.1);
+  color: var(--primary, #123d73);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.spa-interaction-history-message {
+  color: #334155;
+  white-space: pre-wrap;
+}
+
+.spa-interaction-sort-picker {
+  position: relative;
+}
+
+.spa-interaction-sort-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 2.5rem;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.75rem;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  color: #0f172a;
+}
+
+.spa-interaction-sort-trigger:hover,
+.spa-interaction-sort-trigger.is-open {
+  border-color: var(--primary, #123d73);
+  box-shadow: 0 0 0 3px rgba(18, 61, 115, 0.1);
+}
+
+.spa-interaction-sort-trigger-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  background: rgba(18, 61, 115, 0.1);
+  color: var(--primary, #123d73);
+}
+
+.spa-interaction-sort-trigger-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 7rem;
+}
+
+.spa-interaction-sort-trigger-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.spa-interaction-sort-trigger-value {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.spa-interaction-sort-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border: 0;
+  background: transparent;
+  text-align: left;
+}
+
+.spa-interaction-sort-option:hover,
+.spa-interaction-sort-option.is-active {
+  background: #f1f5f9;
+}
+
+.spa-interaction-sort-option-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  background: rgba(18, 61, 115, 0.1);
+  color: var(--primary, #123d73);
+}
+
+.spa-interaction-sort-option-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.spa-interaction-sort-option-check {
+  margin-left: auto;
+  color: var(--primary, #123d73);
+}
+
+@media only screen and (max-width: 47.9375rem) {
+  .spa-interaction-history-list {
+    max-height: none;
+  }
+}
+
 .daywise-upload-form .form-select,
 .daywise-upload-form .form-control {
   border-radius: 0.5rem;

@@ -69,6 +69,67 @@ function adminPeerThreadFilter(user, adminUserId) {
   };
 }
 
+function buildUserHistoryFilter(user) {
+  const userId = user._id;
+
+  if (user.role === "student") {
+    return {
+      $or: [
+        { channel: "group" },
+        {
+          channel: "private",
+          $or: [{ sender: userId }, { threadStudentId: userId }],
+        },
+      ],
+    };
+  }
+
+  if (user.role === "staff") {
+    return {
+      $or: [
+        { channel: "group" },
+        {
+          channel: "private",
+          $or: [{ sender: userId }, { threadStaffId: userId }],
+        },
+      ],
+    };
+  }
+
+  return {
+    $or: [
+      { channel: "group" },
+      {
+        channel: "private",
+        $or: [
+          { sender: userId },
+          { threadAdminId: userId },
+          {
+            threadStudentId: { $ne: null },
+            $or: [
+              { threadAdminId: null },
+              { threadAdminId: { $exists: false } },
+              { threadAdminId: userId },
+            ],
+          },
+          {
+            threadStaffId: { $ne: null },
+            threadAdminId: userId,
+          },
+        ],
+      },
+    ],
+  };
+}
+
+function parseHistoryDate(value, endOfDay = false) {
+  if (!value || typeof value !== "string") return null;
+  const match = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return null;
+  const date = new Date(`${value}T${endOfDay ? "23:59:59.999" : "00:00:00.000"}Z`);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
 function buildPrivateFilter(user, { studentUserId, staffUserId, adminUserId }) {
   if (adminUserId && user.role === "staff") {
     return {
@@ -153,6 +214,53 @@ router.get("/contacts", authRequired, attachUser, async (req, res) => {
     return res.json(contacts);
   } catch (error) {
     res.status(error.message.includes("Unsupported panel") ? 400 : 500).json({ message: error.message });
+  }
+});
+
+router.get("/history", authRequired, attachUser, async (req, res) => {
+  try {
+    const user = req.currentUser;
+    if (!canViewMessages(user)) {
+      return res.status(403).json({ message: "You do not have permission to view message history." });
+    }
+
+    const visibilityFilter = buildUserHistoryFilter(user);
+    const filter = { $and: [visibilityFilter] };
+
+    const channelParam = req.query.channel;
+    if (channelParam === "group" || channelParam === "private") {
+      filter.$and.push({ channel: channelParam });
+    }
+
+    const fromDate = parseHistoryDate(req.query.from);
+    const toDate = parseHistoryDate(req.query.to, true);
+    if (fromDate || toDate) {
+      const createdAt = {};
+      if (fromDate) createdAt.$gte = fromDate;
+      if (toDate) createdAt.$lte = toDate;
+      filter.$and.push({ createdAt });
+    }
+
+    const search = typeof req.query.search === "string" ? req.query.search.trim() : "";
+    if (search) {
+      const pattern = new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+      filter.$and.push({
+        $or: [{ message: pattern }, { senderName: pattern }, { senderEmail: pattern }],
+      });
+    }
+
+    const sortParam = req.query.sort === "asc" ? "asc" : "desc";
+    const sortKey = req.query.sortKey === "senderName" ? "senderName" : "createdAt";
+    const sortDir = sortParam === "asc" ? 1 : -1;
+    const limit = Math.min(Math.max(Number(req.query.limit) || 500, 1), 1000);
+
+    const messages = await Message.find(filter)
+      .sort({ [sortKey]: sortDir, createdAt: sortDir })
+      .limit(limit);
+
+    res.json(messages.map(mapMessage));
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 

@@ -3,9 +3,16 @@ import { useRef } from "react";
 type PerformanceSearchFieldProps = {
   value: string;
   onChange: (value: string) => void;
+  placeholder?: string;
+  ariaLabel?: string;
 };
 
-export function PerformanceSearchField({ value, onChange }: PerformanceSearchFieldProps) {
+export function PerformanceSearchField({
+  value,
+  onChange,
+  placeholder = "Name, reg no., batch...",
+  ariaLabel = "Search by name, register number, or batch",
+}: PerformanceSearchFieldProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const hasValue = value.length > 0;
 
@@ -28,7 +35,7 @@ export function PerformanceSearchField({ value, onChange }: PerformanceSearchFie
         type="text"
         className="spa-performance-search-input"
         value={value}
-        placeholder="Name, reg no., batch..."
+        placeholder={placeholder}
         autoComplete="off"
         spellCheck={false}
         onChange={(event) => onChange(event.target.value)}
@@ -37,7 +44,7 @@ export function PerformanceSearchField({ value, onChange }: PerformanceSearchFie
             handleClear();
           }
         }}
-        aria-label="Search by name, register number, or batch"
+        aria-label={ariaLabel}
       />
 
       {hasValue && (

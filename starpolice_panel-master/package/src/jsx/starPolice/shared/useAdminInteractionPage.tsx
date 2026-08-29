@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import PageTitle from "../../layouts/PageTitle";
 import { ThemeContext } from "../../../context/ThemeContext";
 import { api } from "../api";
@@ -9,6 +9,11 @@ import {
   type InteractionAudienceOption,
   type MessengerContact,
 } from "./InteractionMessenger";
+import { InteractionHistoryPanel } from "./InteractionHistoryPanel";
+import {
+  resolveHistoryMessageNavigation,
+  type InteractionAudience,
+} from "./interactionHistoryHelpers";
 import {
   GROUP_CONTACT_ID,
   buildGroupContact,
@@ -18,7 +23,7 @@ import {
 } from "./interactionHelpers";
 import type { AuthUser, ChatMessage, MessagingContact } from "../types";
 
-export type InteractionAudience = "group" | "student" | "staff" | "admin";
+export type { InteractionAudience };
 
 export type PanelInteractionConfig = {
   activeMenu: string;
@@ -138,6 +143,8 @@ export function usePanelInteractionPage(config: PanelInteractionConfig) {
   const [activeContactId, setActiveContactId] = useState(GROUP_CONTACT_ID);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
+  const [viewMode, setViewMode] = useState<"chat" | "history">("chat");
+  const pendingContactIdRef = useRef<string | null>(null);
 
   const contacts = useMemo<MessengerContact[]>(() => {
     if (audience === "group") {
@@ -157,9 +164,12 @@ export function usePanelInteractionPage(config: PanelInteractionConfig) {
   }, [audience, audienceOptions]);
 
   useEffect(() => {
+    const pendingContactId = pendingContactIdRef.current;
+
     if (audience === "group") {
       setRecords([]);
-      setActiveContactId(GROUP_CONTACT_ID);
+      setActiveContactId(pendingContactId ?? GROUP_CONTACT_ID);
+      pendingContactIdRef.current = null;
       return;
     }
 
@@ -168,6 +178,13 @@ export function usePanelInteractionPage(config: PanelInteractionConfig) {
       .getMessageContacts(scope)
       .then((data) => {
         setRecords(data);
+        if (pendingContactId) {
+          const hasPending = data.some((record) => messagingRecordToContact(record).id === pendingContactId);
+          setActiveContactId(hasPending ? pendingContactId : data[0] ? messagingRecordToContact(data[0]).id : "");
+          pendingContactIdRef.current = null;
+          return;
+        }
+
         const first = data[0];
         if (first) {
           setActiveContactId(messagingRecordToContact(first).id);
@@ -179,6 +196,7 @@ export function usePanelInteractionPage(config: PanelInteractionConfig) {
         notify.error(error, "Failed to load contacts");
         setRecords([]);
         setActiveContactId("");
+        pendingContactIdRef.current = null;
       });
   }, [audience]);
 
@@ -239,6 +257,21 @@ export function usePanelInteractionPage(config: PanelInteractionConfig) {
     }
   };
 
+  const handleOpenHistoryMessage = (message: ChatMessage) => {
+    if (!auth?.role) return;
+    const navigation = resolveHistoryMessageNavigation(message, auth.role);
+    if (!navigation) return;
+
+    setViewMode("chat");
+    if (navigation.audience === audience) {
+      setActiveContactId(navigation.contactId);
+      return;
+    }
+
+    pendingContactIdRef.current = navigation.contactId;
+    setAudience(navigation.audience);
+  };
+
   return {
     auth,
     audience,
@@ -250,6 +283,9 @@ export function usePanelInteractionPage(config: PanelInteractionConfig) {
     messages,
     loading,
     handleSend,
+    viewMode,
+    setViewMode,
+    handleOpenHistoryMessage,
     motherMenu: getPanelMotherMenu(auth?.panel),
     activeMenu: config.activeMenu,
     sidebarTitle: config.sidebarTitle ?? "Interaction",
@@ -273,30 +309,57 @@ export function PanelInteractionPage({ config }: { config: PanelInteractionConfi
     activeMenu,
     sidebarTitle,
     emptyHint,
+    viewMode,
+    setViewMode,
+    handleOpenHistoryMessage,
   } = usePanelInteractionPage(config);
 
   return (
     <>
       <PageTitle motherMenu={motherMenu} activeMenu={activeMenu} pageContent="" />
       <div className="card spa-messenger-card">
+        <div className="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+          <div>
+            <h4 className="card-title mb-1">{viewMode === "history" ? "Interaction History" : sidebarTitle}</h4>
+            <p className="text-muted mb-0 small">
+              {viewMode === "history"
+                ? "Search, filter, and sort across all your chats."
+                : "Send messages and review conversation history in each chat."}
+            </p>
+          </div>
+          <button
+            type="button"
+            className="btn btn-outline-primary btn-sm"
+            onClick={() => setViewMode(viewMode === "history" ? "chat" : "history")}
+          >
+            {viewMode === "history" ? "Back to Chats" : "Full History"}
+          </button>
+        </div>
         <div className="card-body p-0">
-          <InteractionMessenger
-            contacts={contacts}
-            activeContactId={activeContactId}
-            onSelectContact={setActiveContactId}
-            messages={messages}
-            onSend={handleSend}
-            loading={loading}
-            viewerRole={auth?.role}
-            viewerId={auth?.id}
-            viewerEmail={auth?.email}
-            sidebarTitle={sidebarTitle}
-            emptyThreadHint={emptyHint}
-            audience={audience}
-            audienceOptions={audienceOptions}
-            onAudienceChange={onAudienceChange}
-            hideContactList={audience === "group"}
-          />
+          {viewMode === "history" ? (
+            <InteractionHistoryPanel
+              viewerRole={auth?.role ?? "student"}
+              onOpenMessage={handleOpenHistoryMessage}
+            />
+          ) : (
+            <InteractionMessenger
+              contacts={contacts}
+              activeContactId={activeContactId}
+              onSelectContact={setActiveContactId}
+              messages={messages}
+              onSend={handleSend}
+              loading={loading}
+              viewerRole={auth?.role}
+              viewerId={auth?.id}
+              viewerEmail={auth?.email}
+              sidebarTitle={sidebarTitle}
+              emptyThreadHint={emptyHint}
+              audience={audience}
+              audienceOptions={audienceOptions}
+              onAudienceChange={onAudienceChange}
+              hideContactList={audience === "group"}
+            />
+          )}
         </div>
       </div>
     </>

@@ -1,5 +1,13 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { PerformanceSearchField } from "../admin/PerformanceSearchField";
 import type { ChatMessage, UserRole } from "../types";
+import {
+  filterAndSortMessages,
+  type InteractionHistoryChannelFilter,
+  type InteractionHistorySortDir,
+  type InteractionHistorySortKey,
+} from "./interactionHistoryHelpers";
+import { InteractionSortPicker } from "./InteractionSortPicker";
 
 export type InteractionAudience = "group" | "student" | "staff" | "admin";
 
@@ -48,6 +56,24 @@ function isMineMessage(item: ChatMessage, viewerId?: string, viewerEmail?: strin
   return item.senderEmail.toLowerCase() === viewerEmail.toLowerCase();
 }
 
+const THREAD_SORT_OPTIONS = [
+  { key: "createdAt", dir: "asc" as const, label: "Date (Oldest first)" },
+  { key: "createdAt", dir: "desc" as const, label: "Date (Newest first)" },
+  { key: "senderName", dir: "asc" as const, label: "Sender (A → Z)" },
+  { key: "senderName", dir: "desc" as const, label: "Sender (Z → A)" },
+];
+
+function parseThreadSortValue(value: string): {
+  sortKey: InteractionHistorySortKey;
+  sortDir: InteractionHistorySortDir;
+} {
+  const [sortKey, sortDir] = value.split(":");
+  return {
+    sortKey: sortKey === "senderName" ? "senderName" : "createdAt",
+    sortDir: sortDir === "asc" ? "asc" : "desc",
+  };
+}
+
 export function InteractionMessenger({
   contacts,
   activeContactId,
@@ -67,10 +93,29 @@ export function InteractionMessenger({
 }: InteractionMessengerProps) {
   const [draft, setDraft] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [messageSearch, setMessageSearch] = useState("");
+  const [messageSort, setMessageSort] = useState("createdAt:asc");
+  const [messageDateFrom, setMessageDateFrom] = useState("");
+  const [messageDateTo, setMessageDateTo] = useState("");
+  const [messageChannelFilter, setMessageChannelFilter] = useState<InteractionHistoryChannelFilter>("");
   const [mobileThreadOpen, setMobileThreadOpen] = useState(false);
   const feedRef = useRef<HTMLDivElement>(null);
 
   const activeContact = contacts.find((contact) => contact.id === activeContactId) ?? contacts[0] ?? null;
+  const { sortKey, sortDir } = parseThreadSortValue(messageSort);
+
+  const displayedMessages = useMemo(
+    () =>
+      filterAndSortMessages(messages, {
+        search: messageSearch,
+        sortKey,
+        sortDir,
+        channel: messageChannelFilter,
+        fromDate: messageDateFrom,
+        toDate: messageDateTo,
+      }),
+    [messages, messageSearch, sortKey, sortDir, messageChannelFilter, messageDateFrom, messageDateTo]
+  );
 
   const filteredContacts = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
@@ -89,13 +134,21 @@ export function InteractionMessenger({
   useEffect(() => {
     if (!feedRef.current) return;
     feedRef.current.scrollTop = feedRef.current.scrollHeight;
-  }, [messages, activeContactId]);
+  }, [displayedMessages, activeContactId]);
 
   useEffect(() => {
     if (hideContactList && contacts[0]) {
       setMobileThreadOpen(true);
     }
   }, [hideContactList, contacts]);
+
+  useEffect(() => {
+    setMessageSearch("");
+    setMessageSort("createdAt:asc");
+    setMessageDateFrom("");
+    setMessageDateTo("");
+    setMessageChannelFilter("");
+  }, [activeContactId]);
 
   useEffect(() => {
     if (!activeContactId && contacts[0]) {
@@ -231,13 +284,78 @@ export function InteractionMessenger({
               </div>
             </div>
 
+            <div className="spa-messenger-thread-controls">
+              <div className="spa-messenger-thread-controls-row">
+                <PerformanceSearchField
+                  value={messageSearch}
+                  onChange={setMessageSearch}
+                  placeholder="Search this chat..."
+                  ariaLabel="Search messages in this chat"
+                />
+                <InteractionSortPicker
+                  options={THREAD_SORT_OPTIONS}
+                  value={messageSort}
+                  onChange={setMessageSort}
+                  ariaLabel="Sort messages in this chat"
+                />
+              </div>
+              <div className="spa-messenger-thread-filters row g-2">
+                <div className="col-md-4">
+                  <label className="form-label small text-muted mb-1" htmlFor="thread-message-from">
+                    From date
+                  </label>
+                  <input
+                    id="thread-message-from"
+                    type="date"
+                    className="form-control form-control-sm"
+                    value={messageDateFrom}
+                    onChange={(event) => setMessageDateFrom(event.target.value)}
+                  />
+                </div>
+                <div className="col-md-4">
+                  <label className="form-label small text-muted mb-1" htmlFor="thread-message-to">
+                    To date
+                  </label>
+                  <input
+                    id="thread-message-to"
+                    type="date"
+                    className="form-control form-control-sm"
+                    value={messageDateTo}
+                    onChange={(event) => setMessageDateTo(event.target.value)}
+                  />
+                </div>
+                {activeContact.kind === "group" && (
+                  <div className="col-md-4">
+                    <label className="form-label small text-muted mb-1" htmlFor="thread-message-type">
+                      Message type
+                    </label>
+                    <select
+                      id="thread-message-type"
+                      className="form-control form-control-sm"
+                      value={messageChannelFilter}
+                      onChange={(event) =>
+                        setMessageChannelFilter(event.target.value as InteractionHistoryChannelFilter)
+                      }
+                    >
+                      <option value="">All in thread</option>
+                      <option value="group">Group only</option>
+                    </select>
+                  </div>
+                )}
+              </div>
+            </div>
+
             <div ref={feedRef} className="spa-messenger-feed">
               {messages.length === 0 ? (
                 <p className="text-muted text-center mt-4 mb-0">
                   No messages yet. Type below to start the conversation.
                 </p>
+              ) : displayedMessages.length === 0 ? (
+                <p className="text-muted text-center mt-4 mb-0">
+                  No messages match your search or date filters.
+                </p>
               ) : (
-                messages.map((item) => {
+                displayedMessages.map((item) => {
                   const mine = isMineMessage(item, viewerId, viewerEmail);
                   return (
                     <div

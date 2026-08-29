@@ -714,6 +714,27 @@ export const api = {
     return request<ChatMessage[]>(`/api/messages${query ? `?${query}` : ""}`);
   },
 
+  getMessageHistory(params?: {
+    search?: string;
+    sort?: "asc" | "desc";
+    sortKey?: "createdAt" | "senderName";
+    channel?: "group" | "private";
+    from?: string;
+    to?: string;
+    limit?: number;
+  }) {
+    const search = new URLSearchParams();
+    if (params?.search) search.set("search", params.search);
+    if (params?.sort) search.set("sort", params.sort);
+    if (params?.sortKey) search.set("sortKey", params.sortKey);
+    if (params?.channel) search.set("channel", params.channel);
+    if (params?.from) search.set("from", params.from);
+    if (params?.to) search.set("to", params.to);
+    if (params?.limit) search.set("limit", String(params.limit));
+    const query = search.toString();
+    return request<ChatMessage[]>(`/api/messages/history${query ? `?${query}` : ""}`);
+  },
+
   sendMessage(
     message: string,
     options?: {
