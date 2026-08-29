@@ -37,9 +37,9 @@ export type ConversationTypeKey =
 
 export const CONVERSATION_TYPE_FILTER_OPTIONS: { value: ConversationTypeFilter; label: string }[] = [
   { value: "", label: "All conversations" },
-  { value: "admin-group", label: "Admin → Group" },
-  { value: "staff-group", label: "Staff → Group" },
-  { value: "student-group", label: "Student → Group" },
+  { value: "admin-group", label: "Admin → Everyone (Group)" },
+  { value: "staff-group", label: "Staff → Everyone (Group)" },
+  { value: "student-group", label: "Student → Everyone (Group)" },
   { value: "admin-student", label: "Admin → Student" },
   { value: "student-admin", label: "Student → Admin" },
   { value: "admin-staff", label: "Admin → Staff" },
@@ -118,9 +118,9 @@ export function matchesConversationFilter(
 export function historyConversationLabel(message: ChatMessage, names: ContactNameLookup) {
   const type = getConversationType(message);
 
-  if (type === "admin-group") return "Admin → Group";
-  if (type === "staff-group") return "Staff → Group";
-  if (type === "student-group") return "Student → Group";
+  if (type === "admin-group") return "Admin → Everyone (Group)";
+  if (type === "staff-group") return "Staff → Everyone (Group)";
+  if (type === "student-group") return "Student → Everyone (Group)";
 
   if (type === "admin-student") {
     const studentName = names.student(message.threadStudentId);

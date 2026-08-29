@@ -911,8 +911,13 @@ html {
 .spa-messenger-thread-controls-row {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: stretch;
   gap: 0.75rem;
+}
+
+.spa-messenger-thread-controls-row .spa-interaction-sort-picker {
+  flex: 0 1 18rem;
+  min-width: min(100%, 14rem);
 }
 
 .spa-messenger-thread-controls-row .spa-performance-search-field {
@@ -941,14 +946,19 @@ html {
 .spa-interaction-history-controls {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: stretch;
   gap: 0.75rem;
 }
 
 .spa-interaction-history-controls .spa-performance-search-field {
-  flex: 1 1 18rem;
-  min-width: 0;
+  flex: 1 1 16rem;
+  min-width: min(100%, 14rem);
   max-width: none;
+}
+
+.spa-interaction-history-controls .spa-interaction-sort-picker {
+  flex: 0 1 18rem;
+  min-width: min(100%, 14rem);
 }
 
 .spa-interaction-history-filters {
@@ -1020,18 +1030,21 @@ html {
 
 .spa-interaction-sort-picker {
   position: relative;
+  width: 100%;
 }
 
 .spa-interaction-sort-trigger {
   display: inline-flex;
   align-items: center;
   gap: 0.65rem;
+  width: 100%;
   min-height: 2.5rem;
   padding: 0.45rem 0.85rem;
   border: 1px solid #cbd5e1;
   border-radius: 0.75rem;
   background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
   color: #0f172a;
+  text-align: left;
 }
 
 .spa-interaction-sort-trigger:hover,
@@ -1055,7 +1068,8 @@ html {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  min-width: 7rem;
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .spa-interaction-sort-trigger-label {
@@ -1070,6 +1084,34 @@ html {
   font-size: 0.85rem;
   font-weight: 600;
   color: #0f172a;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.spa-interaction-sort-trigger-chevron {
+  color: #64748b;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.spa-performance-dropdown-menu-portal {
+  background: #ffffff;
+  border: 1px solid #dbe3ec;
+  border-radius: 0.85rem;
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.16);
+  padding: 0.35rem;
+}
+
+.spa-performance-dropdown-menu-portal.spa-interaction-sort-menu {
+  width: min(20rem, calc(100vw - 1.5rem));
+  min-width: min(18rem, calc(100vw - 1.5rem));
+}
+
+.spa-interaction-sort-menu {
+  max-height: 18rem;
+  overflow: auto;
 }
 
 .spa-interaction-sort-option {
@@ -1079,13 +1121,16 @@ html {
   width: 100%;
   padding: 0.7rem 0.85rem;
   border: 0;
+  border-radius: 0.6rem;
   background: transparent;
   text-align: left;
+  cursor: pointer;
+  transition: background 0.12s ease;
 }
 
 .spa-interaction-sort-option:hover,
 .spa-interaction-sort-option.is-active {
-  background: #f1f5f9;
+  background: rgba(18, 61, 115, 0.08);
 }
 
 .spa-interaction-sort-option-icon {
@@ -1094,15 +1139,23 @@ html {
   justify-content: center;
   width: 1.75rem;
   height: 1.75rem;
-  border-radius: 999px;
+  border-radius: 0.5rem;
+  flex-shrink: 0;
   background: rgba(18, 61, 115, 0.1);
   color: var(--primary, #123d73);
 }
 
+.spa-interaction-sort-option-body {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
 .spa-interaction-sort-option-label {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   color: #0f172a;
+  line-height: 1.35;
+  white-space: normal;
 }
 
 .spa-interaction-sort-option-check {

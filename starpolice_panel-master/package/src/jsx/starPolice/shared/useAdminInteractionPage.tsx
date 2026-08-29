@@ -53,7 +53,7 @@ export const ADMIN_INTERACTION_CONFIG: PanelInteractionConfig = {
   defaultAudience: "group",
   groupContact: {
     title: "Group Message",
-    subtitle: "Send to all students",
+    subtitle: "Send to everyone (students, staff, admins)",
     initials: "ALL",
   },
   audienceOptions: (auth) => {
@@ -67,12 +67,12 @@ export const ADMIN_INTERACTION_CONFIG: PanelInteractionConfig = {
     return options;
   },
   emptyHint: (audience) => {
-    if (audience === "group") return "Group messages are sent to all students.";
+    if (audience === "group") return "Group messages are sent to everyone (students, staff, and admins).";
     if (audience === "student") return "Select a student to send a private message.";
     if (audience === "staff") return "Select a staff member to send a private message.";
     return "Select an admin to send a private message.";
   },
-  groupSendSuccess: "Group message sent to all students.",
+  groupSendSuccess: "Group message sent to everyone.",
   privateSendSuccess: (name) => `Message sent to ${name}.`,
 };
 
@@ -82,7 +82,7 @@ export const STUDENT_INTERACTION_CONFIG: PanelInteractionConfig = {
   defaultAudience: "group",
   groupContact: {
     title: "Group Message",
-    subtitle: "Messages for all students",
+    subtitle: "Messages for everyone",
     initials: "ALL",
   },
   audienceOptions: () => [
@@ -91,7 +91,7 @@ export const STUDENT_INTERACTION_CONFIG: PanelInteractionConfig = {
     { value: "staff", label: "Staff" },
   ],
   emptyHint: (audience) => {
-    if (audience === "group") return "Group announcements for all students.";
+    if (audience === "group") return "Group announcements for everyone.";
     if (audience === "admin") return "Select an admin to send a private message.";
     return "Select a staff member to send a private message.";
   },
@@ -105,7 +105,7 @@ export const STAFF_INTERACTION_CONFIG: PanelInteractionConfig = {
   defaultAudience: "group",
   groupContact: {
     title: "Group Message",
-    subtitle: "Send to all students",
+    subtitle: "Send to everyone (students, staff, admins)",
     initials: "ALL",
   },
   audienceOptions: () => [
@@ -114,11 +114,11 @@ export const STAFF_INTERACTION_CONFIG: PanelInteractionConfig = {
     { value: "admin", label: "Admin" },
   ],
   emptyHint: (audience) => {
-    if (audience === "group") return "Group messages are sent to all students.";
+    if (audience === "group") return "Group messages are sent to everyone (students, staff, and admins).";
     if (audience === "student") return "Select a student to send a private message.";
     return "Select an admin to send a private message.";
   },
-  groupSendSuccess: "Group message sent to all students.",
+  groupSendSuccess: "Group message sent to everyone.",
   privateSendSuccess: (name) => `Message sent to ${name}.`,
 };
 
@@ -129,7 +129,7 @@ export function usePanelInteractionPage(config: PanelInteractionConfig) {
       buildGroupContact(
         config.groupContact ?? {
           title: "Group Message",
-          subtitle: "Send to all students",
+          subtitle: "Send to everyone (students, staff, admins)",
           initials: "ALL",
         }
       ),

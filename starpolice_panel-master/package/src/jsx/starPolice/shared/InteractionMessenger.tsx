@@ -379,8 +379,8 @@ export function InteractionMessenger({
                 placeholder={
                   activeContact.kind === "group"
                     ? isAdminSide(viewerRole ?? "student")
-                      ? "Message all students..."
-                      : "Message the group..."
+                      ? "Message everyone (students, staff, admins)..."
+                      : "Message everyone..."
                     : viewerRole === "student"
                       ? `Message ${activeContact.title}...`
                       : activeContact.contactType === "admin"

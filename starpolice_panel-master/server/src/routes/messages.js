@@ -3,7 +3,7 @@ import Message from "../models/Message.js";
 import User from "../models/User.js";
 import { authRequired, attachUser } from "../middleware/auth.js";
 import { hasAnyPermission } from "../permissions.js";
-import { notifyAllAdmins, notifyAllStudents, notifyUsers } from "../utils/notifications.js";
+import { notifyAllUsers, notifyUsers } from "../utils/notifications.js";
 import {
   getMessagingContacts,
   resolveMessagePanel,
@@ -410,7 +410,7 @@ router.post("/", authRequired, attachUser, async (req, res) => {
     });
 
     if (resolvedChannel === "group") {
-      await notifyAllStudents({
+      await notifyAllUsers({
         title: "Group Message",
         message: message.trim().slice(0, 80),
         type: "message",
