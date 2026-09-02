@@ -1,4 +1,17 @@
 import type { MessengerContact } from "./InteractionMessenger";
+import type { ChatMessage } from "../types";
+
+export function isMineMessage(
+  item: ChatMessage,
+  viewerId?: string,
+  viewerEmail?: string
+) {
+  if (viewerId && item.senderId) {
+    return item.senderId === viewerId;
+  }
+  if (!viewerEmail || !item.senderEmail) return false;
+  return item.senderEmail.toLowerCase() === viewerEmail.toLowerCase();
+}
 
 export const GROUP_CONTACT_ID = "group";
 
