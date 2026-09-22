@@ -998,6 +998,15 @@ html {
   height: 2.5rem;
 }
 
+.spa-chat-review-thread {
+  margin: 0 -1rem -1rem;
+}
+
+.spa-chat-review-feed {
+  max-height: min(28rem, 70vh);
+  border-radius: 0 0 0.5rem 0.5rem;
+}
+
 .spa-interaction-history-meta {
   display: flex;
   justify-content: space-between;

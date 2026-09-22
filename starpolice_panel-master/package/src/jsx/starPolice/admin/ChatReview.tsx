@@ -17,6 +17,9 @@ import {
   getDayThreadKey,
   getDayThreadMessages,
   getMessageDateKey,
+  getReviewAnchorSenderKey,
+  getReviewSenderInitials,
+  isReviewMessageOnRight,
 } from "../shared/chatReviewHelpers";
 
 const SORT_OPTIONS = [
@@ -128,6 +131,10 @@ const ChatReview = () => {
   }, [messages, activeDayThreadKey]);
 
   const activeSummary = daySummaries.find((summary) => summary.key === activeDayThreadKey) || null;
+  const reviewAnchorSenderKey = useMemo(
+    () => getReviewAnchorSenderKey(activeDayMessages),
+    [activeDayMessages]
+  );
 
   if (!canReview) {
     return (
@@ -273,24 +280,36 @@ const ChatReview = () => {
           {activeDayMessages.length === 0 ? (
             <p className="text-muted mb-0">No messages for this day.</p>
           ) : (
-            <div className="d-flex flex-column gap-3">
-              {activeDayMessages.map((message) => (
-                <div key={message.id} className="border rounded p-3">
-                  <div className="d-flex flex-wrap justify-content-between gap-2 mb-2">
-                    <div>
-                      <strong>{message.senderName}</strong>
-                      <span className="text-muted ms-2">({formatRoleLabel(message.senderRole)})</span>
+            <div className="spa-chat-review-thread">
+              <div className="spa-messenger-feed spa-chat-review-feed">
+                {activeDayMessages.map((message) => {
+                  const onRight = isReviewMessageOnRight(message, reviewAnchorSenderKey);
+                  const initials = getReviewSenderInitials(message.senderName);
+                  return (
+                    <div
+                      key={message.id}
+                      className={`spa-messenger-row ${onRight ? "is-mine" : "is-other"}`}
+                    >
+                      {!onRight && (
+                        <div className="spa-messenger-msg-avatar" aria-hidden="true">{initials}</div>
+                      )}
+                      <div className={`spa-messenger-bubble ${onRight ? "is-mine" : "is-other"}`}>
+                        <div className="spa-messenger-bubble-name">
+                          {message.senderName}
+                          <span className="text-muted fw-normal ms-1">({formatRoleLabel(message.senderRole)})</span>
+                        </div>
+                        <div style={{ whiteSpace: "pre-wrap" }}>{message.message}</div>
+                        <small>
+                          {formatReviewDate(message.createdAt)} {formatReviewTime(message.createdAt)}
+                        </small>
+                      </div>
+                      {onRight && (
+                        <div className="spa-messenger-msg-avatar is-mine" aria-hidden="true">{initials}</div>
+                      )}
                     </div>
-                    <small className="text-muted">
-                      {formatReviewDate(message.createdAt)} {formatReviewTime(message.createdAt)}
-                    </small>
-                  </div>
-                  <div className="text-muted small mb-2">
-                    To: {message.receiverName || "—"} ({formatRoleLabel(message.receiverRole)})
-                  </div>
-                  <div style={{ whiteSpace: "pre-wrap" }}>{message.message}</div>
-                </div>
-              ))}
+                  );
+                })}
+              </div>
             </div>
           )}
         </Modal.Body>

@@ -47,3 +47,23 @@ export function getDayThreadMessages(messages: ChatMessage[], dayThreadKey: stri
     .filter((message) => getDayThreadKey(message) === dayThreadKey)
     .sort((left, right) => new Date(left.createdAt).getTime() - new Date(right.createdAt).getTime());
 }
+
+export function getReviewSenderKey(message: ChatMessage) {
+  return message.senderId || `${message.senderRole}:${message.senderName}`;
+}
+
+export function getReviewAnchorSenderKey(messages: ChatMessage[]) {
+  const first = messages[0];
+  return first ? getReviewSenderKey(first) : "";
+}
+
+export function isReviewMessageOnRight(message: ChatMessage, anchorSenderKey: string) {
+  if (!anchorSenderKey) return false;
+  return getReviewSenderKey(message) !== anchorSenderKey;
+}
+
+export function getReviewSenderInitials(name?: string) {
+  const trimmed = (name || "").trim();
+  if (!trimmed) return "??";
+  return trimmed.slice(0, 2).toUpperCase();
+}
