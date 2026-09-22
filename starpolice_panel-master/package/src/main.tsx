@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { AppContextProvider } from "./context/ThemeContext.tsx";
+import { APP_BASE } from "./jsx/starPolice/appBase";
 import App from "./App.tsx";
 import "./assets/css/style.css";
 import "./assets/css/star-police-brand.css";
@@ -14,7 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AppContextProvider>
-      <BrowserRouter>
+      <BrowserRouter basename={APP_BASE || undefined}>
         <App />
         <ToastContainer
           position="top-right"

@@ -39,6 +39,7 @@ import {
   filterAndSortMessages,
   type InteractionHistoryChannelFilter,
 } from "./shared/interactionHistoryHelpers";
+import { resolvePanelFromPath, toAbsoluteAppPath } from "./appBase";
 
 const API_BASE = import.meta.env.VITE_API_URL || "";
 
@@ -50,12 +51,6 @@ export function getPanelClientUrl(): string {
     return `${origin}${panelBase}`;
   }
   return origin;
-}
-
-function resolvePanelFromPath(pathname: string): PanelType {
-  if (pathname.startsWith("/student")) return "student";
-  if (pathname.startsWith("/staff")) return "staff";
-  return "admin";
 }
 
 function getStorageKey(panel?: PanelType) {
@@ -108,7 +103,7 @@ export function handleInvalidSession(panel?: PanelType) {
   clearAuth(resolved);
   const loginPath = getLoginPath(resolved);
   if (!window.location.pathname.includes("/login") && !window.location.pathname.includes("/signup")) {
-    window.location.replace(loginPath);
+    window.location.replace(toAbsoluteAppPath(loginPath));
   }
 }
 
