@@ -29,11 +29,28 @@ function UploadPreviewContent({ upload }: { upload: UploadedFile }) {
   const kind = getPreviewKind(upload);
 
   if (kind === "image") {
-    return <img src={fileUrl} alt={upload.name} className="upload-preview-image" />;
+    return (
+      <img
+        src={fileUrl}
+        alt={upload.name}
+        className="upload-preview-image"
+        onContextMenu={(event) => event.preventDefault()}
+        draggable={false}
+      />
+    );
   }
 
   if (kind === "video") {
-    return <video src={fileUrl} controls className="upload-preview-video" />;
+    return (
+      <video
+        src={fileUrl}
+        controls
+        controlsList="nodownload noplaybackrate"
+        disablePictureInPicture
+        className="upload-preview-video"
+        onContextMenu={(event) => event.preventDefault()}
+      />
+    );
   }
 
   if (kind === "pdf" || kind === "text" || kind === "file") {
@@ -42,6 +59,7 @@ function UploadPreviewContent({ upload }: { upload: UploadedFile }) {
         src={fileUrl}
         title={upload.name}
         className="upload-preview-frame"
+        sandbox=""
       />
     );
   }
@@ -52,6 +70,7 @@ function UploadPreviewContent({ upload }: { upload: UploadedFile }) {
       src={officeUrl}
       title={upload.name}
       className="upload-preview-frame"
+      sandbox=""
     />
   );
 }

@@ -21,6 +21,7 @@ import studentAttendanceRoutes from "./routes/studentAttendance.js";
 import subjectRoutes from "./routes/subjects.js";
 import examRoutes from "./routes/exams.js";
 import questionPaperRoutes from "./routes/questionPapers.js";
+import scheduledClassRoutes from "./routes/scheduledClasses.js";
 import { uploadDir } from "./middleware/upload.js";
 import { isEmailConfigured, getEmailProvider, getEmailDiagnostics, warmEmailTransport } from "./services/email.js";
 import { backfillAttendancePermission } from "./migrations/backfillAttendancePermission.js";
@@ -85,6 +86,7 @@ app.use("/api/student-attendance", studentAttendanceRoutes);
 app.use("/api/subjects", subjectRoutes);
 app.use("/api/exams", examRoutes);
 app.use("/api/question-papers", questionPaperRoutes);
+app.use("/api/scheduled-classes", scheduledClassRoutes);
 
 app.use((error, _req, res, _next) => {
   res.status(500).json({ message: error.message || "Server error" });

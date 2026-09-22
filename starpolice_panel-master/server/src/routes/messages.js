@@ -1,7 +1,7 @@
 import express from "express";
 import Message from "../models/Message.js";
 import User from "../models/User.js";
-import { authRequired, attachUser } from "../middleware/auth.js";
+import { authRequired, attachUser, superAdminOnly } from "../middleware/auth.js";
 import { hasAnyPermission } from "../permissions.js";
 import { notifyAllUsers, notifyUsers } from "../utils/notifications.js";
 import {
@@ -214,6 +214,43 @@ router.get("/contacts", authRequired, attachUser, async (req, res) => {
     return res.json(contacts);
   } catch (error) {
     res.status(error.message.includes("Unsupported panel") ? 400 : 500).json({ message: error.message });
+  }
+});
+
+router.get("/review", authRequired, attachUser, superAdminOnly, async (req, res) => {
+  try {
+    const filter = {};
+    const channelParam = req.query.channel;
+    if (channelParam === "group" || channelParam === "private") {
+      filter.channel = channelParam;
+    }
+
+    const fromDate = parseHistoryDate(req.query.from);
+    const toDate = parseHistoryDate(req.query.to, true);
+    if (fromDate || toDate) {
+      filter.createdAt = {};
+      if (fromDate) filter.createdAt.$gte = fromDate;
+      if (toDate) filter.createdAt.$lte = toDate;
+    }
+
+    const search = typeof req.query.search === "string" ? req.query.search.trim() : "";
+    if (search) {
+      const pattern = new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+      filter.$or = [{ message: pattern }, { senderName: pattern }, { senderEmail: pattern }];
+    }
+
+    const sortParam = req.query.sort === "asc" ? "asc" : "desc";
+    const sortKey = req.query.sortKey === "senderName" ? "senderName" : "createdAt";
+    const sortDir = sortParam === "asc" ? 1 : -1;
+    const limit = Math.min(Math.max(Number(req.query.limit) || 1000, 1), 2000);
+
+    const messages = await Message.find(filter)
+      .sort({ [sortKey]: sortDir, createdAt: sortDir })
+      .limit(limit);
+
+    res.json(messages.map(mapMessage));
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 

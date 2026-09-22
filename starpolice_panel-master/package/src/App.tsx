@@ -21,6 +21,8 @@ const StudentOnboarding = lazy(() => import("./jsx/starPolice/admin/StudentOnboa
 const Leads = lazy(() => import("./jsx/starPolice/admin/Leads"));
 const StudentPerformanceAdmin = lazy(() => import("./jsx/starPolice/admin/StudentPerformance"));
 const StudentAttendance = lazy(() => import("./jsx/starPolice/admin/StudentAttendance"));
+const ScheduleClass = lazy(() => import("./jsx/starPolice/admin/ScheduleClass"));
+const ChatReview = lazy(() => import("./jsx/starPolice/admin/ChatReview"));
 const SubjectManagement = lazy(() => import("./jsx/starPolice/admin/SubjectManagement"));
 const ExamManagement = lazy(() => import("./jsx/starPolice/admin/ExamManagement"));
 const PhysicalExamEntry = lazy(() =>
@@ -144,6 +146,8 @@ function App() {
             <Route path="interaction" element={<AdminStudentInteraction />} />
             <Route path="student-interaction" element={<Navigate to="interaction" replace />} />
             <Route path="monthly-calendar" element={<MonthlyCalendar />} />
+            <Route path="schedule-class" element={<ScheduleClass />} />
+            <Route path="chat-review" element={<ChatReview />} />
             <Route path="user-management" element={<UserManagement />} />
             <Route path="student-onboarding" element={<StudentOnboarding />} />
             <Route path="leads" element={<Leads />} />
@@ -167,6 +171,7 @@ function App() {
             <Route path="staff-interaction" element={<Navigate to="interaction" replace />} />
             <Route path="student-interaction" element={<Navigate to="interaction" replace />} />
             <Route path="monthly-calendar" element={<MonthlyCalendar />} />
+            <Route path="schedule-class" element={<ScheduleClass />} />
             <Route path="student-performance" element={<StudentPerformanceAdmin />} />
             <Route path="physical-exam" element={<PhysicalExamEntry />} />
             <Route path="written-exam" element={<WrittenExamEntry />} />

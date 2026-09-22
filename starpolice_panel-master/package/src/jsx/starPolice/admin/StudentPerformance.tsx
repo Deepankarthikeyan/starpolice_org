@@ -163,6 +163,8 @@ const StudentPerformance = () => {
   const [error, setError] = useState("");
   const [listError, setListError] = useState("");
   const [activeSection, setActiveSection] = useState<PerformanceSection>("attendance");
+  const [writtenExamFilter, setWrittenExamFilter] = useState("");
+  const [writtenDateFilter, setWrittenDateFilter] = useState("");
 
   const loadStudents = async () => {
     setListLoading(true);
@@ -288,8 +290,48 @@ const StudentPerformance = () => {
     setWrittenExams([]);
     setPerformanceForm(null);
     setActiveSection("attendance");
+    setWrittenExamFilter("");
+    setWrittenDateFilter("");
     setError("");
   };
+
+  const filteredWrittenExams = useMemo(() => {
+    return writtenExams.filter((exam) => {
+      if (writtenExamFilter && exam.examId !== writtenExamFilter) return false;
+      if (writtenDateFilter) {
+        const markedDate = exam.markedAt ? String(exam.markedAt).slice(0, 10) : "";
+        if (markedDate !== writtenDateFilter) return false;
+      }
+      return true;
+    });
+  }, [writtenExams, writtenExamFilter, writtenDateFilter]);
+
+  const displayedWrittenPercent = useMemo(() => {
+    const hasWrittenFilter = Boolean(writtenExamFilter || writtenDateFilter);
+    if (!hasWrittenFilter) return detail?.summary.writtenExamPercent ?? null;
+    const scoredExams = filteredWrittenExams.filter(
+      (exam) => exam.scoredMarks !== "" && exam.scoredMarks !== null && exam.scoredMarks !== undefined
+    );
+    if (!scoredExams.length) return null;
+    const scored = scoredExams.reduce((sum, exam) => sum + Number(exam.scoredMarks || 0), 0);
+    const total = scoredExams.reduce((sum, exam) => sum + Number(exam.totalMarks || 0), 0);
+    if (!total) return null;
+    return Math.round((scored / total) * 100);
+  }, [detail, filteredWrittenExams, writtenExamFilter, writtenDateFilter]);
+
+  const writtenExamOptions = useMemo(() => {
+    const names = new Map<string, string>();
+    writtenExams.forEach((exam) => names.set(exam.examId, exam.name));
+    return Array.from(names.entries()).map(([examId, name]) => ({ examId, name }));
+  }, [writtenExams]);
+
+  const writtenDateOptions = useMemo(() => {
+    const dates = new Set<string>();
+    writtenExams.forEach((exam) => {
+      if (exam.markedAt) dates.add(String(exam.markedAt).slice(0, 10));
+    });
+    return Array.from(dates).sort((a, b) => b.localeCompare(a));
+  }, [writtenExams]);
 
   const savePhysicalRecord = async (event: FormEvent) => {
     event.preventDefault();
@@ -549,8 +591,13 @@ const StudentPerformance = () => {
                   onClick={() => setActiveSection("physical")}
                 />
                 <PerformanceSummaryCard
-                  label="Written Exam"
-                  value={formatPercent(detail.summary.writtenExamPercent)}
+                  label={writtenExamFilter || writtenDateFilter ? "Written Exam (Filtered)" : "Written Exam"}
+                  value={formatPercent(displayedWrittenPercent)}
+                  subtext={
+                    writtenExamFilter || writtenDateFilter
+                      ? "Showing selected exam only"
+                      : undefined
+                  }
                   active={activeSection === "written"}
                   onClick={() => setActiveSection("written")}
                 />
@@ -588,10 +635,67 @@ const StudentPerformance = () => {
 
               {activeSection === "written" && (
                 <form onSubmit={saveWrittenExamMarks}>
+                  <div className="card mb-3 spa-no-print">
+                    <div className="card-body">
+                      <div className="row g-3">
+                        <div className="col-md-4">
+                          <label className="form-label small text-muted mb-1">Exam Name</label>
+                          <select
+                            className="form-control form-control-sm"
+                            value={writtenExamFilter}
+                            onChange={(e) => setWrittenExamFilter(e.target.value)}
+                          >
+                            <option value="">All written exams</option>
+                            {writtenExamOptions.map((exam) => (
+                              <option key={exam.examId} value={exam.examId}>
+                                {exam.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="col-md-4">
+                          <label className="form-label small text-muted mb-1">Date</label>
+                          <select
+                            className="form-control form-control-sm"
+                            value={writtenDateFilter}
+                            onChange={(e) => setWrittenDateFilter(e.target.value)}
+                          >
+                            <option value="">All dates</option>
+                            {writtenDateOptions.map((date) => (
+                              <option key={date} value={date}>
+                                {date}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="col-md-4 d-flex align-items-end">
+                          {(writtenExamFilter || writtenDateFilter) && (
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-outline-secondary"
+                              onClick={() => {
+                                setWrittenExamFilter("");
+                                setWrittenDateFilter("");
+                              }}
+                            >
+                              Clear filters
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <ExamMarksTable
-                    title="Written Exam Performance"
-                    exams={writtenExams}
-                    onChange={setWrittenExams}
+                    title={
+                      writtenExamFilter || writtenDateFilter
+                        ? "Selected Written Exam Performance"
+                        : "Written Exam Performance"
+                    }
+                    exams={filteredWrittenExams}
+                    onChange={(next) => {
+                      const nextById = new Map(next.map((exam) => [exam.examId, exam]));
+                      setWrittenExams((prev) => prev.map((exam) => nextById.get(exam.examId) || exam));
+                    }}
                   />
                   <button type="submit" className="btn btn-primary spa-no-print" disabled={saving}>
                     {saving ? "Saving..." : "Save Written Exam Marks"}

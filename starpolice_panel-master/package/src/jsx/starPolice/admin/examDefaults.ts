@@ -23,6 +23,7 @@ export interface StudentExamMarkEntry {
   scoredMarks: number | string;
   remarks: string;
   markId?: string | null;
+  markedAt?: string | null;
 }
 
 export interface StudentPerformanceDetail {

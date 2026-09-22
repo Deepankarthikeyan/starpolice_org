@@ -859,6 +859,27 @@ export const api = {
     return request<ChatMessage[]>(`/api/messages${query ? `?${query}` : ""}`);
   },
 
+  getChatReview(params?: {
+    search?: string;
+    sort?: "asc" | "desc";
+    sortKey?: "createdAt" | "senderName";
+    channel?: "group" | "private";
+    from?: string;
+    to?: string;
+    limit?: number;
+  }) {
+    const search = new URLSearchParams();
+    if (params?.search) search.set("search", params.search);
+    if (params?.sort) search.set("sort", params.sort);
+    if (params?.sortKey) search.set("sortKey", params.sortKey);
+    if (params?.channel) search.set("channel", params.channel);
+    if (params?.from) search.set("from", params.from);
+    if (params?.to) search.set("to", params.to);
+    if (params?.limit) search.set("limit", String(params.limit));
+    const query = search.toString();
+    return request<ChatMessage[]>(`/api/messages/review${query ? `?${query}` : ""}`);
+  },
+
   async getMessageHistory(params?: {
     search?: string;
     sort?: "asc" | "desc";
@@ -1040,6 +1061,35 @@ export const api = {
   deleteStudentOnboarding(id: string) {
     return request<{ message: string }>(`/api/student-onboarding/${id}`, {
       method: "DELETE",
+    });
+  },
+
+  getScheduledClasses() {
+    return request<
+      Array<{
+        id: string;
+        scheduledAt: string;
+        subjectName: string;
+        staffName: string;
+      }>
+    >("/api/scheduled-classes");
+  },
+
+  createScheduledClass(payload: { scheduledAt: string; subjectId: string; staffId: string }) {
+    return request<{
+      id: string;
+      scheduledAt: string;
+      subjectName: string;
+      staffName: string;
+      notificationsSent: boolean;
+      whatsapp: {
+        message: string;
+        staff: { name: string; link: string | null };
+        students: Array<{ studentId: string; name: string; link: string }>;
+      };
+    }>("/api/scheduled-classes", {
+      method: "POST",
+      body: JSON.stringify(payload),
     });
   },
 

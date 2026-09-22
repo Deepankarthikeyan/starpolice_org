@@ -7,6 +7,7 @@ import { hasPermission } from "../permissions";
 import { getPanelMotherMenu } from "../panelLabels";
 import { FileUploadProgressOverlay } from "../shared/FileUploadProgress";
 import { getAbsoluteFileUrl } from "../fileUrl";
+import { SecureFilePreviewButton } from "../shared/SecureFilePreviewButton";
 import { notify } from "../toast";
 import {
   emptyStudentOnboardingForm,
@@ -569,9 +570,10 @@ const StudentOnboarding = () => {
       <Field key={field.key} label={field.label} optional>
         {viewMode ? (
           form[field.urlKey] ? (
-            <a href={getAbsoluteFileUrl(String(form[field.urlKey]))} target="_blank" rel="noreferrer" className="btn btn-sm btn-outline-primary">
-              View File
-            </a>
+            <SecureFilePreviewButton
+              fileUrl={String(form[field.urlKey])}
+              name={field.label}
+            />
           ) : (
             <span className="text-muted">No file uploaded</span>
           )

@@ -364,6 +364,7 @@ async function buildStudentPerformanceDetail(student) {
       scoredMarks: mark?.scoredMarks ?? "",
       remarks: mark?.remarks || "",
       markId: mark?._id.toString() || null,
+      markedAt: mark?.updatedAt || mark?.createdAt || null,
     };
   };
 
