@@ -1,4 +1,5 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { Modal } from "react-bootstrap";
 import PageTitle from "../../layouts/PageTitle";
 import { ThemeContext } from "../../../context/ThemeContext";
 import { api } from "../api";
@@ -9,6 +10,14 @@ import type { ChatMessage } from "../types";
 import { PerformanceSearchField } from "./PerformanceSearchField";
 import { InteractionFilterSelect } from "../shared/InteractionFilterSelect";
 import { InteractionSortPicker } from "../shared/InteractionSortPicker";
+import {
+  formatReviewDate,
+  formatReviewTime,
+  formatRoleLabel,
+  getDayThreadKey,
+  getDayThreadMessages,
+  getMessageDateKey,
+} from "../shared/chatReviewHelpers";
 
 const SORT_OPTIONS = [
   { key: "createdAt", dir: "desc" as const, label: "Date (Newest first)" },
@@ -23,11 +32,40 @@ const CHANNEL_OPTIONS = [
   { value: "private", label: "Private only" },
 ];
 
-function formatDate(value?: string) {
-  if (!value) return "—";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-  return date.toLocaleString();
+type ChatDaySummary = {
+  key: string;
+  date: string;
+  latestMessage: ChatMessage;
+  messageCount: number;
+};
+
+function buildDaySummaries(messages: ChatMessage[]) {
+  const grouped = new Map<string, ChatMessage[]>();
+
+  for (const message of messages) {
+    const key = getDayThreadKey(message);
+    const bucket = grouped.get(key) || [];
+    bucket.push(message);
+    grouped.set(key, bucket);
+  }
+
+  const summaries: ChatDaySummary[] = [];
+  for (const [key, bucket] of grouped.entries()) {
+    const sorted = [...bucket].sort(
+      (left, right) => new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime()
+    );
+    summaries.push({
+      key,
+      date: getMessageDateKey(sorted[0]?.createdAt),
+      latestMessage: sorted[0],
+      messageCount: bucket.length,
+    });
+  }
+
+  return summaries.sort(
+    (left, right) =>
+      new Date(right.latestMessage.createdAt).getTime() - new Date(left.latestMessage.createdAt).getTime()
+  );
 }
 
 const ChatReview = () => {
@@ -42,6 +80,7 @@ const ChatReview = () => {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [loading, setLoading] = useState(false);
+  const [activeDayThreadKey, setActiveDayThreadKey] = useState<string | null>(null);
 
   const { sortKey, sortDir } = useMemo(() => {
     const [key, dir] = sortValue.split(":");
@@ -59,7 +98,7 @@ const ChatReview = () => {
         search: debouncedSearch.trim() || undefined,
         sort: sortDir,
         sortKey,
-        channel: (channelFilter === "group" || channelFilter === "private" ? channelFilter : undefined),
+        channel: channelFilter === "group" || channelFilter === "private" ? channelFilter : undefined,
         from: fromDate || undefined,
         to: toDate || undefined,
       });
@@ -80,6 +119,15 @@ const ChatReview = () => {
   useEffect(() => {
     loadMessages().catch(console.error);
   }, [loadMessages]);
+
+  const daySummaries = useMemo(() => buildDaySummaries(messages), [messages]);
+
+  const activeDayMessages = useMemo(() => {
+    if (!activeDayThreadKey) return [];
+    return getDayThreadMessages(messages, activeDayThreadKey);
+  }, [messages, activeDayThreadKey]);
+
+  const activeSummary = daySummaries.find((summary) => summary.key === activeDayThreadKey) || null;
 
   if (!canReview) {
     return (
@@ -130,7 +178,7 @@ const ChatReview = () => {
 
           {loading ? (
             <p className="text-muted mb-0">Loading chat history...</p>
-          ) : messages.length === 0 ? (
+          ) : daySummaries.length === 0 ? (
             <p className="text-muted mb-0">No messages found.</p>
           ) : (
             <div className="table-responsive">
@@ -138,30 +186,93 @@ const ChatReview = () => {
                 <thead>
                   <tr>
                     <th>Date</th>
-                    <th>Sender</th>
-                    <th>Role</th>
-                    <th>Email</th>
+                    <th>Time</th>
+                    <th>Sender Role</th>
+                    <th>Receiver Role</th>
+                    <th>Sender Name</th>
+                    <th>Receiver Name</th>
                     <th>Channel</th>
-                    <th>Message</th>
+                    <th>Messages</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
-                  {messages.map((message) => (
-                    <tr key={message.id}>
-                      <td className="text-nowrap">{formatDate(message.createdAt)}</td>
-                      <td>{message.senderName || "—"}</td>
-                      <td className="text-capitalize">{message.senderRole || "—"}</td>
-                      <td>{message.senderEmail || "—"}</td>
-                      <td className="text-capitalize">{message.channel}</td>
-                      <td style={{ whiteSpace: "pre-wrap" }}>{message.message}</td>
-                    </tr>
-                  ))}
+                  {daySummaries.map((summary) => {
+                    const message = summary.latestMessage;
+                    return (
+                      <tr key={summary.key}>
+                        <td className="text-nowrap">{formatReviewDate(message.createdAt)}</td>
+                        <td className="text-nowrap">{formatReviewTime(message.createdAt)}</td>
+                        <td>{formatRoleLabel(message.senderRole)}</td>
+                        <td>{formatRoleLabel(message.receiverRole)}</td>
+                        <td>{message.senderName || "—"}</td>
+                        <td>{message.receiverName || "—"}</td>
+                        <td className="text-capitalize">{message.channel}</td>
+                        <td>
+                          <span className="badge bg-light text-dark">{summary.messageCount}</span>
+                        </td>
+                        <td>
+                          <button
+                            type="button"
+                            className="btn btn-sm btn-outline-primary"
+                            onClick={() => setActiveDayThreadKey(summary.key)}
+                          >
+                            View
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
           )}
         </div>
       </div>
+
+      <Modal show={Boolean(activeDayThreadKey)} onHide={() => setActiveDayThreadKey(null)} size="lg" centered scrollable>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Chat on {activeSummary ? formatReviewDate(activeSummary.latestMessage.createdAt) : ""}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {activeSummary && (
+            <p className="text-muted small">
+              {formatRoleLabel(activeSummary.latestMessage.senderRole)} {activeSummary.latestMessage.senderName}
+              {" → "}
+              {formatRoleLabel(activeSummary.latestMessage.receiverRole)} {activeSummary.latestMessage.receiverName}
+              {" · "}
+              <span className="text-capitalize">{activeSummary.latestMessage.channel}</span>
+              {" · "}
+              {activeDayMessages.length} message{activeDayMessages.length === 1 ? "" : "s"}
+            </p>
+          )}
+          {activeDayMessages.length === 0 ? (
+            <p className="text-muted mb-0">No messages for this day.</p>
+          ) : (
+            <div className="d-flex flex-column gap-3">
+              {activeDayMessages.map((message) => (
+                <div key={message.id} className="border rounded p-3">
+                  <div className="d-flex flex-wrap justify-content-between gap-2 mb-2">
+                    <div>
+                      <strong>{message.senderName}</strong>
+                      <span className="text-muted ms-2">({formatRoleLabel(message.senderRole)})</span>
+                    </div>
+                    <small className="text-muted">
+                      {formatReviewDate(message.createdAt)} {formatReviewTime(message.createdAt)}
+                    </small>
+                  </div>
+                  <div className="text-muted small mb-2">
+                    To: {message.receiverName || "—"} ({formatRoleLabel(message.receiverRole)})
+                  </div>
+                  <div style={{ whiteSpace: "pre-wrap" }}>{message.message}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </Modal.Body>
+      </Modal>
     </>
   );
 };

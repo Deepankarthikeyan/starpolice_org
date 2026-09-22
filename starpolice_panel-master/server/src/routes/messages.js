@@ -11,7 +11,7 @@ import {
 
 const router = express.Router();
 
-function mapMessage(item) {
+function mapMessage(item, receiver = null) {
   return {
     id: item._id.toString(),
     senderId: item.sender?.toString?.() ?? String(item.sender),
@@ -23,8 +23,51 @@ function mapMessage(item) {
     threadStudentId: item.threadStudentId ? item.threadStudentId.toString() : null,
     threadStaffId: item.threadStaffId ? item.threadStaffId.toString() : null,
     threadAdminId: item.threadAdminId ? item.threadAdminId.toString() : null,
+    receiverId: receiver?.id || null,
+    receiverName: receiver?.name || null,
+    receiverRole: receiver?.role || null,
     createdAt: item.createdAt,
   };
+}
+
+function resolveReceiverParticipant(message, usersById) {
+  if (message.channel === "group") {
+    return { id: null, name: "Everyone", role: "all" };
+  }
+
+  const senderId = message.sender?.toString?.() ?? String(message.sender);
+  const participantIds = [
+    message.threadStudentId?.toString(),
+    message.threadStaffId?.toString(),
+    message.threadAdminId?.toString(),
+  ].filter(Boolean);
+
+  const receiverId = participantIds.find((id) => id !== senderId) || null;
+  if (!receiverId) {
+    return { id: null, name: "Private participant", role: "unknown" };
+  }
+
+  const user = usersById.get(receiverId);
+  return {
+    id: receiverId,
+    name: user?.name || "Unknown user",
+    role: user?.role || "unknown",
+  };
+}
+
+async function buildUsersById(messages) {
+  const ids = new Set();
+  for (const message of messages) {
+    if (message.sender) ids.add(message.sender.toString());
+    if (message.threadStudentId) ids.add(message.threadStudentId.toString());
+    if (message.threadStaffId) ids.add(message.threadStaffId.toString());
+    if (message.threadAdminId) ids.add(message.threadAdminId.toString());
+  }
+
+  if (!ids.size) return new Map();
+
+  const users = await User.find({ _id: { $in: [...ids] } }).select("name role email");
+  return new Map(users.map((user) => [user._id.toString(), user]));
 }
 
 function canViewMessages(user) {
@@ -248,7 +291,10 @@ router.get("/review", authRequired, attachUser, superAdminOnly, async (req, res)
       .sort({ [sortKey]: sortDir, createdAt: sortDir })
       .limit(limit);
 
-    res.json(messages.map(mapMessage));
+    const usersById = await buildUsersById(messages);
+    res.json(
+      messages.map((message) => mapMessage(message, resolveReceiverParticipant(message, usersById)))
+    );
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

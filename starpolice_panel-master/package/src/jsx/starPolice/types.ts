@@ -80,6 +80,9 @@ export interface ChatMessage {
   threadStudentId?: string | null;
   threadStaffId?: string | null;
   threadAdminId?: string | null;
+  receiverId?: string | null;
+  receiverName?: string | null;
+  receiverRole?: string | null;
   createdAt: string;
 }
 
