@@ -1277,6 +1277,7 @@ const STUDENT_ONBOARDING_TEXT_FIELDS: Array<keyof StudentOnboardingFormState> = 
   "discount",
   "paymentMethod",
   "paymentStatus",
+  "balanceAmount",
   "transactionId",
   "receiptNumber",
   "medicalConditions",
@@ -1311,7 +1312,8 @@ function buildStudentOnboardingFormData(
   formData.append("privacyAccepted", String(form.privacyAccepted));
   formData.append("grantLogin", String(form.grantLogin));
   formData.append("residenceType", form.residenceType || "");
-  formData.append("paymentStatus", form.paymentStatus || "Pending");
+  formData.append("paymentStatus", form.paymentStatus || "");
+  formData.append("balanceAmount", form.balanceAmount || "");
   formData.append("materials", JSON.stringify(form.materials || []));
   formData.append("clientUrl", getPanelClientUrl());
 
