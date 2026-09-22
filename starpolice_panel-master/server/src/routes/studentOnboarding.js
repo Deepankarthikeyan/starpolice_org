@@ -2,7 +2,13 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import StudentOnboarding from "../models/StudentOnboarding.js";
 import User from "../models/User.js";
-import { authRequired, adminPanelOnly, attachUser, requirePermission } from "../middleware/auth.js";
+import {
+  authRequired,
+  adminPanelOnly,
+  attachUser,
+  requirePermission,
+  superAdminOnly,
+} from "../middleware/auth.js";
 import { upload } from "../middleware/upload.js";
 import { defaultPermissionsForRole, sanitizePermissions } from "../permissions.js";
 import { sendSetupInvite } from "../services/passwordAuth.js";
@@ -101,6 +107,7 @@ const TEXT_FIELDS = [
   "discount",
   "paymentMethod",
   "paymentStatus",
+  "balanceAmount",
   "transactionId",
   "receiptNumber",
   "medicalConditions",
@@ -147,7 +154,21 @@ function parseBodyData(body) {
 }
 
 const RESIDENCE_TYPES = ["Day Scholar", "Hostel"];
-const PAYMENT_STATUSES = ["Pending", "Paid", "Partial"];
+const PAYMENT_STATUSES = ["Paid", "Partial"];
+
+function parseAmount(value) {
+  const amount = Number.parseFloat(String(value || "").replace(/,/g, "").trim());
+  return Number.isFinite(amount) ? amount : 0;
+}
+
+function calculateTotalDue(data) {
+  const total =
+    parseAmount(data.registrationFee) +
+    parseAmount(data.courseFee) -
+    parseAmount(data.scholarship) -
+    parseAmount(data.discount);
+  return Math.max(total, 0);
+}
 
 function validateResidenceType(data, existingRecord = null) {
   const value = data.residenceType || existingRecord?.residenceType || "";
@@ -160,8 +181,37 @@ function validateResidenceType(data, existingRecord = null) {
 function validatePaymentStatus(data, existingRecord = null) {
   const value = data.paymentStatus || existingRecord?.paymentStatus || "";
   if (!PAYMENT_STATUSES.includes(value)) {
-    return "Payment status is required (Pending, Paid, or Partial).";
+    return "Payment status is required (Paid or Partial).";
   }
+  return null;
+}
+
+function validateBalanceAmount(data, existingRecord = null) {
+  const status = data.paymentStatus || existingRecord?.paymentStatus || "";
+  const merged = { ...existingRecord, ...data };
+  const totalDue = calculateTotalDue(merged);
+
+  if (status === "Paid") {
+    data.balanceAmount = "0";
+    return null;
+  }
+
+  if (status !== "Partial") {
+    return null;
+  }
+
+  const balanceValue = data.balanceAmount ?? existingRecord?.balanceAmount ?? "";
+  const balance = parseAmount(balanceValue);
+  if (!String(balanceValue).trim()) {
+    return "Balance amount is required when payment status is Partial.";
+  }
+  if (balance < 0) {
+    return "Balance amount cannot be negative.";
+  }
+  if (totalDue > 0 && balance > totalDue) {
+    return "Balance amount cannot exceed the total due amount.";
+  }
+  data.balanceAmount = String(balance);
   return null;
 }
 
@@ -212,6 +262,7 @@ function formatLogValue(value) {
 
 const TRACKED_LOG_FIELDS = [
   "paymentStatus",
+  "balanceAmount",
   "registrationFee",
   "courseFee",
   "scholarship",
@@ -322,6 +373,7 @@ function mapRecord(record) {
     discount: item.discount,
     paymentMethod: item.paymentMethod,
     paymentStatus: item.paymentStatus,
+    balanceAmount: item.balanceAmount || "",
     transactionId: item.transactionId,
     receiptNumber: item.receiptNumber,
     materials: (item.materials || []).map((material) => ({
@@ -583,6 +635,10 @@ router.post(
       if (paymentError) {
         return res.status(400).json({ message: paymentError });
       }
+      const balanceError = validateBalanceAmount(data);
+      if (balanceError) {
+        return res.status(400).json({ message: balanceError });
+      }
 
       const materials = parseMaterials(req.body);
       if (materials !== undefined) {
@@ -622,6 +678,7 @@ router.post(
 router.put(
   "/:id",
   ...onboardingGuard,
+  superAdminOnly,
   upload.fields(FILE_FIELDS),
   async (req, res) => {
     try {
@@ -638,6 +695,10 @@ router.put(
       const paymentError = validatePaymentStatus(data, record);
       if (paymentError) {
         return res.status(400).json({ message: paymentError });
+      }
+      const balanceError = validateBalanceAmount(data, record);
+      if (balanceError) {
+        return res.status(400).json({ message: balanceError });
       }
       if (!data.residenceType && record.residenceType) {
         data.residenceType = record.residenceType;
@@ -678,6 +739,7 @@ router.put(
 router.delete(
   "/:id",
   ...onboardingGuard,
+  superAdminOnly,
   async (req, res) => {
     try {
       const record = await StudentOnboarding.findById(req.params.id);

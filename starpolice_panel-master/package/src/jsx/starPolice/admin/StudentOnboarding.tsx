@@ -1,4 +1,5 @@
 import { FormEvent, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { Modal } from "react-bootstrap";
 import PageTitle from "../../layouts/PageTitle";
 import { ThemeContext } from "../../../context/ThemeContext";
 import { api } from "../api";
@@ -107,21 +108,55 @@ function formatResidenceType(value: string) {
   return "—";
 }
 
+function parseAmount(value: string) {
+  const amount = Number.parseFloat(String(value || "").replace(/,/g, "").trim());
+  return Number.isFinite(amount) ? amount : 0;
+}
+
+function calculateTotalDue(record: Pick<StudentOnboardingRecord, "registrationFee" | "courseFee" | "scholarship" | "discount">) {
+  const total =
+    parseAmount(record.registrationFee) +
+    parseAmount(record.courseFee) -
+    parseAmount(record.scholarship) -
+    parseAmount(record.discount);
+  return Math.max(total, 0);
+}
+
+function getDisplayBalanceAmount(record: StudentOnboardingRecord) {
+  if (record.paymentStatus === "Paid") return 0;
+  if (record.paymentStatus === "Partial") {
+    const stored = parseAmount(record.balanceAmount);
+    if (stored > 0) return stored;
+    return calculateTotalDue(record);
+  }
+  const stored = parseAmount(record.balanceAmount);
+  return stored > 0 ? stored : calculateTotalDue(record);
+}
+
+function formatCurrency(value: number) {
+  if (!Number.isFinite(value)) return "—";
+  return `₹${value.toLocaleString("en-IN", { maximumFractionDigits: 2 })}`;
+}
+
 function formatPaymentStatus(value: string) {
-  if (value === "Pending" || value === "Paid" || value === "Partial") return value;
+  if (value === "Paid" || value === "Partial") return value;
   return "—";
 }
 
 function paymentStatusBadgeClass(value: string) {
   if (value === "Paid") return "badge bg-success";
   if (value === "Partial") return "badge bg-info text-dark";
-  if (value === "Pending") return "badge bg-warning text-dark";
   return "badge bg-secondary";
+}
+
+function isImageUrl(url: string) {
+  return /\.(jpe?g|png|gif|webp|bmp|svg)(\?.*)?$/i.test(url);
 }
 
 function formatLogField(field: string) {
   const labels: Record<string, string> = {
     paymentStatus: "Payment Status",
+    balanceAmount: "Balance Amount",
     registrationFee: "Registration Fee",
     courseFee: "Course Fee",
     scholarship: "Scholarship",
@@ -183,8 +218,12 @@ const StudentOnboarding = () => {
   const [materialDraft, setMaterialDraft] = useState<OnboardingMaterial>(createMaterialDraft());
   const [editingMaterialIndex, setEditingMaterialIndex] = useState<number | null>(null);
   const [activityLogs, setActivityLogs] = useState<OnboardingActivityLog[]>([]);
+  const [expandedPhotoUrl, setExpandedPhotoUrl] = useState<string | null>(null);
+  const [expandedPhotoName, setExpandedPhotoName] = useState("");
 
   const canManage = hasPermission(auth, "admin:onboarding");
+  const isSuperAdmin = auth?.role === "superadmin";
+  const totalDue = useMemo(() => calculateTotalDue(form), [form]);
 
   const loadRecords = async () => {
     const data = await api.getStudentOnboardingRecords();
@@ -284,6 +323,27 @@ const StudentOnboarding = () => {
       notify.error(message);
       return;
     }
+    if (form.paymentStatus === "Partial" && !form.balanceAmount.trim()) {
+      const message = "Balance amount is required when payment status is Partial.";
+      setError(message);
+      notify.error(message);
+      return;
+    }
+    if (form.paymentStatus === "Partial") {
+      const balance = parseAmount(form.balanceAmount);
+      if (balance < 0) {
+        const message = "Balance amount cannot be negative.";
+        setError(message);
+        notify.error(message);
+        return;
+      }
+      if (totalDue > 0 && balance > totalDue) {
+        const message = "Balance amount cannot exceed the total due amount.";
+        setError(message);
+        notify.error(message);
+        return;
+      }
+    }
     if (form.password && form.password !== form.confirmPassword) {
       const message = "Password and confirm password must match.";
       setError(message);
@@ -304,6 +364,7 @@ const StudentOnboarding = () => {
     const payload: StudentOnboardingFormState = {
       ...form,
       loginEmail,
+      balanceAmount: form.paymentStatus === "Paid" ? "0" : form.balanceAmount,
     };
 
     const selectedFiles = Object.values(files).filter((file): file is File => Boolean(file));
@@ -423,34 +484,116 @@ const StudentOnboarding = () => {
     }
   };
 
-  const renderFileInput = (field: (typeof FILE_FIELDS)[number]) => (
-    <Field key={field.key} label={field.label} optional={field.key !== "profilePhoto"}>
-      {viewMode ? (
-        form[field.urlKey] ? (
-          <a href={getAbsoluteFileUrl(String(form[field.urlKey]))} target="_blank" rel="noreferrer" className="btn btn-sm btn-outline-primary">
-            View File
-          </a>
+  const openPhotoPreview = (url: string, name: string) => {
+    setExpandedPhotoUrl(url);
+    setExpandedPhotoName(name);
+  };
+
+  const renderProfilePhotoField = () => {
+    const photoUrl = form.profilePhotoUrl ? getAbsoluteFileUrl(form.profilePhotoUrl) : "";
+    const previewUrl = files.profilePhoto ? URL.createObjectURL(files.profilePhoto) : photoUrl;
+    const canPreview = previewUrl && (files.profilePhoto?.type.startsWith("image/") || isImageUrl(photoUrl));
+
+    return (
+      <Field label="Profile Photo">
+        {viewMode ? (
+          photoUrl ? (
+            <div className="d-flex flex-wrap align-items-center gap-2">
+              {isImageUrl(photoUrl) ? (
+                <button
+                  type="button"
+                  className="btn btn-link p-0 border-0"
+                  onClick={() => openPhotoPreview(photoUrl, [form.firstName, form.middleName, form.lastName].filter(Boolean).join(" "))}
+                >
+                  <img
+                    src={photoUrl}
+                    alt="Student profile photo"
+                    className="rounded spa-onboarding-profile-thumb"
+                    style={{ width: 72, height: 72, objectFit: "cover" }}
+                  />
+                </button>
+              ) : null}
+              <button
+                type="button"
+                className="btn btn-sm btn-outline-primary"
+                onClick={() => openPhotoPreview(photoUrl, [form.firstName, form.middleName, form.lastName].filter(Boolean).join(" "))}
+              >
+                View Photo
+              </button>
+            </div>
+          ) : (
+            <span className="text-muted">No file uploaded</span>
+          )
         ) : (
-          <span className="text-muted">No file uploaded</span>
-        )
-      ) : (
-        <>
-          <input
-            type="file"
-            className="form-control"
-            accept="image/*,.pdf"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              setFiles((prev) => ({ ...prev, [field.key]: file }));
-            }}
-          />
-          {form[field.urlKey] && (
-            <small className="text-muted d-block mt-1">Current file uploaded</small>
-          )}
-        </>
-      )}
-    </Field>
-  );
+          <>
+            {canPreview && (
+              <div className="mb-2">
+                <button
+                  type="button"
+                  className="btn btn-link p-0 border-0"
+                  onClick={() => openPhotoPreview(previewUrl, [form.firstName, form.middleName, form.lastName].filter(Boolean).join(" "))}
+                >
+                  <img
+                    src={previewUrl}
+                    alt="Profile photo preview"
+                    className="rounded"
+                    style={{ width: 72, height: 72, objectFit: "cover" }}
+                  />
+                </button>
+              </div>
+            )}
+            <input
+              type="file"
+              className="form-control"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                setFiles((prev) => ({ ...prev, profilePhoto: file }));
+              }}
+            />
+            {form.profilePhotoUrl && (
+              <small className="text-muted d-block mt-1">Current file uploaded</small>
+            )}
+          </>
+        )}
+      </Field>
+    );
+  };
+
+  const renderFileInput = (field: (typeof FILE_FIELDS)[number]) => {
+    if (field.key === "profilePhoto") {
+      return renderProfilePhotoField();
+    }
+
+    return (
+      <Field key={field.key} label={field.label} optional>
+        {viewMode ? (
+          form[field.urlKey] ? (
+            <a href={getAbsoluteFileUrl(String(form[field.urlKey]))} target="_blank" rel="noreferrer" className="btn btn-sm btn-outline-primary">
+              View File
+            </a>
+          ) : (
+            <span className="text-muted">No file uploaded</span>
+          )
+        ) : (
+          <>
+            <input
+              type="file"
+              className="form-control"
+              accept="image/*,.pdf"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                setFiles((prev) => ({ ...prev, [field.key]: file }));
+              }}
+            />
+            {form[field.urlKey] && (
+              <small className="text-muted d-block mt-1">Current file uploaded</small>
+            )}
+          </>
+        )}
+      </Field>
+    );
+  };
 
   if (!canManage) {
     return (
@@ -504,12 +647,14 @@ const StudentOnboarding = () => {
               <table className="table table-striped table-hover align-middle mb-0 spa-onboarding-table">
                 <thead>
                   <tr>
+                    <th scope="col">Photo</th>
                     <th scope="col">Student ID</th>
                     <th scope="col">Name</th>
                     <th scope="col">Course</th>
                     <th scope="col">Batch</th>
                     <th scope="col">Day Scholar / Hostel</th>
                     <th scope="col">Payment Status</th>
+                    <th scope="col">Balance Amount</th>
                     <th scope="col">Email</th>
                     <th scope="col" className="spa-onboarding-actions-col spa-no-print">
                       Actions
@@ -519,13 +664,35 @@ const StudentOnboarding = () => {
                 <tbody>
                   {filteredRecords.length === 0 ? (
                     <tr>
-                      <td colSpan={8} className="spa-onboarding-empty">
+                      <td colSpan={10} className="spa-onboarding-empty">
                         No student onboarding records yet.
                       </td>
                     </tr>
                   ) : (
-                    filteredRecords.map((record) => (
+                    filteredRecords.map((record) => {
+                      const photoUrl = record.profilePhotoUrl ? getAbsoluteFileUrl(record.profilePhotoUrl) : "";
+                      const balanceAmount = getDisplayBalanceAmount(record);
+                      return (
                       <tr key={record.id}>
+                        <td>
+                          {photoUrl && isImageUrl(photoUrl) ? (
+                            <button
+                              type="button"
+                              className="btn btn-link p-0 border-0"
+                              onClick={() => openPhotoPreview(photoUrl, fullName(record))}
+                              title="View profile photo"
+                            >
+                              <img
+                                src={photoUrl}
+                                alt={`${fullName(record)} profile photo`}
+                                className="rounded"
+                                style={{ width: 40, height: 40, objectFit: "cover" }}
+                              />
+                            </button>
+                          ) : (
+                            <span className="text-muted">—</span>
+                          )}
+                        </td>
                         <td className="spa-onboarding-id">{record.studentId}</td>
                         <td className="spa-onboarding-name">{fullName(record)}</td>
                         <td>{record.course || "—"}</td>
@@ -536,6 +703,7 @@ const StudentOnboarding = () => {
                             {formatPaymentStatus(record.paymentStatus)}
                           </span>
                         </td>
+                        <td>{formatCurrency(balanceAmount)}</td>
                         <td className="spa-onboarding-email">{record.loginEmail || record.email || "—"}</td>
                         <td className="spa-onboarding-actions-col spa-no-print">
                           <div className="spa-onboarding-actions">
@@ -546,24 +714,29 @@ const StudentOnboarding = () => {
                             >
                               View
                             </button>
-                            <button
-                              type="button"
-                              className="btn btn-sm btn-outline-primary"
-                              onClick={() => startEdit(record)}
-                            >
-                              Edit
-                            </button>
-                            <button
-                              type="button"
-                              className="btn btn-sm btn-outline-danger"
-                              onClick={() => onDelete(record)}
-                            >
-                              Delete
-                            </button>
+                            {isSuperAdmin && (
+                              <button
+                                type="button"
+                                className="btn btn-sm btn-outline-primary"
+                                onClick={() => startEdit(record)}
+                              >
+                                Edit
+                              </button>
+                            )}
+                            {isSuperAdmin && (
+                              <button
+                                type="button"
+                                className="btn btn-sm btn-outline-danger"
+                                onClick={() => onDelete(record)}
+                              >
+                                Delete
+                              </button>
+                            )}
                           </div>
                         </td>
                       </tr>
-                    ))
+                    );
+                    })
                   )}
                 </tbody>
               </table>
@@ -581,7 +754,7 @@ const StudentOnboarding = () => {
                   : "New Student Onboarding"}
             </h4>
             <div className="d-flex gap-2">
-              {viewMode && editingId && (
+              {viewMode && editingId && isSuperAdmin && (
                 <button
                   type="button"
                   className="btn btn-primary"
@@ -782,22 +955,56 @@ const StudentOnboarding = () => {
               <div className="col-md-3"><Field label="Course Fee"><TextInput value={form.courseFee} onChange={(v) => setField("courseFee", v)} /></Field></div>
               <div className="col-md-3"><Field label="Scholarship" optional><TextInput value={form.scholarship} onChange={(v) => setField("scholarship", v)} /></Field></div>
               <div className="col-md-3"><Field label="Discount"><TextInput value={form.discount} onChange={(v) => setField("discount", v)} /></Field></div>
+              <div className="col-md-3">
+                <Field label="Total Due">
+                  <input className="form-control" value={formatCurrency(totalDue)} disabled readOnly />
+                </Field>
+              </div>
               <div className="col-md-3"><Field label="Payment Method"><TextInput value={form.paymentMethod} onChange={(v) => setField("paymentMethod", v)} /></Field></div>
               <div className="col-md-3">
                 <Field label="Payment Status">
                   <select
                     className="form-select"
                     value={form.paymentStatus}
-                    onChange={(e) => setField("paymentStatus", e.target.value)}
+                    onChange={(e) => {
+                      const nextStatus = e.target.value;
+                      setForm((prev) => ({
+                        ...prev,
+                        paymentStatus: nextStatus,
+                        balanceAmount: nextStatus === "Paid" ? "0" : nextStatus === "Partial" ? prev.balanceAmount : "",
+                      }));
+                    }}
                     required
                   >
                     <option value="">Select</option>
-                    <option value="Pending">Pending</option>
                     <option value="Paid">Paid</option>
                     <option value="Partial">Partial</option>
                   </select>
                 </Field>
               </div>
+              {form.paymentStatus === "Partial" && (
+                <div className="col-md-3">
+                  <Field label="Balance Amount">
+                    <input
+                      type="number"
+                      className="form-control"
+                      min="0"
+                      step="0.01"
+                      value={form.balanceAmount}
+                      onChange={(e) => setField("balanceAmount", e.target.value)}
+                      placeholder="Remaining balance"
+                      required
+                    />
+                  </Field>
+                </div>
+              )}
+              {form.paymentStatus === "Paid" && (
+                <div className="col-md-3">
+                  <Field label="Balance Amount">
+                    <input className="form-control" value={formatCurrency(0)} disabled readOnly />
+                  </Field>
+                </div>
+              )}
               <div className="col-md-3"><Field label="Transaction ID"><TextInput value={form.transactionId} onChange={(v) => setField("transactionId", v)} /></Field></div>
               <div className="col-md-3"><Field label="Receipt Number"><TextInput value={form.receiptNumber} onChange={(v) => setField("receiptNumber", v)} /></Field></div>
             </div>
@@ -1025,6 +1232,22 @@ const StudentOnboarding = () => {
             .map((file) => file.name)}
         />
       )}
+
+      <Modal show={Boolean(expandedPhotoUrl)} onHide={() => setExpandedPhotoUrl(null)} centered size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>{expandedPhotoName || "Profile Photo"}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="text-center">
+          {expandedPhotoUrl && (
+            <img
+              src={expandedPhotoUrl}
+              alt={expandedPhotoName || "Student profile photo"}
+              className="img-fluid rounded"
+              style={{ maxHeight: "70vh", objectFit: "contain" }}
+            />
+          )}
+        </Modal.Body>
+      </Modal>
     </>
   );
 };
