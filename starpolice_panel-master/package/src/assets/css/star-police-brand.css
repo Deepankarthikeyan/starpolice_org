@@ -965,6 +965,39 @@ html {
   margin-top: 0.85rem;
 }
 
+.spa-chat-review-filters > [class*="col-"] {
+  display: flex;
+  flex-direction: column;
+}
+
+.spa-chat-review-filters .spa-performance-search-field {
+  min-width: 0;
+  max-width: none;
+  width: 100%;
+}
+
+.spa-chat-review-filters .spa-interaction-sort-trigger-label {
+  display: none;
+}
+
+.spa-chat-review-filters .spa-interaction-sort-trigger {
+  min-height: 2.5rem;
+  height: 2.5rem;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.spa-chat-review-filters .spa-interaction-sort-trigger-text {
+  flex-direction: row;
+  align-items: center;
+}
+
+.spa-chat-review-filters .spa-interaction-filter-select-input,
+.spa-chat-review-filters .form-control[type="date"] {
+  min-height: 2.5rem;
+  height: 2.5rem;
+}
+
 .spa-interaction-history-meta {
   display: flex;
   justify-content: space-between;

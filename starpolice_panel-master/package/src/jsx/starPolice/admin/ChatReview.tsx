@@ -150,11 +150,20 @@ const ChatReview = () => {
           </button>
         </div>
         <div className="card-body">
-          <div className="row g-3 mb-3">
-            <div className="col-md-4">
-              <PerformanceSearchField value={search} onChange={setSearch} placeholder="Search message or sender..." />
+          <div className="spa-chat-review-filters row g-3 align-items-end mb-3">
+            <div className="col-md-6 col-lg-3">
+              <label className="form-label small text-muted mb-1" htmlFor="chat-review-search">
+                Search
+              </label>
+              <PerformanceSearchField
+                id="chat-review-search"
+                value={search}
+                onChange={setSearch}
+                placeholder="Search message or sender..."
+                ariaLabel="Search message or sender"
+              />
             </div>
-            <div className="col-md-3">
+            <div className="col-md-6 col-lg-2">
               <InteractionFilterSelect
                 id="chat-review-channel"
                 label="Channel"
@@ -163,16 +172,33 @@ const ChatReview = () => {
                 onChange={setChannelFilter}
               />
             </div>
-            <div className="col-md-3">
+            <div className="col-md-6 col-lg-3">
+              <label className="form-label small text-muted mb-1">Sort by</label>
               <InteractionSortPicker options={SORT_OPTIONS} value={sortValue} onChange={setSortValue} />
             </div>
-            <div className="col-md-2">
-              <label className="form-label small text-muted mb-1">From</label>
-              <input type="date" className="form-control form-control-sm" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
+            <div className="col-md-6 col-lg-2">
+              <label className="form-label small text-muted mb-1" htmlFor="chat-review-from">
+                From
+              </label>
+              <input
+                id="chat-review-from"
+                type="date"
+                className="form-control"
+                value={fromDate}
+                onChange={(e) => setFromDate(e.target.value)}
+              />
             </div>
-            <div className="col-md-2">
-              <label className="form-label small text-muted mb-1">To</label>
-              <input type="date" className="form-control form-control-sm" value={toDate} onChange={(e) => setToDate(e.target.value)} />
+            <div className="col-md-6 col-lg-2">
+              <label className="form-label small text-muted mb-1" htmlFor="chat-review-to">
+                To
+              </label>
+              <input
+                id="chat-review-to"
+                type="date"
+                className="form-control"
+                value={toDate}
+                onChange={(e) => setToDate(e.target.value)}
+              />
             </div>
           </div>
 
@@ -192,8 +218,7 @@ const ChatReview = () => {
                     <th>Sender Name</th>
                     <th>Receiver Name</th>
                     <th>Channel</th>
-                    <th>Messages</th>
-                    <th></th>
+                    <th className="text-end">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -208,10 +233,7 @@ const ChatReview = () => {
                         <td>{message.senderName || "—"}</td>
                         <td>{message.receiverName || "—"}</td>
                         <td className="text-capitalize">{message.channel}</td>
-                        <td>
-                          <span className="badge bg-light text-dark">{summary.messageCount}</span>
-                        </td>
-                        <td>
+                        <td className="text-end">
                           <button
                             type="button"
                             className="btn btn-sm btn-outline-primary"
