@@ -89,6 +89,7 @@ export interface StudentOnboardingRecord {
   discount: string;
   paymentMethod: string;
   paymentStatus: string;
+  balanceAmount: string;
   transactionId: string;
   receiptNumber: string;
   materials: OnboardingMaterial[];
@@ -183,7 +184,8 @@ export const emptyStudentOnboardingForm = (): StudentOnboardingFormState => ({
   scholarship: "",
   discount: "",
   paymentMethod: "",
-  paymentStatus: "Pending",
+  paymentStatus: "",
+  balanceAmount: "",
   transactionId: "",
   receiptNumber: "",
   materials: [],

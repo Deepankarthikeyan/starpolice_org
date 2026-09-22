@@ -43,6 +43,7 @@ const StudentAttendance = () => {
   const [historySearch, setHistorySearch] = useState("");
   const [historyStatusFilter, setHistoryStatusFilter] = useState<StatusFilter>("");
   const [historyDateFilter, setHistoryDateFilter] = useState(today);
+  const [headerDateFilter, setHeaderDateFilter] = useState(today);
   const [historyLoading, setHistoryLoading] = useState(false);
 
   const loadToday = async () => {
@@ -190,6 +191,19 @@ const StudentAttendance = () => {
     }
   };
 
+  const onHeaderDateChange = (value: string) => {
+    setHeaderDateFilter(value);
+    if (!value) return;
+    if (value === today) {
+      setShowHistory(false);
+      loadToday().catch(console.error);
+      return;
+    }
+    setHistoryDateFilter(value);
+    setShowHistory(true);
+    selectHistoryDate(value).catch(console.error);
+  };
+
   if (!canManage) {
     return (
       <>
@@ -202,6 +216,32 @@ const StudentAttendance = () => {
   return (
     <>
       <PageTitle motherMenu={getPanelMotherMenu(auth?.panel)} activeMenu="Student Attendance" pageContent="" />
+
+      <div className="card mb-3">
+        <div className="card-body py-3">
+          <div className="row g-2 align-items-end">
+            <div className="col-md-4 col-sm-6">
+              <label className="form-label small text-muted mb-1" htmlFor="attendance-header-date">
+                Attendance Date
+              </label>
+              <input
+                id="attendance-header-date"
+                type="date"
+                className="form-control"
+                value={headerDateFilter}
+                onChange={(e) => onHeaderDateChange(e.target.value)}
+              />
+            </div>
+            <div className="col-md-8 col-sm-6">
+              <p className="text-muted small mb-0">
+                {headerDateFilter === today
+                  ? "Viewing today's attendance for marking."
+                  : `Viewing attendance records for ${formatDisplayDate(headerDateFilter)}.`}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div className="row">
         <div className="col-12">

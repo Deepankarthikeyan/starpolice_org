@@ -37,6 +37,12 @@ const AdminMenuList = (auth?: AuthUser | null, panel: PanelType = "admin") => {
       permission: "admin:calendar" as const,
     },
     {
+      title: "Schedule Class",
+      iconStyle: <i className="material-symbols-outlined">event</i>,
+      to: "schedule-class",
+      permission: "admin:schedule" as const,
+    },
+    {
       title: "Leads",
       iconStyle: <i className="material-symbols-outlined">contact_page</i>,
       to: "leads",
@@ -81,6 +87,12 @@ const AdminMenuList = (auth?: AuthUser | null, panel: PanelType = "admin") => {
       permission: "admin:users" as const,
     },
     {
+      title: "Chat Review",
+      iconStyle: <i className="material-symbols-outlined">policy</i>,
+      to: "chat-review",
+      permission: "admin:chat-review" as const,
+    },
+    {
       title: "Subjects",
       iconStyle: <i className="material-symbols-outlined">menu_book</i>,
       to: "master/subjects",
@@ -102,9 +114,6 @@ const AdminMenuList = (auth?: AuthUser | null, panel: PanelType = "admin") => {
     }
     if (isStaff && item.examType) {
       return staffExamTypes.includes(item.examType);
-    }
-    if (isStaff && item.to === "student-performance") {
-      return false;
     }
     return true;
   });

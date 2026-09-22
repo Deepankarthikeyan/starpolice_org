@@ -8,6 +8,7 @@ import { ThemeContext } from "../../../context/ThemeContext";
 import { api } from "../api";
 import { FILE_CATEGORY_LABELS } from "../constants";
 import { getAbsoluteFileUrl } from "../fileUrl";
+import { SecureFilePreviewButton } from "../shared/SecureFilePreviewButton";
 import { getPanelMotherMenu } from "../panelLabels";
 import type { UploadedFile } from "../types";
 
@@ -79,14 +80,7 @@ const MonthlyCalendar = () => {
                       <video src={getAbsoluteFileUrl(upload.fileUrl)} controls className="w-100 rounded" />
                     )}
                     {(upload.category === "pdf" || upload.category === "document") && (
-                      <a
-                        href={getAbsoluteFileUrl(upload.fileUrl)}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="btn btn-sm btn-outline-primary"
-                      >
-                        Download
-                      </a>
+                      <SecureFilePreviewButton fileUrl={upload.fileUrl} name={upload.name} />
                     )}
                   </div>
                 ))

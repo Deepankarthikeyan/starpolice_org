@@ -1,7 +1,7 @@
 import express from "express";
 import Message from "../models/Message.js";
 import User from "../models/User.js";
-import { authRequired, attachUser } from "../middleware/auth.js";
+import { authRequired, attachUser, superAdminOnly } from "../middleware/auth.js";
 import { hasAnyPermission } from "../permissions.js";
 import { notifyAllUsers, notifyUsers } from "../utils/notifications.js";
 import {
@@ -11,7 +11,7 @@ import {
 
 const router = express.Router();
 
-function mapMessage(item) {
+function mapMessage(item, receiver = null) {
   return {
     id: item._id.toString(),
     senderId: item.sender?.toString?.() ?? String(item.sender),
@@ -23,8 +23,51 @@ function mapMessage(item) {
     threadStudentId: item.threadStudentId ? item.threadStudentId.toString() : null,
     threadStaffId: item.threadStaffId ? item.threadStaffId.toString() : null,
     threadAdminId: item.threadAdminId ? item.threadAdminId.toString() : null,
+    receiverId: receiver?.id || null,
+    receiverName: receiver?.name || null,
+    receiverRole: receiver?.role || null,
     createdAt: item.createdAt,
   };
+}
+
+function resolveReceiverParticipant(message, usersById) {
+  if (message.channel === "group") {
+    return { id: null, name: "Everyone", role: "all" };
+  }
+
+  const senderId = message.sender?.toString?.() ?? String(message.sender);
+  const participantIds = [
+    message.threadStudentId?.toString(),
+    message.threadStaffId?.toString(),
+    message.threadAdminId?.toString(),
+  ].filter(Boolean);
+
+  const receiverId = participantIds.find((id) => id !== senderId) || null;
+  if (!receiverId) {
+    return { id: null, name: "Private participant", role: "unknown" };
+  }
+
+  const user = usersById.get(receiverId);
+  return {
+    id: receiverId,
+    name: user?.name || "Unknown user",
+    role: user?.role || "unknown",
+  };
+}
+
+async function buildUsersById(messages) {
+  const ids = new Set();
+  for (const message of messages) {
+    if (message.sender) ids.add(message.sender.toString());
+    if (message.threadStudentId) ids.add(message.threadStudentId.toString());
+    if (message.threadStaffId) ids.add(message.threadStaffId.toString());
+    if (message.threadAdminId) ids.add(message.threadAdminId.toString());
+  }
+
+  if (!ids.size) return new Map();
+
+  const users = await User.find({ _id: { $in: [...ids] } }).select("name role email");
+  return new Map(users.map((user) => [user._id.toString(), user]));
 }
 
 function canViewMessages(user) {
@@ -214,6 +257,46 @@ router.get("/contacts", authRequired, attachUser, async (req, res) => {
     return res.json(contacts);
   } catch (error) {
     res.status(error.message.includes("Unsupported panel") ? 400 : 500).json({ message: error.message });
+  }
+});
+
+router.get("/review", authRequired, attachUser, superAdminOnly, async (req, res) => {
+  try {
+    const filter = {};
+    const channelParam = req.query.channel;
+    if (channelParam === "group" || channelParam === "private") {
+      filter.channel = channelParam;
+    }
+
+    const fromDate = parseHistoryDate(req.query.from);
+    const toDate = parseHistoryDate(req.query.to, true);
+    if (fromDate || toDate) {
+      filter.createdAt = {};
+      if (fromDate) filter.createdAt.$gte = fromDate;
+      if (toDate) filter.createdAt.$lte = toDate;
+    }
+
+    const search = typeof req.query.search === "string" ? req.query.search.trim() : "";
+    if (search) {
+      const pattern = new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+      filter.$or = [{ message: pattern }, { senderName: pattern }, { senderEmail: pattern }];
+    }
+
+    const sortParam = req.query.sort === "asc" ? "asc" : "desc";
+    const sortKey = req.query.sortKey === "senderName" ? "senderName" : "createdAt";
+    const sortDir = sortParam === "asc" ? 1 : -1;
+    const limit = Math.min(Math.max(Number(req.query.limit) || 1000, 1), 2000);
+
+    const messages = await Message.find(filter)
+      .sort({ [sortKey]: sortDir, createdAt: sortDir })
+      .limit(limit);
+
+    const usersById = await buildUsersById(messages);
+    res.json(
+      messages.map((message) => mapMessage(message, resolveReceiverParticipant(message, usersById)))
+    );
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 

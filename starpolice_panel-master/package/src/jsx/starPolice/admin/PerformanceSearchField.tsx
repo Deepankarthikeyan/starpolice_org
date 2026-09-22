@@ -1,6 +1,7 @@
 import { useRef } from "react";
 
 type PerformanceSearchFieldProps = {
+  id?: string;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
@@ -8,6 +9,7 @@ type PerformanceSearchFieldProps = {
 };
 
 export function PerformanceSearchField({
+  id,
   value,
   onChange,
   placeholder = "Name, reg no., batch...",
@@ -32,6 +34,7 @@ export function PerformanceSearchField({
 
       <input
         ref={inputRef}
+        id={id}
         type="text"
         className="spa-performance-search-input"
         value={value}
