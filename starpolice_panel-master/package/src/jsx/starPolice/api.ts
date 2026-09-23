@@ -860,7 +860,7 @@ export const api = {
     return request<ChatMessage[]>(`/api/messages${query ? `?${query}` : ""}`);
   },
 
-  getChatReviewMessages(params?: {
+  async getChatReviewMessages(params?: {
     search?: string;
     sort?: "asc" | "desc";
     sortKey?: "createdAt" | "senderName";
@@ -878,7 +878,16 @@ export const api = {
     if (params?.to) search.set("to", params.to);
     if (params?.limit) search.set("limit", String(params.limit));
     const query = search.toString();
-    return request<ChatMessage[]>(`/api/messages/review${query ? `?${query}` : ""}`);
+    const path = `/api/messages/review${query ? `?${query}` : ""}`;
+
+    try {
+      return await request<ChatMessage[]>(path);
+    } catch (error) {
+      if (!isMissingHistoryEndpoint(error)) {
+        throw error;
+      }
+      return request<ChatMessage[]>(`/api/messages/history${query ? `?${query}` : ""}`);
+    }
   },
 
   getScheduledClasses() {

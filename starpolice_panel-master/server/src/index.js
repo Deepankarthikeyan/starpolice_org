@@ -66,6 +66,7 @@ app.get("/api/health", (_req, res) => {
     build: process.env.RENDER_GIT_COMMIT?.slice(0, 7) || "local",
     features: {
       messageContacts: true,
+      messageReview: true,
       usernameIndexFix: true,
     },
   });
