@@ -48,6 +48,7 @@ export function getSidebarMenuOptions(panel: PanelType, auth?: AuthUser | null):
     { to: "daywise-upload", title: "Daywise Upload", description: descriptionForPermission("admin:uploads"), permission: "admin:uploads" },
     { to: "questions", title: "Questions", description: descriptionForPermission("admin:questions"), permission: "admin:questions" },
     { to: "interaction", title: "Interaction", description: descriptionForPermission("admin:messages"), permission: "admin:messages" },
+    { to: "chat-review", title: "Chat Review", description: descriptionForPermission("admin:chat-review"), permission: "admin:chat-review" },
     { to: "monthly-calendar", title: "Monthly Calendar", description: descriptionForPermission("admin:calendar"), permission: "admin:calendar" },
     { to: "schedule-class", title: "Schedule Class", description: descriptionForPermission("admin:schedule"), permission: "admin:schedule" },
     { to: "leads", title: "Leads", description: descriptionForPermission("admin:leads"), permission: "admin:leads" },
@@ -57,7 +58,6 @@ export function getSidebarMenuOptions(panel: PanelType, auth?: AuthUser | null):
     { to: "student-attendance", title: "Student Attendance", description: descriptionForPermission("admin:attendance"), permission: "admin:attendance" },
     { to: "student-onboarding", title: "Student Onboarding", description: descriptionForPermission("admin:onboarding"), permission: "admin:onboarding" },
     { to: "user-management", title: "User Management", description: descriptionForPermission("admin:users"), permission: "admin:users" },
-    { to: "chat-review", title: "Chat Review", description: descriptionForPermission("admin:chat-review"), permission: "admin:chat-review" },
     { to: "master/subjects", title: "Subjects", description: descriptionForPermission("admin:master"), permission: "admin:master", section: "master" },
     { to: "master/exams", title: "Exams", description: descriptionForPermission("admin:master"), permission: "admin:master", section: "master" },
   ];

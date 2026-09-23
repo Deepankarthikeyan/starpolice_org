@@ -21,6 +21,7 @@ export const ADMIN_MENU_ITEMS = [
   { to: "daywise-upload", permission: "admin:uploads", label: "Daywise Upload" },
   { to: "questions", permission: "admin:questions", label: "Questions" },
   { to: "interaction", permission: "admin:messages", label: "Interaction" },
+  { to: "chat-review", permission: "admin:chat-review", label: "Chat Review" },
   { to: "monthly-calendar", permission: "admin:calendar", label: "Monthly Calendar" },
   { to: "schedule-class", permission: "admin:schedule", label: "Schedule Class" },
   { to: "leads", permission: "admin:leads", label: "Leads" },
@@ -30,7 +31,6 @@ export const ADMIN_MENU_ITEMS = [
   { to: "student-attendance", permission: "admin:attendance", label: "Student Attendance" },
   { to: "student-onboarding", permission: "admin:onboarding", label: "Student Onboarding" },
   { to: "user-management", permission: "admin:users", label: "User Management" },
-  { to: "chat-review", permission: "admin:chat-review", label: "Chat Review" },
   { to: "master/subjects", permission: "admin:master", label: "Subjects", section: "master" },
   { to: "master/exams", permission: "admin:master", label: "Exams", section: "master" },
 ];

@@ -31,6 +31,12 @@ const AdminMenuList = (auth?: AuthUser | null, panel: PanelType = "admin") => {
       permission: "admin:messages" as const,
     },
     {
+      title: "Chat Review",
+      iconStyle: <i className="material-symbols-outlined">policy</i>,
+      to: "chat-review",
+      permission: "admin:chat-review" as const,
+    },
+    {
       title: "Monthly Calendar",
       iconStyle: <i className="material-symbols-outlined">calendar_month</i>,
       to: "monthly-calendar",
@@ -85,12 +91,6 @@ const AdminMenuList = (auth?: AuthUser | null, panel: PanelType = "admin") => {
       iconStyle: <i className="material-symbols-outlined">manage_accounts</i>,
       to: "user-management",
       permission: "admin:users" as const,
-    },
-    {
-      title: "Chat Review",
-      iconStyle: <i className="material-symbols-outlined">policy</i>,
-      to: "chat-review",
-      permission: "admin:chat-review" as const,
     },
     {
       title: "Subjects",
