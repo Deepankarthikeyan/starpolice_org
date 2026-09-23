@@ -40,7 +40,7 @@ type SortKey =
 
 type SortDir = "asc" | "desc";
 
-type PerformanceSection = "attendance" | "physical" | "written";
+type PerformanceSection = "attendance" | "physical" | "written" | "overall";
 
 type PercentFilterKey =
   | "attendancePercent"
@@ -56,12 +56,23 @@ const PERCENT_SORT_KEYS = new Set<SortKey>([
 ]);
 
 const PERCENT_FILTER_OPTIONS: { value: PercentFilterKey | ""; label: string }[] = [
-  { value: "", label: "Select category" },
+  { value: "", label: "Overall (All)" },
   { value: "attendancePercent", label: "Attendance" },
   { value: "physicalExamPercent", label: "Physical Exam" },
   { value: "writtenExamPercent", label: "Written Exam" },
-  { value: "overallPercent", label: "Overall" },
+  { value: "overallPercent", label: "Overall %" },
 ];
+
+function categoryToSection(category: PercentFilterKey | ""): PerformanceSection {
+  if (category === "attendancePercent") return "attendance";
+  if (category === "physicalExamPercent") return "physical";
+  if (category === "writtenExamPercent") return "written";
+  return "overall";
+}
+
+function showAllOverviewColumns(category: PercentFilterKey | "") {
+  return !category || category === "overallPercent";
+}
 
 function percentFilterLabel(key: PercentFilterKey | "") {
   return PERCENT_FILTER_OPTIONS.find((option) => option.value === key)?.label ?? "Performance";
@@ -162,7 +173,7 @@ const StudentPerformance = () => {
   const [listLoading, setListLoading] = useState(true);
   const [error, setError] = useState("");
   const [listError, setListError] = useState("");
-  const [activeSection, setActiveSection] = useState<PerformanceSection>("attendance");
+  const [activeSection, setActiveSection] = useState<PerformanceSection>("overall");
   const [attendanceDateFrom, setAttendanceDateFrom] = useState("");
   const [attendanceDateTo, setAttendanceDateTo] = useState("");
   const [attendanceStatusFilter, setAttendanceStatusFilter] = useState("");
@@ -262,7 +273,35 @@ const StudentPerformance = () => {
     setPercentFilterKey("");
     setPercentMin("");
     setPercentMax("");
+    setActiveSection("overall");
   };
+
+  const handleCategoryChange = (value: PercentFilterKey | "") => {
+    setPercentFilterKey(value);
+    setActiveSection(categoryToSection(value));
+    if (value === "attendancePercent") {
+      setSortKey("attendancePercent");
+      setSortDir("desc");
+    } else if (value === "physicalExamPercent") {
+      setSortKey("physicalExamPercent");
+      setSortDir("desc");
+    } else if (value === "writtenExamPercent") {
+      setSortKey("writtenExamPercent");
+      setSortDir("desc");
+    } else if (value === "overallPercent") {
+      setSortKey("overallPercent");
+      setSortDir("desc");
+    } else {
+      setSortKey("overallPercent");
+      setSortDir("desc");
+    }
+  };
+
+  const showAllColumns = showAllOverviewColumns(percentFilterKey);
+  const showAttendanceColumn = showAllColumns || percentFilterKey === "attendancePercent";
+  const showPhysicalColumn = showAllColumns || percentFilterKey === "physicalExamPercent";
+  const showWrittenColumn = showAllColumns || percentFilterKey === "writtenExamPercent";
+  const showOverallColumn = showAllColumns;
 
   const toggleSort = (key: SortKey) => {
     if (sortKey === key) {
@@ -305,7 +344,7 @@ const StudentPerformance = () => {
       setDetail(data);
       setWrittenExams(data.writtenExams);
       setPerformanceForm(buildPerformanceFormFromDetail(data));
-      setActiveSection("attendance");
+      setActiveSection(categoryToSection(percentFilterKey));
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to load student performance.";
       setError(message);
@@ -319,7 +358,7 @@ const StudentPerformance = () => {
     setDetail(null);
     setWrittenExams([]);
     setPerformanceForm(null);
-    setActiveSection("attendance");
+    setActiveSection(categoryToSection(percentFilterKey));
     setError("");
   };
 
@@ -436,40 +475,46 @@ const StudentPerformance = () => {
               active={percentFilterActive}
               summary={percentFilterSummary}
               resultCount={filteredStudents.length}
-              onCategoryChange={(value) => setPercentFilterKey(value as PercentFilterKey | "")}
+              onCategoryChange={(value) => handleCategoryChange(value as PercentFilterKey | "")}
               onMinChange={setPercentMin}
               onMaxChange={setPercentMax}
               onClear={clearPercentFilter}
             />
-            <div className="row g-3 mb-3">
-              <div className="col-md-3">
-                <label className="form-label small text-muted">Attendance from</label>
-                <input type="date" className="form-control" value={attendanceDateFrom} onChange={(e) => setAttendanceDateFrom(e.target.value)} />
+            {(showAllColumns || percentFilterKey === "attendancePercent") && (
+              <div className="row g-3 mb-3">
+                <div className="col-md-3">
+                  <label className="form-label small text-muted">Attendance from</label>
+                  <input type="date" className="form-control" value={attendanceDateFrom} onChange={(e) => setAttendanceDateFrom(e.target.value)} />
+                </div>
+                <div className="col-md-3">
+                  <label className="form-label small text-muted">Attendance to</label>
+                  <input type="date" className="form-control" value={attendanceDateTo} onChange={(e) => setAttendanceDateTo(e.target.value)} />
+                </div>
+                <div className="col-md-3">
+                  <label className="form-label small text-muted">Attendance status</label>
+                  <select className="form-select" value={attendanceStatusFilter} onChange={(e) => setAttendanceStatusFilter(e.target.value)}>
+                    <option value="">All</option>
+                    <option value="present">Present</option>
+                    <option value="absent">Absent</option>
+                    <option value="late">Late</option>
+                    <option value="leave">Leave</option>
+                  </select>
+                </div>
               </div>
-              <div className="col-md-3">
-                <label className="form-label small text-muted">Attendance to</label>
-                <input type="date" className="form-control" value={attendanceDateTo} onChange={(e) => setAttendanceDateTo(e.target.value)} />
+            )}
+            {(showAllColumns || percentFilterKey === "writtenExamPercent") && (
+              <div className="row g-3 mb-3">
+                <div className="col-md-4">
+                  <label className="form-label small text-muted">Written exam</label>
+                  <select className="form-select" value={writtenExamNameFilter} onChange={(e) => setWrittenExamNameFilter(e.target.value)}>
+                    <option value="">All exams</option>
+                    {writtenExamOptions.map((name) => (
+                      <option key={name} value={name}>{name}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
-              <div className="col-md-3">
-                <label className="form-label small text-muted">Attendance status</label>
-                <select className="form-select" value={attendanceStatusFilter} onChange={(e) => setAttendanceStatusFilter(e.target.value)}>
-                  <option value="">All</option>
-                  <option value="present">Present</option>
-                  <option value="absent">Absent</option>
-                  <option value="late">Late</option>
-                  <option value="leave">Leave</option>
-                </select>
-              </div>
-              <div className="col-md-3">
-                <label className="form-label small text-muted">Written exam</label>
-                <select className="form-select" value={writtenExamNameFilter} onChange={(e) => setWrittenExamNameFilter(e.target.value)}>
-                  <option value="">All exams</option>
-                  {writtenExamOptions.map((name) => (
-                    <option key={name} value={name}>{name}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
+            )}
             {listError && (
               <div className="alert alert-danger spa-no-print">
                 {listError}
@@ -506,26 +551,34 @@ const StudentPerformance = () => {
                           Batch{sortIndicator("batch")}
                         </button>
                       </th>
-                      <th className="text-end">
-                        <button type="button" className="btn btn-link p-0 spa-sort-btn" onClick={() => toggleSort("attendancePercent")}>
-                          Attendance %{sortIndicator("attendancePercent")}
-                        </button>
-                      </th>
-                      <th className="text-end">
-                        <button type="button" className="btn btn-link p-0 spa-sort-btn" onClick={() => toggleSort("physicalExamPercent")}>
-                          Physical Exam %{sortIndicator("physicalExamPercent")}
-                        </button>
-                      </th>
-                      <th className="text-end">
-                        <button type="button" className="btn btn-link p-0 spa-sort-btn" onClick={() => toggleSort("writtenExamPercent")}>
-                          Written Exam %{sortIndicator("writtenExamPercent")}
-                        </button>
-                      </th>
-                      <th className="text-end">
-                        <button type="button" className="btn btn-link p-0 spa-sort-btn" onClick={() => toggleSort("overallPercent")}>
-                          Overall %{sortIndicator("overallPercent")}
-                        </button>
-                      </th>
+                      {showAttendanceColumn && (
+                        <th className="text-end">
+                          <button type="button" className="btn btn-link p-0 spa-sort-btn" onClick={() => toggleSort("attendancePercent")}>
+                            Attendance %{sortIndicator("attendancePercent")}
+                          </button>
+                        </th>
+                      )}
+                      {showPhysicalColumn && (
+                        <th className="text-end">
+                          <button type="button" className="btn btn-link p-0 spa-sort-btn" onClick={() => toggleSort("physicalExamPercent")}>
+                            Physical Exam %{sortIndicator("physicalExamPercent")}
+                          </button>
+                        </th>
+                      )}
+                      {showWrittenColumn && (
+                        <th className="text-end">
+                          <button type="button" className="btn btn-link p-0 spa-sort-btn" onClick={() => toggleSort("writtenExamPercent")}>
+                            Written Exam %{sortIndicator("writtenExamPercent")}
+                          </button>
+                        </th>
+                      )}
+                      {showOverallColumn && (
+                        <th className="text-end">
+                          <button type="button" className="btn btn-link p-0 spa-sort-btn" onClick={() => toggleSort("overallPercent")}>
+                            Overall %{sortIndicator("overallPercent")}
+                          </button>
+                        </th>
+                      )}
                       <th className="spa-no-print"></th>
                     </tr>
                   </thead>
@@ -535,12 +588,20 @@ const StudentPerformance = () => {
                         <td>{student.studentId}</td>
                         <td>{student.fullName}</td>
                         <td>{student.batch || "—"}</td>
-                        <td className="text-end">{formatPercent(student.attendancePercent)}</td>
-                        <td className="text-end">{formatPercent(student.physicalExamPercent)}</td>
-                        <td className="text-end">{formatPercent(student.writtenExamPercent)}</td>
-                        <td className="text-end">
-                          <span className="badge bg-primary">{formatPercent(student.overallPercent)}</span>
-                        </td>
+                        {showAttendanceColumn && (
+                          <td className="text-end">{formatPercent(student.attendancePercent)}</td>
+                        )}
+                        {showPhysicalColumn && (
+                          <td className="text-end">{formatPercent(student.physicalExamPercent)}</td>
+                        )}
+                        {showWrittenColumn && (
+                          <td className="text-end">{formatPercent(student.writtenExamPercent)}</td>
+                        )}
+                        {showOverallColumn && (
+                          <td className="text-end">
+                            <span className="badge bg-primary">{formatPercent(student.overallPercent)}</span>
+                          </td>
+                        )}
                         <td className="spa-no-print">
                           <button
                             type="button"
@@ -623,9 +684,35 @@ const StudentPerformance = () => {
                       ? overallPerformanceLabel(detail.summary.overallPerformance as never)
                       : undefined
                   }
-                  clickable={false}
+                  active={activeSection === "overall"}
+                  onClick={() => setActiveSection("overall")}
                 />
               </div>
+
+              {activeSection === "overall" && detail && (
+                <>
+                  <AttendancePerformanceList
+                    attendance={filteredAttendance}
+                    attendancePercent={detail.summary.attendancePercent}
+                  />
+                  {performanceForm && (
+                    <div className="mt-4">
+                      <PhysicalRecordCard
+                        form={performanceForm}
+                        onChange={setPerformanceForm}
+                        todayAttendanceStatus={getTodayAttendanceStatus(detail.attendance)}
+                      />
+                    </div>
+                  )}
+                  <div className="mt-4">
+                    <ExamMarksTable
+                      title="Written Exam Performance"
+                      exams={writtenExamNameFilter ? filteredWrittenExams : writtenExams}
+                      onChange={setWrittenExams}
+                    />
+                  </div>
+                </>
+              )}
 
               {activeSection === "attendance" && detail && (
                 <>
@@ -648,11 +735,7 @@ const StudentPerformance = () => {
                   </div>
                   <AttendancePerformanceList
                     attendance={filteredAttendance}
-                    attendancePercent={
-                      writtenExamNameFilter
-                        ? null
-                        : detail.summary.attendancePercent
-                    }
+                    attendancePercent={detail.summary.attendancePercent}
                   />
                 </>
               )}
