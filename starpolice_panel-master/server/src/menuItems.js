@@ -26,6 +26,8 @@ export const ADMIN_MENU_ITEMS = [
   { to: "schedule-class", permission: "admin:schedule", label: "Schedule Class" },
   { to: "leads", permission: "admin:leads", label: "Leads" },
   { to: "student-performance", permission: "admin:performance", label: "Student Performance" },
+  { to: "staff-performance", permission: "admin:staff-performance", label: "Staff Performance" },
+  { to: "my-performance", permission: "admin:dashboard", label: "My Performance", staffOnly: true },
   { to: "physical-exam", permission: "admin:performance", label: "Physical Exam", examType: "physical_exam" },
   { to: "written-exam", permission: "admin:performance", label: "Written Exam", examType: "written_exam" },
   { to: "student-attendance", permission: "admin:attendance", label: "Student Attendance" },
@@ -56,6 +58,8 @@ export function getAllowedMenuPaths(user, panel) {
   return ADMIN_MENU_ITEMS.filter((item) => {
     if (!hasPermission(item.permission)) return false;
     if (isStaff && item.examType) return staffExamTypes.includes(item.examType);
+    if (item.staffOnly) return isStaff;
+    if (isStaff && item.to === "staff-performance") return false;
     if (isStaff && item.to === "chat-review") return false;
     return true;
   }).map((item) => item.to);

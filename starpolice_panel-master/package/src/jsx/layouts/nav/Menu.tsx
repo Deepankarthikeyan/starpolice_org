@@ -13,6 +13,13 @@ const AdminMenuList = (auth?: AuthUser | null, panel: PanelType = "admin") => {
       permission: "admin:dashboard" as const,
     },
     {
+      title: "My Performance",
+      iconStyle: <i className="material-symbols-outlined">insights</i>,
+      to: "my-performance",
+      permission: "admin:dashboard" as const,
+      staffOnly: true as const,
+    },
+    {
       title: "Daywise Upload",
       iconStyle: <i className="material-symbols-outlined">upload_file</i>,
       to: "daywise-upload",
@@ -59,6 +66,12 @@ const AdminMenuList = (auth?: AuthUser | null, panel: PanelType = "admin") => {
       iconStyle: <i className="material-symbols-outlined">fitness_center</i>,
       to: "student-performance",
       permission: "admin:performance" as const,
+    },
+    {
+      title: "Staff Performance",
+      iconStyle: <i className="material-symbols-outlined">badge</i>,
+      to: "staff-performance",
+      permission: "admin:staff-performance" as const,
     },
     {
       title: "Physical Exam",
@@ -109,6 +122,12 @@ const AdminMenuList = (auth?: AuthUser | null, panel: PanelType = "admin") => {
   ];
 
   return items.filter((item) => {
+    if ("staffOnly" in item && item.staffOnly) {
+      return isStaff;
+    }
+    if (isStaff && item.to === "staff-performance") {
+      return false;
+    }
     if (!hasPermission(auth, item.permission)) {
       return false;
     }

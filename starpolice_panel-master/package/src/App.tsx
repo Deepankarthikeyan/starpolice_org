@@ -20,6 +20,8 @@ const UserManagement = lazy(() => import("./jsx/starPolice/admin/UserManagement"
 const StudentOnboarding = lazy(() => import("./jsx/starPolice/admin/StudentOnboarding"));
 const Leads = lazy(() => import("./jsx/starPolice/admin/Leads"));
 const StudentPerformanceAdmin = lazy(() => import("./jsx/starPolice/admin/StudentPerformance"));
+const StaffPerformanceAdmin = lazy(() => import("./jsx/starPolice/admin/StaffPerformance"));
+const StaffMyPerformance = lazy(() => import("./jsx/starPolice/staff/StaffMyPerformance"));
 const StudentAttendance = lazy(() => import("./jsx/starPolice/admin/StudentAttendance"));
 const ScheduleClass = lazy(() => import("./jsx/starPolice/admin/ScheduleClass"));
 const ChatReview = lazy(() => import("./jsx/starPolice/admin/ChatReview"));
@@ -152,6 +154,7 @@ function App() {
             <Route path="student-onboarding" element={<StudentOnboarding />} />
             <Route path="leads" element={<Leads />} />
             <Route path="student-performance" element={<StudentPerformanceAdmin />} />
+            <Route path="staff-performance" element={<StaffPerformanceAdmin />} />
             <Route path="physical-exam" element={<PhysicalExamEntry />} />
             <Route path="written-exam" element={<WrittenExamEntry />} />
             <Route path="student-attendance" element={<StudentAttendance />} />
@@ -173,9 +176,11 @@ function App() {
             <Route path="monthly-calendar" element={<MonthlyCalendar />} />
             <Route path="schedule-class" element={<ScheduleClass />} />
             <Route path="student-performance" element={<StudentPerformanceAdmin />} />
+            <Route path="staff-performance" element={<StaffPerformanceAdmin />} />
             <Route path="physical-exam" element={<PhysicalExamEntry />} />
             <Route path="written-exam" element={<WrittenExamEntry />} />
             <Route path="student-attendance" element={<StudentAttendance />} />
+            <Route path="my-performance" element={<StaffMyPerformance />} />
             <Route path="profile" element={<PanelProfile />} />
             <Route path="inbox" element={<PanelInbox />} />
             <Route path="settings" element={<PanelSettings />} />

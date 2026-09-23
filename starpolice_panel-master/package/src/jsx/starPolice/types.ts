@@ -120,6 +120,29 @@ export interface StudentDashboardStats {
   }>;
 }
 
+export interface StaffDashboardStats {
+  uploadCount: number;
+  questionCount: number;
+  classesAssigned: number;
+  classesAttended: number;
+  classAttendancePercent: number | null;
+  attendanceMarked: number;
+  messagesSent: number;
+  recentUploads: Array<{
+    id: string;
+    date: string;
+    name: string;
+    title: string;
+    category: FileCategory;
+  }>;
+  upcomingClasses: Array<{
+    id: string;
+    scheduledAt: string;
+    subject: string;
+    facultyName: string;
+  }>;
+}
+
 export interface Note {
   id: string;
   content: string;

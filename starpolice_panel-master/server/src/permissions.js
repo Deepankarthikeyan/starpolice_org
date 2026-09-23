@@ -1,5 +1,5 @@
 export const SUPERADMIN_ONLY_PERMISSIONS = ["admin:users", "admin:chat-review"];
-export const ADMIN_ONLY_PERMISSIONS = ["admin:leads"];
+export const ADMIN_ONLY_PERMISSIONS = ["admin:leads", "admin:staff-performance"];
 
 export const ADMIN_PERMISSIONS = [
   { key: "admin:dashboard", label: "Dashboard", description: "View admin dashboard and statistics" },
@@ -11,6 +11,7 @@ export const ADMIN_PERMISSIONS = [
   { key: "admin:onboarding", label: "Student Onboarding", description: "Create and manage student onboarding records" },
   { key: "admin:leads", label: "Leads", description: "Manage prospective student leads" },
   { key: "admin:performance", label: "Student Performance", description: "Manage physical efficiency records" },
+  { key: "admin:staff-performance", label: "Staff Performance", description: "Review staff class attendance, uploads, and activity" },
   { key: "admin:attendance", label: "Student Attendance", description: "Mark and review daily student attendance" },
   { key: "admin:schedule", label: "Schedule Class", description: "Schedule classes and notify students and staff" },
   { key: "admin:chat-review", label: "Chat Review", description: "Review all platform chat history" },

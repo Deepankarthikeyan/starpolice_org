@@ -43,7 +43,7 @@ export function getSidebarMenuOptions(panel: PanelType, auth?: AuthUser | null):
   const isStaff = panel === "staff" && auth.role === "staff";
   const staffExamTypes = auth.staffExamTypes || [];
 
-  const adminItems: Array<SidebarMenuOption & { permission: string; examType?: string }> = [
+  const adminItems: Array<SidebarMenuOption & { permission: string; examType?: string; staffOnly?: boolean }> = [
     { to: "dashboard", title: "Dashboard", description: descriptionForPermission("admin:dashboard"), permission: "admin:dashboard" },
     { to: "daywise-upload", title: "Daywise Upload", description: descriptionForPermission("admin:uploads"), permission: "admin:uploads" },
     { to: "questions", title: "Questions", description: descriptionForPermission("admin:questions"), permission: "admin:questions" },
@@ -53,6 +53,8 @@ export function getSidebarMenuOptions(panel: PanelType, auth?: AuthUser | null):
     { to: "schedule-class", title: "Schedule Class", description: descriptionForPermission("admin:schedule"), permission: "admin:schedule" },
     { to: "leads", title: "Leads", description: descriptionForPermission("admin:leads"), permission: "admin:leads" },
     { to: "student-performance", title: "Student Performance", description: descriptionForPermission("admin:performance"), permission: "admin:performance" },
+    { to: "staff-performance", title: "Staff Performance", description: descriptionForPermission("admin:staff-performance"), permission: "admin:staff-performance" },
+    { to: "my-performance", title: "My Performance", description: "View your class attendance, uploads, and activity", permission: "admin:dashboard", staffOnly: true },
     { to: "physical-exam", title: "Physical Exam", description: descriptionForPermission("admin:performance"), permission: "admin:performance", examType: "physical_exam" },
     { to: "written-exam", title: "Written Exam", description: descriptionForPermission("admin:performance"), permission: "admin:performance", examType: "written_exam" },
     { to: "student-attendance", title: "Student Attendance", description: descriptionForPermission("admin:attendance"), permission: "admin:attendance" },
@@ -67,6 +69,8 @@ export function getSidebarMenuOptions(panel: PanelType, auth?: AuthUser | null):
       if (item.to === "user-management") return false;
       if (!hasPermission(auth, item.permission as never)) return false;
       if (isStaff && item.examType) return staffExamTypes.includes(item.examType as never);
+      if (item.staffOnly) return isStaff;
+      if (isStaff && item.to === "staff-performance") return false;
       if (isStaff && item.to === "chat-review") return false;
       return true;
     })

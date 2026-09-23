@@ -979,6 +979,37 @@ export const api = {
     return request<StudentDashboardStats>("/api/dashboard/student-stats");
   },
 
+  getStaffDashboardStats() {
+    return request<import("./types").StaffDashboardStats>("/api/dashboard/staff-stats");
+  },
+
+  getStaffPerformanceStaff() {
+    return request<import("./admin/staffPerformanceDefaults").StaffPerformanceSummary[]>("/api/staff-performance/staff");
+  },
+
+  getMyStaffPerformanceDetail() {
+    return request<import("./admin/staffPerformanceDefaults").StaffPerformanceDetail>("/api/staff-performance/me/detail");
+  },
+
+  getStaffPerformanceDetail(userId: string) {
+    return request<import("./admin/staffPerformanceDefaults").StaffPerformanceDetail>(
+      `/api/staff-performance/by-staff/${userId}/detail`
+    );
+  },
+
+  saveStaffClassAttendance(
+    userId: string,
+    payload: { scheduledClassId: string; status: "present" | "absent" | "late"; notes?: string }
+  ) {
+    return request<import("./admin/staffPerformanceDefaults").StaffPerformanceDetail>(
+      `/api/staff-performance/by-staff/${userId}/class-attendance`,
+      {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      }
+    );
+  },
+
   getNotes() {
     return request<Note[]>("/api/notes");
   },
