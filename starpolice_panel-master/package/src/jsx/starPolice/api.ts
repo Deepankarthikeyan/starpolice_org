@@ -15,6 +15,7 @@ import type {
   Subject,
 } from "./types";
 import type { StudentOnboardingFormState, StudentOnboardingRecord } from "./admin/studentOnboardingDefaults";
+import type { ScheduledClassRecord } from "./admin/scheduleDefaults";
 import type { LeadFormState, LeadRecord, LeadStatus } from "./admin/leadDefaults";
 import type { Exam, StudentPerformanceDetail } from "./admin/examDefaults";
 import type {
@@ -859,6 +860,52 @@ export const api = {
     return request<ChatMessage[]>(`/api/messages${query ? `?${query}` : ""}`);
   },
 
+  getChatReviewMessages(params?: {
+    search?: string;
+    sort?: "asc" | "desc";
+    sortKey?: "createdAt" | "senderName";
+    channel?: "group" | "private";
+    from?: string;
+    to?: string;
+    limit?: number;
+  }) {
+    const search = new URLSearchParams();
+    if (params?.search) search.set("search", params.search);
+    if (params?.sort) search.set("sort", params.sort);
+    if (params?.sortKey) search.set("sortKey", params.sortKey);
+    if (params?.channel) search.set("channel", params.channel);
+    if (params?.from) search.set("from", params.from);
+    if (params?.to) search.set("to", params.to);
+    if (params?.limit) search.set("limit", String(params.limit));
+    const query = search.toString();
+    return request<ChatMessage[]>(`/api/messages/review${query ? `?${query}` : ""}`);
+  },
+
+  getScheduledClasses() {
+    return request<ScheduledClassRecord[]>("/api/scheduled-classes");
+  },
+
+  createScheduledClass(payload: {
+    scheduledAt: string;
+    subject: string;
+    subjectId?: string;
+    facultyId: string;
+    notes?: string;
+  }) {
+    return request<ScheduledClassRecord & { whatsAppMessage?: string }>("/api/scheduled-classes", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+  },
+
+  getScheduledClassWhatsAppLinks(id: string) {
+    return request<{
+      message: string;
+      studentLinks: Array<{ name: string; phone: string; url: string }>;
+      facultyLink: { name: string; phone: string; url: string } | null;
+    }>(`/api/scheduled-classes/whatsapp-broadcast/${id}`);
+  },
+
   async getMessageHistory(params?: {
     search?: string;
     sort?: "asc" | "desc";
@@ -1277,6 +1324,7 @@ const STUDENT_ONBOARDING_TEXT_FIELDS: Array<keyof StudentOnboardingFormState> = 
   "discount",
   "paymentMethod",
   "paymentStatus",
+  "balanceAmount",
   "transactionId",
   "receiptNumber",
   "medicalConditions",
@@ -1311,7 +1359,8 @@ function buildStudentOnboardingFormData(
   formData.append("privacyAccepted", String(form.privacyAccepted));
   formData.append("grantLogin", String(form.grantLogin));
   formData.append("residenceType", form.residenceType || "");
-  formData.append("paymentStatus", form.paymentStatus || "Pending");
+  formData.append("paymentStatus", form.paymentStatus || "");
+  formData.append("balanceAmount", form.balanceAmount || "");
   formData.append("materials", JSON.stringify(form.materials || []));
   formData.append("clientUrl", getPanelClientUrl());
 

@@ -7,7 +7,10 @@ import { getPanelMotherMenu } from "../panelLabels";
 import { FileUploadProgressOverlay } from "../shared/FileUploadProgress";
 import { getAbsoluteFileUrl } from "../fileUrl";
 import { notify } from "../toast";
+import { SecureFilePreview } from "../shared/SecureFilePreview";
 import {
+  calculateTotalFees,
+  displayBalanceAmount,
   emptyStudentOnboardingForm,
   type OnboardingActivityLog,
   type OnboardingMaterial,
@@ -108,20 +111,20 @@ function formatResidenceType(value: string) {
 }
 
 function formatPaymentStatus(value: string) {
-  if (value === "Pending" || value === "Paid" || value === "Partial") return value;
+  if (value === "Paid" || value === "Partial") return value;
   return "—";
 }
 
 function paymentStatusBadgeClass(value: string) {
   if (value === "Paid") return "badge bg-success";
   if (value === "Partial") return "badge bg-info text-dark";
-  if (value === "Pending") return "badge bg-warning text-dark";
   return "badge bg-secondary";
 }
 
 function formatLogField(field: string) {
   const labels: Record<string, string> = {
     paymentStatus: "Payment Status",
+    balanceAmount: "Balance Amount",
     registrationFee: "Registration Fee",
     courseFee: "Course Fee",
     scholarship: "Scholarship",
@@ -185,6 +188,7 @@ const StudentOnboarding = () => {
   const [activityLogs, setActivityLogs] = useState<OnboardingActivityLog[]>([]);
 
   const canManage = hasPermission(auth, "admin:onboarding");
+  const isSuperAdmin = auth?.role === "superadmin";
 
   const loadRecords = async () => {
     const data = await api.getStudentOnboardingRecords();
@@ -280,6 +284,12 @@ const StudentOnboarding = () => {
     }
     if (!form.paymentStatus) {
       const message = "Payment status is required.";
+      setError(message);
+      notify.error(message);
+      return;
+    }
+    if (form.paymentStatus === "Partial" && !form.balanceAmount.trim()) {
+      const message = "Balance amount is required for partial payment.";
       setError(message);
       notify.error(message);
       return;
@@ -426,13 +436,11 @@ const StudentOnboarding = () => {
   const renderFileInput = (field: (typeof FILE_FIELDS)[number]) => (
     <Field key={field.key} label={field.label} optional={field.key !== "profilePhoto"}>
       {viewMode ? (
-        form[field.urlKey] ? (
-          <a href={getAbsoluteFileUrl(String(form[field.urlKey]))} target="_blank" rel="noreferrer" className="btn btn-sm btn-outline-primary">
-            View File
-          </a>
-        ) : (
-          <span className="text-muted">No file uploaded</span>
-        )
+        <SecureFilePreview
+          fileUrl={String(form[field.urlKey] || "")}
+          label="View File"
+          imagePreview={field.key === "profilePhoto"}
+        />
       ) : (
         <>
           <input
@@ -504,12 +512,14 @@ const StudentOnboarding = () => {
               <table className="table table-striped table-hover align-middle mb-0 spa-onboarding-table">
                 <thead>
                   <tr>
+                    <th scope="col">Photo</th>
                     <th scope="col">Student ID</th>
                     <th scope="col">Name</th>
                     <th scope="col">Course</th>
                     <th scope="col">Batch</th>
                     <th scope="col">Day Scholar / Hostel</th>
                     <th scope="col">Payment Status</th>
+                    <th scope="col">Balance Amount</th>
                     <th scope="col">Email</th>
                     <th scope="col" className="spa-onboarding-actions-col spa-no-print">
                       Actions
@@ -519,13 +529,32 @@ const StudentOnboarding = () => {
                 <tbody>
                   {filteredRecords.length === 0 ? (
                     <tr>
-                      <td colSpan={8} className="spa-onboarding-empty">
+                      <td colSpan={10} className="spa-onboarding-empty">
                         No student onboarding records yet.
                       </td>
                     </tr>
                   ) : (
                     filteredRecords.map((record) => (
                       <tr key={record.id}>
+                        <td>
+                          {record.profilePhotoUrl ? (
+                            <button
+                              type="button"
+                              className="btn btn-link p-0 border-0"
+                              onClick={() => startView(record)}
+                              title="View profile photo"
+                            >
+                              <img
+                                src={getAbsoluteFileUrl(record.profilePhotoUrl)}
+                                alt={fullName(record)}
+                                className="rounded-circle"
+                                style={{ width: 36, height: 36, objectFit: "cover" }}
+                              />
+                            </button>
+                          ) : (
+                            <span className="text-muted">—</span>
+                          )}
+                        </td>
                         <td className="spa-onboarding-id">{record.studentId}</td>
                         <td className="spa-onboarding-name">{fullName(record)}</td>
                         <td>{record.course || "—"}</td>
@@ -536,6 +565,7 @@ const StudentOnboarding = () => {
                             {formatPaymentStatus(record.paymentStatus)}
                           </span>
                         </td>
+                        <td>{displayBalanceAmount(record)}</td>
                         <td className="spa-onboarding-email">{record.loginEmail || record.email || "—"}</td>
                         <td className="spa-onboarding-actions-col spa-no-print">
                           <div className="spa-onboarding-actions">
@@ -546,20 +576,24 @@ const StudentOnboarding = () => {
                             >
                               View
                             </button>
-                            <button
-                              type="button"
-                              className="btn btn-sm btn-outline-primary"
-                              onClick={() => startEdit(record)}
-                            >
-                              Edit
-                            </button>
-                            <button
-                              type="button"
-                              className="btn btn-sm btn-outline-danger"
-                              onClick={() => onDelete(record)}
-                            >
-                              Delete
-                            </button>
+                            {isSuperAdmin && (
+                              <button
+                                type="button"
+                                className="btn btn-sm btn-outline-primary"
+                                onClick={() => startEdit(record)}
+                              >
+                                Edit
+                              </button>
+                            )}
+                            {isSuperAdmin && (
+                              <button
+                                type="button"
+                                className="btn btn-sm btn-outline-danger"
+                                onClick={() => onDelete(record)}
+                              >
+                                Delete
+                              </button>
+                            )}
                           </div>
                         </td>
                       </tr>
@@ -581,7 +615,7 @@ const StudentOnboarding = () => {
                   : "New Student Onboarding"}
             </h4>
             <div className="d-flex gap-2">
-              {viewMode && editingId && (
+              {viewMode && editingId && isSuperAdmin && (
                 <button
                   type="button"
                   className="btn btn-primary"
@@ -657,7 +691,14 @@ const StudentOnboarding = () => {
                   <TextInput value={form.aadhaarOrPassport} onChange={(v) => setField("aadhaarOrPassport", v)} />
                 </Field>
               </div>
-              <div className="col-md-4">{renderFileInput(FILE_FIELDS[0])}</div>
+              <div className="col-md-4">
+                {renderFileInput(FILE_FIELDS[0])}
+                {viewMode && form.profilePhotoUrl && (
+                  <div className="mt-2">
+                    <SecureFilePreview fileUrl={form.profilePhotoUrl} label="Expand Photo" imagePreview />
+                  </div>
+                )}
+              </div>
             </div>
           </SectionCard>
 
@@ -788,14 +829,37 @@ const StudentOnboarding = () => {
                   <select
                     className="form-select"
                     value={form.paymentStatus}
-                    onChange={(e) => setField("paymentStatus", e.target.value)}
+                    onChange={(e) => {
+                      const nextStatus = e.target.value;
+                      setForm((prev) => ({
+                        ...prev,
+                        paymentStatus: nextStatus,
+                        balanceAmount: nextStatus === "Paid" ? "0" : prev.balanceAmount,
+                      }));
+                    }}
                     required
                   >
                     <option value="">Select</option>
-                    <option value="Pending">Pending</option>
                     <option value="Paid">Paid</option>
-                    <option value="Partial">Partial</option>
+                    <option value="Partial">Partial Payment</option>
                   </select>
+                </Field>
+              </div>
+              {form.paymentStatus === "Partial" && (
+                <div className="col-md-3">
+                  <Field label="Remaining Balance Amount">
+                    <TextInput
+                      value={form.balanceAmount}
+                      onChange={(v) => setField("balanceAmount", v)}
+                      placeholder="Enter remaining balance"
+                      required
+                    />
+                  </Field>
+                </div>
+              )}
+              <div className="col-md-3">
+                <Field label="Total Fees (Calculated)" optional>
+                  <input className="form-control" value={calculateTotalFees(form).toFixed(2)} disabled readOnly />
                 </Field>
               </div>
               <div className="col-md-3"><Field label="Transaction ID"><TextInput value={form.transactionId} onChange={(v) => setField("transactionId", v)} /></Field></div>

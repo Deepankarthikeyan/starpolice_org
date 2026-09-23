@@ -89,6 +89,7 @@ export interface StudentOnboardingRecord {
   discount: string;
   paymentMethod: string;
   paymentStatus: string;
+  balanceAmount: string;
   transactionId: string;
   receiptNumber: string;
   materials: OnboardingMaterial[];
@@ -183,7 +184,8 @@ export const emptyStudentOnboardingForm = (): StudentOnboardingFormState => ({
   scholarship: "",
   discount: "",
   paymentMethod: "",
-  paymentStatus: "Pending",
+  paymentStatus: "",
+  balanceAmount: "",
   transactionId: "",
   receiptNumber: "",
   materials: [],
@@ -204,3 +206,23 @@ export const emptyStudentOnboardingForm = (): StudentOnboardingFormState => ({
   confirmPassword: "",
   grantLogin: false,
 });
+
+export function parseFeeAmount(value: string) {
+  const parsed = Number.parseFloat(String(value || "").replace(/[^0-9.-]/g, ""));
+  return Number.isNaN(parsed) ? 0 : parsed;
+}
+
+export function calculateTotalFees(record: Pick<StudentOnboardingRecord, "registrationFee" | "courseFee" | "scholarship" | "discount">) {
+  return (
+    parseFeeAmount(record.registrationFee) +
+    parseFeeAmount(record.courseFee) -
+    parseFeeAmount(record.scholarship) -
+    parseFeeAmount(record.discount)
+  );
+}
+
+export function displayBalanceAmount(record: Pick<StudentOnboardingRecord, "paymentStatus" | "balanceAmount">) {
+  if (record.paymentStatus === "Paid") return "0";
+  if (record.paymentStatus === "Partial") return record.balanceAmount || "—";
+  return "—";
+}

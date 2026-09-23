@@ -94,6 +94,7 @@ export function UploadPreviewButton({
         </Modal.Header>
         <Modal.Body className="upload-preview-body">
           <UploadPreviewContent upload={upload} />
+          <p className="text-muted small mt-3 mb-0 text-center">Downloads are disabled. View only.</p>
         </Modal.Body>
       </Modal>
     </>

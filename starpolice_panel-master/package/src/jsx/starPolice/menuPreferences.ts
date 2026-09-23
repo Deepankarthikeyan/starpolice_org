@@ -49,6 +49,7 @@ export function getSidebarMenuOptions(panel: PanelType, auth?: AuthUser | null):
     { to: "questions", title: "Questions", description: descriptionForPermission("admin:questions"), permission: "admin:questions" },
     { to: "interaction", title: "Interaction", description: descriptionForPermission("admin:messages"), permission: "admin:messages" },
     { to: "monthly-calendar", title: "Monthly Calendar", description: descriptionForPermission("admin:calendar"), permission: "admin:calendar" },
+    { to: "schedule-class", title: "Schedule Class", description: descriptionForPermission("admin:schedule"), permission: "admin:schedule" },
     { to: "leads", title: "Leads", description: descriptionForPermission("admin:leads"), permission: "admin:leads" },
     { to: "student-performance", title: "Student Performance", description: descriptionForPermission("admin:performance"), permission: "admin:performance" },
     { to: "physical-exam", title: "Physical Exam", description: descriptionForPermission("admin:performance"), permission: "admin:performance", examType: "physical_exam" },
@@ -56,6 +57,7 @@ export function getSidebarMenuOptions(panel: PanelType, auth?: AuthUser | null):
     { to: "student-attendance", title: "Student Attendance", description: descriptionForPermission("admin:attendance"), permission: "admin:attendance" },
     { to: "student-onboarding", title: "Student Onboarding", description: descriptionForPermission("admin:onboarding"), permission: "admin:onboarding" },
     { to: "user-management", title: "User Management", description: descriptionForPermission("admin:users"), permission: "admin:users" },
+    { to: "chat-review", title: "Chat Review", description: descriptionForPermission("admin:chat-review"), permission: "admin:chat-review" },
     { to: "master/subjects", title: "Subjects", description: descriptionForPermission("admin:master"), permission: "admin:master", section: "master" },
     { to: "master/exams", title: "Exams", description: descriptionForPermission("admin:master"), permission: "admin:master", section: "master" },
   ];
@@ -65,7 +67,7 @@ export function getSidebarMenuOptions(panel: PanelType, auth?: AuthUser | null):
       if (item.to === "user-management") return false;
       if (!hasPermission(auth, item.permission as never)) return false;
       if (isStaff && item.examType) return staffExamTypes.includes(item.examType as never);
-      if (isStaff && item.to === "student-performance") return false;
+      if (isStaff && item.to === "chat-review") return false;
       return true;
     })
     .map(({ permission: _permission, examType: _examType, ...item }) => item);

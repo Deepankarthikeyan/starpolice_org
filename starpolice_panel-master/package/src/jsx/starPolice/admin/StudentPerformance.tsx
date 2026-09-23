@@ -163,6 +163,12 @@ const StudentPerformance = () => {
   const [error, setError] = useState("");
   const [listError, setListError] = useState("");
   const [activeSection, setActiveSection] = useState<PerformanceSection>("attendance");
+  const [attendanceDateFrom, setAttendanceDateFrom] = useState("");
+  const [attendanceDateTo, setAttendanceDateTo] = useState("");
+  const [attendanceStatusFilter, setAttendanceStatusFilter] = useState("");
+  const [writtenExamDateFilter, setWrittenExamDateFilter] = useState("");
+  const [writtenExamNameFilter, setWrittenExamNameFilter] = useState("");
+  const [allWrittenExamNames, setAllWrittenExamNames] = useState<string[]>([]);
 
   const loadStudents = async () => {
     setListLoading(true);
@@ -182,6 +188,9 @@ const StudentPerformance = () => {
   useEffect(() => {
     if (!canManage) return;
     loadStudents().catch(console.error);
+    api.getExams()
+      .then((exams) => setAllWrittenExamNames(exams.filter((exam) => exam.examType === "written_exam").map((exam) => exam.name)))
+      .catch(console.error);
   }, [canManage]);
 
   const filteredStudents = useMemo(() => {
@@ -218,6 +227,29 @@ const StudentPerformance = () => {
 
   const percentFilterActive =
     Boolean(percentFilterKey) && (percentMin !== "" || percentMax !== "");
+
+  const filteredAttendance = useMemo(() => {
+    if (!detail) return [];
+    return detail.attendance.filter((entry) => {
+      if (attendanceStatusFilter && entry.status !== attendanceStatusFilter) return false;
+      if (attendanceDateFrom && entry.date < attendanceDateFrom) return false;
+      if (attendanceDateTo && entry.date > attendanceDateTo) return false;
+      return true;
+    });
+  }, [detail, attendanceDateFrom, attendanceDateTo, attendanceStatusFilter]);
+
+  const filteredWrittenExams = useMemo(() => {
+    if (!detail) return [];
+    return writtenExams.filter((exam) => {
+      if (writtenExamNameFilter && exam.name !== writtenExamNameFilter) return false;
+      return true;
+    });
+  }, [detail, writtenExams, writtenExamNameFilter]);
+
+  const writtenExamOptions = useMemo(() => {
+    const fromDetail = detail ? detail.writtenExams.map((exam) => exam.name).filter(Boolean) : [];
+    return [...new Set([...allWrittenExamNames, ...fromDetail])];
+  }, [detail, allWrittenExamNames]);
 
   const percentFilterSummary = useMemo(() => {
     if (!percentFilterActive || !percentFilterKey) return "";
@@ -409,6 +441,35 @@ const StudentPerformance = () => {
               onMaxChange={setPercentMax}
               onClear={clearPercentFilter}
             />
+            <div className="row g-3 mb-3">
+              <div className="col-md-3">
+                <label className="form-label small text-muted">Attendance from</label>
+                <input type="date" className="form-control" value={attendanceDateFrom} onChange={(e) => setAttendanceDateFrom(e.target.value)} />
+              </div>
+              <div className="col-md-3">
+                <label className="form-label small text-muted">Attendance to</label>
+                <input type="date" className="form-control" value={attendanceDateTo} onChange={(e) => setAttendanceDateTo(e.target.value)} />
+              </div>
+              <div className="col-md-3">
+                <label className="form-label small text-muted">Attendance status</label>
+                <select className="form-select" value={attendanceStatusFilter} onChange={(e) => setAttendanceStatusFilter(e.target.value)}>
+                  <option value="">All</option>
+                  <option value="present">Present</option>
+                  <option value="absent">Absent</option>
+                  <option value="late">Late</option>
+                  <option value="leave">Leave</option>
+                </select>
+              </div>
+              <div className="col-md-3">
+                <label className="form-label small text-muted">Written exam</label>
+                <select className="form-select" value={writtenExamNameFilter} onChange={(e) => setWrittenExamNameFilter(e.target.value)}>
+                  <option value="">All exams</option>
+                  {writtenExamOptions.map((name) => (
+                    <option key={name} value={name}>{name}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
             {listError && (
               <div className="alert alert-danger spa-no-print">
                 {listError}
@@ -567,10 +628,33 @@ const StudentPerformance = () => {
               </div>
 
               {activeSection === "attendance" && detail && (
-                <AttendancePerformanceList
-                  attendance={detail.attendance}
-                  attendancePercent={detail.summary.attendancePercent}
-                />
+                <>
+                  <div className="row g-3 mb-3 spa-no-print">
+                    <div className="col-md-3">
+                      <input type="date" className="form-control" value={attendanceDateFrom} onChange={(e) => setAttendanceDateFrom(e.target.value)} />
+                    </div>
+                    <div className="col-md-3">
+                      <input type="date" className="form-control" value={attendanceDateTo} onChange={(e) => setAttendanceDateTo(e.target.value)} />
+                    </div>
+                    <div className="col-md-3">
+                      <select className="form-select" value={attendanceStatusFilter} onChange={(e) => setAttendanceStatusFilter(e.target.value)}>
+                        <option value="">All statuses</option>
+                        <option value="present">Present</option>
+                        <option value="absent">Absent</option>
+                        <option value="late">Late</option>
+                        <option value="leave">Leave</option>
+                      </select>
+                    </div>
+                  </div>
+                  <AttendancePerformanceList
+                    attendance={filteredAttendance}
+                    attendancePercent={
+                      writtenExamNameFilter
+                        ? null
+                        : detail.summary.attendancePercent
+                    }
+                  />
+                </>
               )}
 
               {activeSection === "physical" && performanceForm && detail && (
@@ -588,9 +672,31 @@ const StudentPerformance = () => {
 
               {activeSection === "written" && (
                 <form onSubmit={saveWrittenExamMarks}>
+                  <div className="row g-3 mb-3 spa-no-print">
+                    <div className="col-md-4">
+                      <input
+                        type="date"
+                        className="form-control"
+                        value={writtenExamDateFilter}
+                        onChange={(e) => setWrittenExamDateFilter(e.target.value)}
+                      />
+                    </div>
+                    <div className="col-md-4">
+                      <select
+                        className="form-select"
+                        value={writtenExamNameFilter}
+                        onChange={(e) => setWrittenExamNameFilter(e.target.value)}
+                      >
+                        <option value="">All written exams</option>
+                        {writtenExamOptions.map((name) => (
+                          <option key={name} value={name}>{name}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
                   <ExamMarksTable
-                    title="Written Exam Performance"
-                    exams={writtenExams}
+                    title={writtenExamNameFilter ? `Written Exam: ${writtenExamNameFilter}` : "Written Exam Performance"}
+                    exams={writtenExamNameFilter ? filteredWrittenExams : writtenExams}
                     onChange={setWrittenExams}
                   />
                   <button type="submit" className="btn btn-primary spa-no-print" disabled={saving}>

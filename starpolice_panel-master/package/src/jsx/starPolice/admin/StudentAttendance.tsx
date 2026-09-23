@@ -43,6 +43,8 @@ const StudentAttendance = () => {
   const [historySearch, setHistorySearch] = useState("");
   const [historyStatusFilter, setHistoryStatusFilter] = useState<StatusFilter>("");
   const [historyDateFilter, setHistoryDateFilter] = useState(today);
+  const [headerDateFilter, setHeaderDateFilter] = useState(today);
+  const [availableDates, setAvailableDates] = useState<string[]>([]);
   const [historyLoading, setHistoryLoading] = useState(false);
 
   const loadToday = async () => {
@@ -85,6 +87,9 @@ const StudentAttendance = () => {
   useEffect(() => {
     if (!canManage) return;
     loadToday().catch(console.error);
+    api.getStudentAttendanceDates()
+      .then((dates) => setAvailableDates(dates.map((entry) => entry.date)))
+      .catch(console.error);
   }, [canManage]);
 
   const openHistory = () => {
@@ -185,9 +190,23 @@ const StudentAttendance = () => {
 
   const onHistoryDateChange = (value: string) => {
     setHistoryDateFilter(value);
+    setHeaderDateFilter(value);
     if (value) {
       selectHistoryDate(value).catch(console.error);
     }
+  };
+
+  const onHeaderDateChange = (value: string) => {
+    setHeaderDateFilter(value);
+    if (!value) return;
+    if (value === today) {
+      setShowHistory(false);
+      loadToday().catch(console.error);
+      return;
+    }
+    setHistoryDateFilter(value);
+    setShowHistory(true);
+    selectHistoryDate(value).catch(console.error);
   };
 
   if (!canManage) {
@@ -202,6 +221,37 @@ const StudentAttendance = () => {
   return (
     <>
       <PageTitle motherMenu={getPanelMotherMenu(auth?.panel)} activeMenu="Student Attendance" pageContent="" />
+
+      <div className="card mb-3">
+        <div className="card-body py-3">
+          <div className="row g-2 align-items-end">
+            <div className="col-md-4">
+              <label className="form-label small text-muted mb-1" htmlFor="attendance-header-date">
+                Attendance Date
+              </label>
+              <input
+                id="attendance-header-date"
+                type="date"
+                className="form-control"
+                value={headerDateFilter}
+                onChange={(e) => onHeaderDateChange(e.target.value)}
+                list="attendance-date-options"
+              />
+              <datalist id="attendance-date-options">
+                {availableDates.map((date) => (
+                  <option key={date} value={date} />
+                ))}
+              </datalist>
+            </div>
+            <div className="col-md-8">
+              <p className="text-muted small mb-0">
+                Select a date to jump directly to that day&apos;s attendance records.
+                {headerDateFilter === today ? " Showing today." : ` Viewing ${formatDisplayDate(headerDateFilter)}.`}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div className="row">
         <div className="col-12">

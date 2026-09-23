@@ -81,6 +81,7 @@ const studentOnboardingSchema = new mongoose.Schema(
     discount: { type: String, default: "" },
     paymentMethod: { type: String, default: "" },
     paymentStatus: { type: String, default: "" },
+    balanceAmount: { type: String, default: "" },
     transactionId: { type: String, default: "" },
     receiptNumber: { type: String, default: "" },
 
