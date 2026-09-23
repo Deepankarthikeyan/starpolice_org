@@ -66,7 +66,7 @@ const ScheduleClass = () => {
 
   const onSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    if (!form.scheduledAt || !form.subject.trim() || !form.facultyId) {
+    if (!form.scheduledAt || !form.subjectId || !form.facultyId) {
       notify.error("Date & time, subject, and faculty are required.");
       return;
     }
@@ -134,23 +134,16 @@ const ScheduleClass = () => {
                       setForm((prev) => ({
                         ...prev,
                         subjectId: e.target.value,
-                        subject: subject?.name || prev.subject,
+                        subject: subject?.name || "",
                       }));
                     }}
+                    required
                   >
-                    <option value="">Select subject or type below</option>
+                    <option value="">Select subject</option>
                     {subjects.map((subject) => (
                       <option key={subject.id} value={subject.id}>{subject.name}</option>
                     ))}
                   </select>
-                  <input
-                    type="text"
-                    className="form-control mt-2"
-                    placeholder="Subject name"
-                    value={form.subject}
-                    onChange={(e) => setForm((prev) => ({ ...prev, subject: e.target.value }))}
-                    required
-                  />
                 </div>
                 <div className="mb-3">
                   <label className="form-label">Faculty / Staff</label>
