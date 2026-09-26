@@ -7112,7 +7112,7 @@ body.star-site .react-footer-two .footer-top > .container + .container {
 .exact-about-page .spa-about-faculty__photo img {
   display: block;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: top center;
   width: 100%;
 }
