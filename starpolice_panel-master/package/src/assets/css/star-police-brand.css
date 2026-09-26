@@ -810,14 +810,17 @@ html {
   align-items: flex-end;
   gap: 0.5rem;
   margin-bottom: 0.85rem;
+  width: 100%;
 }
 
 .spa-messenger-row.is-mine {
   justify-content: flex-end;
+  flex-direction: row;
 }
 
 .spa-messenger-row.is-other {
   justify-content: flex-start;
+  flex-direction: row;
 }
 
 .spa-messenger-msg-avatar {
@@ -843,26 +846,56 @@ html {
   padding: 0.7rem 0.85rem;
   border-radius: 1rem;
   background: #fff;
-  color: #000;
+  color: #0f172a;
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
 }
 
+.spa-messenger-bubble.is-other {
+  border-bottom-left-radius: 0.25rem;
+  background: #fff;
+  color: #0f172a;
+}
+
 .spa-messenger-bubble.is-mine {
-  background: rgba(18, 61, 115, 0.12);
+  border-bottom-right-radius: 0.25rem;
+  background: var(--primary, #123d73);
+  color: #fff;
 }
 
 .spa-messenger-bubble-name {
   font-size: 0.75rem;
   font-weight: 700;
   margin-bottom: 0.2rem;
-  color: #000;
+  color: #334155;
 }
 
-.spa-messenger-bubble small {
+.spa-messenger-bubble-text {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.spa-messenger-bubble.is-mine .spa-messenger-bubble-text {
+  text-align: right;
+}
+
+.spa-messenger-bubble.is-other .spa-messenger-bubble-text {
+  text-align: left;
+}
+
+.spa-messenger-bubble-time {
   display: block;
   margin-top: 0.35rem;
-  color: #000;
   font-size: 0.72rem;
+}
+
+.spa-messenger-bubble.is-mine .spa-messenger-bubble-time {
+  color: rgba(255, 255, 255, 0.78);
+  text-align: right;
+}
+
+.spa-messenger-bubble.is-other .spa-messenger-bubble-time {
+  color: #64748b;
+  text-align: left;
 }
 
 .spa-messenger-compose {

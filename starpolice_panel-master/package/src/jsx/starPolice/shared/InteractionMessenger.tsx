@@ -9,6 +9,7 @@ import {
 } from "./interactionHistoryHelpers";
 import { InteractionSortPicker } from "./InteractionSortPicker";
 import { InteractionFilterSelect } from "./InteractionFilterSelect";
+import { isMineMessage } from "./interactionHelpers";
 
 export type InteractionAudience = "group" | "student" | "staff" | "admin";
 
@@ -47,14 +48,6 @@ type InteractionMessengerProps = {
 
 function isAdminSide(role: UserRole) {
   return role === "admin" || role === "staff" || role === "superadmin";
-}
-
-function isMineMessage(item: ChatMessage, viewerId?: string, viewerEmail?: string) {
-  if (viewerId && item.senderId) {
-    return item.senderId === viewerId;
-  }
-  if (!viewerEmail || !item.senderEmail) return false;
-  return item.senderEmail.toLowerCase() === viewerEmail.toLowerCase();
 }
 
 const THREAD_SORT_OPTIONS = [
@@ -360,8 +353,10 @@ export function InteractionMessenger({
                       )}
                       <div className={`spa-messenger-bubble ${mine ? "is-mine" : "is-other"}`}>
                         {!mine && <div className="spa-messenger-bubble-name">{item.senderName}</div>}
-                        <div>{item.message}</div>
-                        <small>{new Date(item.createdAt).toLocaleString()}</small>
+                        <div className="spa-messenger-bubble-text">{item.message}</div>
+                        <small className="spa-messenger-bubble-time">
+                          {new Date(item.createdAt).toLocaleString()}
+                        </small>
                       </div>
                       {mine && (
                         <div className="spa-messenger-msg-avatar is-mine">{item.senderName.slice(0, 2).toUpperCase()}</div>

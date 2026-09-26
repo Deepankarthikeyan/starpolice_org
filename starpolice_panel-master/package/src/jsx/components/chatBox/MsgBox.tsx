@@ -4,6 +4,7 @@ import { ThemeContext } from "../../../context/ThemeContext";
 import { api } from "../../starPolice/api";
 import { notify } from "../../starPolice/toast";
 import type { ChatMessage } from "../../starPolice/types";
+import { isMineMessage } from "../../starPolice/shared/interactionHelpers";
 
 interface MsgBoxProps {
   title: string;
@@ -135,11 +136,7 @@ const MsgBox: React.FC<MsgBoxProps> = ({
           <p className="text-muted text-center mt-3">No messages yet. Start the conversation.</p>
         ) : (
           messages.map((item) => {
-            const adminSideRoles = ["admin", "staff", "superadmin"];
-            const isMine =
-              item.senderRole === auth?.role ||
-              (adminSideRoles.includes(item.senderRole) &&
-                adminSideRoles.includes(auth?.role || ""));
+            const isMine = isMineMessage(item, auth?.id, auth?.email);
             return (
               <div
                 key={item.id}
@@ -153,7 +150,7 @@ const MsgBox: React.FC<MsgBoxProps> = ({
                   </div>
                 )}
                 <div className={isMine ? "msg_cotainer_send" : "msg_cotainer"}>
-                  <strong className="d-block small mb-1">{item.senderName}</strong>
+                  {!isMine && <strong className="d-block small mb-1">{item.senderName}</strong>}
                   {item.message}
                   <span className={isMine ? "msg_time_send" : "msg_time"}>
                     {new Date(item.createdAt).toLocaleString()}
