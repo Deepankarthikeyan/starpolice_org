@@ -29,6 +29,14 @@ iframe {
   min-width: 0;
 }
 
+.spa-leads-person-count {
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.5rem 0.85rem;
+  letter-spacing: 0.02em;
+  box-shadow: 0 0.15rem 0.45rem rgba(13, 110, 253, 0.35);
+}
+
 .spa-content-body {
   min-height: 100dvh;
   box-sizing: border-box;
@@ -364,6 +372,14 @@ iframe {
 
   .spa-leads-table {
     min-width: 36rem;
+  }
+
+  .spa-leads-person-count {
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 0.5rem 0.85rem;
+    letter-spacing: 0.02em;
+    box-shadow: 0 0.15rem 0.45rem rgba(13, 110, 253, 0.35);
   }
 
   .spa-lead-status-select {

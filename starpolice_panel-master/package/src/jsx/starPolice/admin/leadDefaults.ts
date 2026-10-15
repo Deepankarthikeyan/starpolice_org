@@ -58,6 +58,7 @@ export interface LeadFormState {
   previousQualification: string;
   careerGoal: string;
   source: LeadSource;
+  markForFollowUp: boolean;
   followUpNotes: string;
   nextFollowUpDate: string;
 }
@@ -132,6 +133,7 @@ export function emptyLeadForm(): LeadFormState {
     previousQualification: "",
     careerGoal: "",
     source: "other",
+    markForFollowUp: false,
     followUpNotes: "",
     nextFollowUpDate: "",
   };
@@ -152,6 +154,7 @@ export function recordToForm(record: LeadRecord): LeadFormState {
     previousQualification: record.previousQualification,
     careerGoal: record.careerGoal,
     source: record.source,
+    markForFollowUp: record.status === "follow_up",
     followUpNotes: record.followUpNotes,
     nextFollowUpDate: record.nextFollowUpDate,
   };

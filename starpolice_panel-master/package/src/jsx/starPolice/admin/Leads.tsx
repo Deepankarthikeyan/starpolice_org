@@ -21,7 +21,7 @@ import {
   type LeadRecord,
   type LeadStatus,
 } from "./leadDefaults";
-import { downloadLeadMobileNumbersSheet } from "./leadExport";
+import { downloadLeadMobileNumbersCsv } from "./leadExport";
 
 function Field({ label, children, optional }: { label: string; children: React.ReactNode; optional?: boolean }) {
   return (
@@ -47,6 +47,7 @@ const Leads = () => {
   const [statusFilter, setStatusFilter] = useState<"" | LeadStatus>("");
   const [courseFilter, setCourseFilter] = useState<"" | LeadCourse>("");
   const [dateFilter, setDateFilter] = useState("");
+  const [editingStatus, setEditingStatus] = useState<LeadStatus | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -59,10 +60,6 @@ const Leads = () => {
     if (!canManage) return;
     loadLeads().catch(console.error);
   }, [canManage]);
-
-  const hasActiveFilters = Boolean(
-    search.trim() || statusFilter || courseFilter || dateFilter
-  );
 
   const filteredLeads = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -89,7 +86,7 @@ const Leads = () => {
       return;
     }
     const datePart = new Date().toISOString().slice(0, 10);
-    downloadLeadMobileNumbersSheet(withMobile, `lead-mobile-numbers-${datePart}.xls`);
+    downloadLeadMobileNumbersCsv(withMobile, `lead-mobile-numbers-${datePart}.csv`);
     notify.success(`Downloaded ${withMobile.length} mobile number(s).`);
   };
 
@@ -100,6 +97,7 @@ const Leads = () => {
   const resetForm = () => {
     setForm(emptyLeadForm());
     setEditingId(null);
+    setEditingStatus(null);
     setShowForm(false);
     setError("");
   };
@@ -107,6 +105,7 @@ const Leads = () => {
   const startCreate = () => {
     setForm(emptyLeadForm());
     setEditingId(null);
+    setEditingStatus(null);
     setShowForm(true);
     setError("");
   };
@@ -114,8 +113,22 @@ const Leads = () => {
   const startEdit = (lead: LeadRecord) => {
     setForm(recordToForm(lead));
     setEditingId(lead.id);
+    setEditingStatus(lead.status);
     setShowForm(true);
     setError("");
+  };
+
+  const formLocked = editingStatus === "converted" || editingStatus === "rejected";
+
+  const applyFollowUpStatus = async (leadId: string, markForFollowUp: boolean) => {
+    if (formLocked) return;
+    if (markForFollowUp) {
+      await api.updateLeadStatus(leadId, "follow_up");
+      return;
+    }
+    if (editingStatus === "follow_up") {
+      await api.updateLeadStatus(leadId, "new");
+    }
   };
 
   const onSubmit = async (event: FormEvent) => {
@@ -123,11 +136,18 @@ const Leads = () => {
     setLoading(true);
     setError("");
     try {
+      const payload: LeadFormState = {
+        ...form,
+        nextFollowUpDate: form.markForFollowUp ? form.nextFollowUpDate : "",
+      };
+
       if (editingId) {
-        await api.updateLead(editingId, form);
+        await api.updateLead(editingId, payload);
+        await applyFollowUpStatus(editingId, form.markForFollowUp);
         notify.success("Lead updated successfully.");
       } else {
-        await api.createLead(form);
+        const created = await api.createLead(payload);
+        await applyFollowUpStatus(created.id, form.markForFollowUp);
         notify.success("Lead created successfully.");
       }
       await loadLeads();
@@ -151,51 +171,6 @@ const Leads = () => {
       notify.success("Lead deleted successfully.");
     } catch (err) {
       notify.error(err, "Failed to delete lead.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const onStatusChange = async (lead: LeadRecord, nextStatus: LeadStatus) => {
-    if (lead.status === nextStatus) return;
-
-    if (nextStatus === "converted") {
-      if (!window.confirm(`Convert ${fullLeadName(lead)} to a student onboarding record?`)) return;
-      setLoading(true);
-      try {
-        const result = await api.convertLeadToStudent(lead.id);
-        await loadLeads();
-        notify.success(`Lead converted. Student ID: ${result.studentId}`);
-      } catch (err) {
-        notify.error(err, "Failed to convert lead.");
-      } finally {
-        setLoading(false);
-      }
-      return;
-    }
-
-    if (nextStatus === "rejected") {
-      const reason = window.prompt("Rejection reason (optional):") ?? "";
-      setLoading(true);
-      try {
-        await api.updateLeadStatus(lead.id, nextStatus, reason);
-        await loadLeads();
-        notify.success("Lead marked as rejected.");
-      } catch (err) {
-        notify.error(err, "Failed to update status.");
-      } finally {
-        setLoading(false);
-      }
-      return;
-    }
-
-    setLoading(true);
-    try {
-      await api.updateLeadStatus(lead.id, nextStatus);
-      await loadLeads();
-      notify.success("Lead status updated.");
-    } catch (err) {
-      notify.error(err, "Failed to update status.");
     } finally {
       setLoading(false);
     }
@@ -373,8 +348,33 @@ const Leads = () => {
                       className="form-control"
                       value={form.careerGoal}
                       onChange={(e) => setField("careerGoal", e.target.value)}
+                      disabled={formLocked}
                     />
                   </Field>
+                </div>
+                <div className="col-md-4 d-flex align-items-end">
+                  <div className="mb-3 w-100">
+                    <div className="form-check">
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        id="lead-mark-follow-up"
+                        checked={form.markForFollowUp}
+                        disabled={formLocked}
+                        onChange={(e) => {
+                          const checked = e.target.checked;
+                          setForm((prev) => ({
+                            ...prev,
+                            markForFollowUp: checked,
+                            nextFollowUpDate: checked ? prev.nextFollowUpDate : "",
+                          }));
+                        }}
+                      />
+                      <label className="form-check-label" htmlFor="lead-mark-follow-up">
+                        Follow up
+                      </label>
+                    </div>
+                  </div>
                 </div>
                 <div className="col-md-4">
                   <Field label="Next Follow-up Date" optional>
@@ -383,6 +383,7 @@ const Leads = () => {
                       className="form-control"
                       value={form.nextFollowUpDate}
                       onChange={(e) => setField("nextFollowUpDate", e.target.value)}
+                      disabled={!form.markForFollowUp || formLocked}
                     />
                   </Field>
                 </div>
@@ -419,24 +420,11 @@ const Leads = () => {
 
       <div className="card spa-leads-card">
         <div className="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
-          <div>
+          <div className="d-flex flex-wrap align-items-center gap-3">
             <h4 className="card-title mb-0">Lead List</h4>
-            <div className="small text-muted mt-1">
-              <span className="me-3">
-                Total persons: <strong>{leads.length}</strong>
-              </span>
-              <span>
-                {hasActiveFilters ? (
-                  <>
-                    Filtered persons: <strong>{filteredLeads.length}</strong>
-                  </>
-                ) : (
-                  <>
-                    Showing: <strong>{filteredLeads.length}</strong>
-                  </>
-                )}
-              </span>
-            </div>
+            <span className="badge spa-leads-person-count bg-primary">
+              Total persons: {filteredLeads.length} / {leads.length}
+            </span>
           </div>
           <div className="d-flex flex-wrap gap-2">
             <button
@@ -445,7 +433,7 @@ const Leads = () => {
               onClick={onDownloadMobileNumbers}
               disabled={filteredLeads.every((lead) => !lead.mobileNumber.trim())}
             >
-              Download mobile numbers (Excel)
+              Download mobile numbers (CSV)
             </button>
             <button type="button" className="btn btn-primary" onClick={startCreate}>
               Add Lead
@@ -552,26 +540,6 @@ const Leads = () => {
                       </td>
                       <td>
                         <div className="d-flex flex-wrap gap-2 align-items-center">
-                          <select
-                            className="form-select form-select-sm spa-lead-status-select"
-                            defaultValue=""
-                            disabled={lead.status === "converted" || lead.status === "rejected" || loading}
-                            onChange={(e) => {
-                              const value = e.target.value as LeadStatus;
-                              if (!value) return;
-                              onStatusChange(lead, value);
-                              e.currentTarget.value = "";
-                            }}
-                          >
-                            <option value="">{statusLabel(lead.status)} — Update...</option>
-                            {lead.status === "new" && <option value="follow_up">Follow Up</option>}
-                            {lead.status !== "rejected" && lead.status !== "converted" && (
-                              <option value="rejected">Rejected</option>
-                            )}
-                            {lead.status !== "converted" && lead.status !== "rejected" && (
-                              <option value="converted">Convert to Student</option>
-                            )}
-                          </select>
                           <button
                             type="button"
                             className="btn btn-sm btn-outline-primary"

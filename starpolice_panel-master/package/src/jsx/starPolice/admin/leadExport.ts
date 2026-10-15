@@ -1,41 +1,22 @@
 import type { LeadRecord } from "./leadDefaults";
 
-function escapeXml(value: string) {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+function escapeCsvCell(value: string) {
+  if (/[",\n\r]/.test(value)) {
+    return `"${value.replace(/"/g, '""')}"`;
+  }
+  return value;
 }
 
-/** Excel-compatible workbook with a single Mobile Number column (opens in Excel / LibreOffice). */
-export function downloadLeadMobileNumbersSheet(
+/** CSV with a single Mobile Number column. */
+export function downloadLeadMobileNumbersCsv(
   leads: LeadRecord[],
-  filename = "lead-mobile-numbers.xls"
+  filename = "lead-mobile-numbers.csv"
 ) {
   const mobiles = leads.map((lead) => lead.mobileNumber.trim()).filter(Boolean);
-  const rows = mobiles
-    .map(
-      (mobile) =>
-        `<Row><Cell><Data ss:Type="String">${escapeXml(mobile)}</Data></Cell></Row>`
-    )
-    .join("");
+  const lines = ["Mobile Number", ...mobiles.map((mobile) => escapeCsvCell(mobile))];
+  const csv = `\uFEFF${lines.join("\r\n")}`;
 
-  const xml = `<?xml version="1.0"?>
-<?mso-application progid="Excel.Sheet"?>
-<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
- xmlns:o="urn:schemas-microsoft-com:office:office"
- xmlns:x="urn:schemas-microsoft-com:office:excel"
- xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
- <Worksheet ss:Name="Mobile Numbers">
-  <Table>
-   <Row><Cell><Data ss:Type="String">Mobile Number</Data></Cell></Row>
-   ${rows}
-  </Table>
- </Worksheet>
-</Workbook>`;
-
-  const blob = new Blob([xml], { type: "application/vnd.ms-excel;charset=utf-8;" });
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
