@@ -374,14 +374,6 @@ iframe {
     min-width: 36rem;
   }
 
-  .spa-leads-person-count {
-    font-size: 0.95rem;
-    font-weight: 600;
-    padding: 0.5rem 0.85rem;
-    letter-spacing: 0.02em;
-    box-shadow: 0 0.15rem 0.45rem rgba(13, 110, 253, 0.35);
-  }
-
   .spa-lead-status-select {
     min-width: 0;
     width: 100%;
