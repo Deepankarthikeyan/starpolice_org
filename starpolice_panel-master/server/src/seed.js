@@ -6,6 +6,7 @@ import Subject from "./models/Subject.js";
 import Exam from "./models/Exam.js";
 import StudentOnboarding from "./models/StudentOnboarding.js";
 import StudentExamMark from "./models/StudentExamMark.js";
+import Lead from "./models/Lead.js";
 import { defaultPermissionsForRole } from "./permissions.js";
 
 dotenv.config();
@@ -99,6 +100,233 @@ const TEMP_STUDENTS = [
     admissionDate: "2025-02-01",
   },
 ];
+
+const TEMP_LEADS = [
+  {
+    leadId: "SPA-LEAD-2026-0001",
+    firstName: "Vikram",
+    middleName: "",
+    lastName: "Rajan",
+    email: "vikram.rajan@example.com",
+    mobileNumber: "9001001001",
+    city: "Chennai",
+    state: "Tamil Nadu",
+    course: "pc",
+    batch: "Morning",
+    source: "instagram",
+    status: "new",
+    createdAt: "2026-10-01T10:30:00.000Z",
+  },
+  {
+    leadId: "SPA-LEAD-2026-0002",
+    firstName: "Meena",
+    middleName: "L",
+    lastName: "Sundaram",
+    email: "meena.sundaram@example.com",
+    mobileNumber: "9001001002",
+    city: "Coimbatore",
+    state: "Tamil Nadu",
+    course: "si",
+    batch: "Evening",
+    source: "google",
+    status: "follow_up",
+    followUpNotes: "Called twice; interested in SI batch starting next month.",
+    nextFollowUpDate: "2026-10-20",
+    createdAt: "2026-10-03T09:15:00.000Z",
+  },
+  {
+    leadId: "SPA-LEAD-2026-0003",
+    firstName: "Arjun",
+    middleName: "",
+    lastName: "Prakash",
+    email: "arjun.prakash@example.com",
+    mobileNumber: "9001001003",
+    city: "Madurai",
+    state: "Tamil Nadu",
+    course: "army",
+    batch: "Weekend",
+    source: "facebook",
+    status: "new",
+    createdAt: "2026-10-05T14:00:00.000Z",
+  },
+  {
+    leadId: "SPA-LEAD-2026-0004",
+    firstName: "Divya",
+    middleName: "",
+    lastName: "Krishnan",
+    email: "divya.k@example.com",
+    mobileNumber: "9001001004",
+    city: "Trichy",
+    state: "Tamil Nadu",
+    course: "pc",
+    batch: "Morning",
+    source: "whatsapp",
+    status: "follow_up",
+    followUpNotes: "Parent will visit campus on Saturday.",
+    nextFollowUpDate: "2026-10-18",
+    createdAt: "2026-10-07T11:45:00.000Z",
+  },
+  {
+    leadId: "SPA-LEAD-2026-0005",
+    firstName: "Suresh",
+    middleName: "K",
+    lastName: "Babu",
+    email: "",
+    mobileNumber: "9001001005",
+    city: "Salem",
+    state: "Tamil Nadu",
+    course: "si",
+    batch: "Morning",
+    source: "youtube",
+    status: "new",
+    createdAt: "2026-10-08T08:20:00.000Z",
+  },
+  {
+    leadId: "SPA-LEAD-2026-0006",
+    firstName: "Karthik",
+    middleName: "",
+    lastName: "Vel",
+    email: "karthik.vel@example.com",
+    mobileNumber: "9001001006",
+    city: "Chennai",
+    state: "Tamil Nadu",
+    course: "army",
+    batch: "Evening",
+    source: "walk_in",
+    status: "follow_up",
+    followUpNotes: "Needs fee structure PDF.",
+    nextFollowUpDate: "2026-10-22",
+    createdAt: "2026-10-09T16:30:00.000Z",
+  },
+  {
+    leadId: "SPA-LEAD-2026-0007",
+    firstName: "Anitha",
+    middleName: "",
+    lastName: "Ramesh",
+    email: "anitha.r@example.com",
+    mobileNumber: "9001001007",
+    city: "Erode",
+    state: "Tamil Nadu",
+    course: "pc",
+    batch: "Evening",
+    source: "referral",
+    status: "rejected",
+    rejectionReason: "Joined another coaching center.",
+    rejectedAt: "2026-10-10T12:00:00.000Z",
+    createdAt: "2026-10-02T13:10:00.000Z",
+  },
+  {
+    leadId: "SPA-LEAD-2026-0008",
+    firstName: "Ravi",
+    middleName: "",
+    lastName: "Chandran",
+    email: "ravi.c@example.com",
+    mobileNumber: "9001001008",
+    city: "Vellore",
+    state: "Tamil Nadu",
+    course: "si",
+    batch: "Weekend",
+    source: "phone",
+    status: "new",
+    createdAt: "2026-10-11T07:50:00.000Z",
+  },
+  {
+    leadId: "SPA-LEAD-2026-0009",
+    firstName: "Nandhini",
+    middleName: "S",
+    lastName: "Iyer",
+    email: "nandhini.iyer@example.com",
+    mobileNumber: "9001001009",
+    city: "Chennai",
+    state: "Tamil Nadu",
+    course: "army",
+    batch: "Morning",
+    source: "website",
+    status: "follow_up",
+    followUpNotes: "Wants physical training schedule.",
+    nextFollowUpDate: "2026-10-25",
+    createdAt: "2026-10-12T10:05:00.000Z",
+  },
+  {
+    leadId: "SPA-LEAD-2026-0010",
+    firstName: "Gopal",
+    middleName: "",
+    lastName: "Mani",
+    email: "gopal.mani@example.com",
+    mobileNumber: "9001001010",
+    city: "Tirunelveli",
+    state: "Tamil Nadu",
+    course: "pc",
+    batch: "Weekend",
+    source: "google",
+    status: "new",
+    createdAt: "2026-10-14T15:40:00.000Z",
+  },
+  {
+    leadId: "SPA-LEAD-2026-0011",
+    firstName: "Harini",
+    middleName: "",
+    lastName: "Subramanian",
+    email: "harini.sub@example.com",
+    mobileNumber: "9001001011",
+    city: "Chennai",
+    state: "Tamil Nadu",
+    course: "si",
+    batch: "Morning",
+    source: "instagram",
+    status: "new",
+    createdAt: "2026-10-14T18:00:00.000Z",
+  },
+  {
+    leadId: "SPA-LEAD-2026-0012",
+    firstName: "Mohammed",
+    middleName: "A",
+    lastName: "Farook",
+    email: "farook.m@example.com",
+    mobileNumber: "9001001012",
+    city: "Chennai",
+    state: "Tamil Nadu",
+    course: "army",
+    batch: "Evening",
+    source: "other",
+    status: "follow_up",
+    followUpNotes: "Follow up after board exam results.",
+    nextFollowUpDate: "2026-10-30",
+    createdAt: "2026-10-13T09:30:00.000Z",
+  },
+];
+
+async function seedLeads(superadminId) {
+  let count = 0;
+  for (const item of TEMP_LEADS) {
+    const { leadId, createdAt, rejectedAt, ...rest } = item;
+    const update = {
+      ...rest,
+      leadId,
+      createdBy: superadminId,
+      alternateMobileNumber: rest.alternateMobileNumber || "",
+      batch: rest.batch || "",
+      previousQualification: rest.previousQualification || "",
+      careerGoal: rest.careerGoal || "",
+      followUpNotes: rest.followUpNotes || "",
+      nextFollowUpDate: rest.nextFollowUpDate || "",
+      rejectionReason: rest.rejectionReason || "",
+      rejectedAt: rejectedAt ? new Date(rejectedAt) : null,
+    };
+
+    const lead = await Lead.findOneAndUpdate({ leadId }, update, {
+      upsert: true,
+      new: true,
+      setDefaultsOnInsert: true,
+    });
+
+    if (createdAt) {
+      await Lead.updateOne({ _id: lead._id }, { $set: { createdAt: new Date(createdAt) } });
+    }
+    count += 1;
+  }
+  console.log(`Seeded ${count} demo leads.`);
+}
 
 async function seedSubjects(superadminId) {
   const subjectMap = new Map();
@@ -264,6 +492,7 @@ async function seed() {
 
   const studentMap = await seedStudents(superadmin._id, studentUser._id);
   await seedSampleMarks(studentMap, examMap);
+  await seedLeads(superadmin._id);
 
   process.exit(0);
 }
