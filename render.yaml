@@ -1,0 +1,29 @@
+# Render Blueprint — production API (repo root copy for Render discovery)
+services:
+  - type: web
+    name: starpolice-api
+    runtime: docker
+    rootDir: starpolice_panel-master/server
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: CLIENT_URL
+        value: https://starpoliceacademy.in
+      - key: EMAIL_FROM
+        value: "Star Police Academy <info@starpoliceacademy.in>"
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGODB_URI
+        sync: false

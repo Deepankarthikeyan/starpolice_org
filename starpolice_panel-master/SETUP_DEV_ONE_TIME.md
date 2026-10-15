@@ -7,11 +7,55 @@ I cannot log into your Render/Netlify/Atlas from the agent without your API keys
 
 ---
 
+## If Render does not show `starpolice_org`
+
+The GitHub repo is **`Deepankarthikeyan/starpolice_org`** (public, branch **`main`**).
+
+1. Log into Render with the **same GitHub account** that owns the repo (`Deepankarthikeyan`).
+2. Open **[GitHub → Settings → Applications → Render](https://github.com/settings/installations)** → **Configure**.
+3. Under **Repository access**, choose **Only select repositories** → add **`starpolice_org`** → **Save**.
+4. In Render: **Account Settings** → **GitHub** → **Reconnect** if needed.
+5. Try again: **New** → **Web Service** (or Blueprint) → search **`starpolice`** or **`starpolice_org`**.
+
+Still missing? Use **Manual Web Service** below (no Blueprint required).
+
+---
+
 ## Step 1 — Create dev API on Render (5 min)
 
-1. Open [Render Dashboard](https://dashboard.render.com) → **New** → **Blueprint**.
-2. Connect repo `starpolice_org` / `main`.
-3. Select blueprint file: **`starpolice_panel-master/render-dev.yaml`**.
+### Option A — Blueprint
+
+1. [Render → New Blueprint](https://dashboard.render.com/select-repo?type=blueprint).
+2. Repo: **`Deepankarthikeyan/starpolice_org`**, branch **`main`**.
+3. Blueprint file at repo root: **`render-dev.yaml`** (not inside a subfolder).
+
+### Option B — Manual Web Service (use this if repo list is empty)
+
+1. [Render → New → Web Service](https://dashboard.render.com/create?type=web).
+2. Connect GitHub → select **`Deepankarthikeyan/starpolice_org`**.
+3. Settings:
+
+   | Field | Value |
+   |-------|--------|
+   | **Name** | `starpolice-api-dev` |
+   | **Region** | same as live API |
+   | **Branch** | `main` |
+   | **Root Directory** | `starpolice_panel-master/server` |
+   | **Runtime** | **Docker** |
+   | **Instance type** | Free |
+
+4. **Environment variables** (before or after first deploy):
+
+   | Key | Value |
+   |-----|--------|
+   | `CLIENT_URL` | `https://starpoliceacademy-dev.netlify.app` |
+   | `MONGODB_URI` | Atlas URI ending with `/starpolice_academy_dev` |
+   | `JWT_SECRET` | long random string (different from live) |
+   | `RESEND_API_KEY` | optional, copy from live if you need email on dev |
+
+5. **Create Web Service** → wait until **Live**.
+
+### Option A continued (Blueprint)
 4. When asked for **`MONGODB_URI`**, paste your Atlas URI but change the database to **`starpolice_academy_dev`**:
    ```text
    mongodb+srv://USER:PASS@cluster.mongodb.net/starpolice_academy_dev
