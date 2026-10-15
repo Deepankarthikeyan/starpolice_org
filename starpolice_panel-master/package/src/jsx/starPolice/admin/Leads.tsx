@@ -11,6 +11,7 @@ import {
   fullLeadName,
   leadCreatedOnDate,
   LEAD_COURSE_OPTIONS,
+  LEAD_FORM_DISPOSITION_OPTIONS,
   LEAD_SOURCE_OPTIONS,
   LEAD_STATUS_FILTER_OPTIONS,
   recordToForm,
@@ -120,15 +121,18 @@ const Leads = () => {
 
   const formLocked = editingStatus === "converted" || editingStatus === "rejected";
 
-  const applyFollowUpStatus = async (leadId: string, markForFollowUp: boolean) => {
-    if (formLocked) return;
-    if (markForFollowUp) {
+  const applyLeadDisposition = async (leadId: string, payload: LeadFormState) => {
+    if (editingStatus === "converted") return;
+    const { leadDisposition, rejectionReason } = payload;
+    if (leadDisposition === "rejected") {
+      await api.updateLeadStatus(leadId, "rejected", rejectionReason);
+      return;
+    }
+    if (leadDisposition === "follow_up") {
       await api.updateLeadStatus(leadId, "follow_up");
       return;
     }
-    if (editingStatus === "follow_up") {
-      await api.updateLeadStatus(leadId, "new");
-    }
+    await api.updateLeadStatus(leadId, "new");
   };
 
   const onSubmit = async (event: FormEvent) => {
@@ -138,16 +142,17 @@ const Leads = () => {
     try {
       const payload: LeadFormState = {
         ...form,
-        nextFollowUpDate: form.markForFollowUp ? form.nextFollowUpDate : "",
+        nextFollowUpDate: form.leadDisposition === "follow_up" ? form.nextFollowUpDate : "",
+        rejectionReason: form.leadDisposition === "rejected" ? form.rejectionReason : "",
       };
 
       if (editingId) {
         await api.updateLead(editingId, payload);
-        await applyFollowUpStatus(editingId, form.markForFollowUp);
+        await applyLeadDisposition(editingId, payload);
         notify.success("Lead updated successfully.");
       } else {
         const created = await api.createLead(payload);
-        await applyFollowUpStatus(created.id, form.markForFollowUp);
+        await applyLeadDisposition(created.id, payload);
         notify.success("Lead created successfully.");
       }
       await loadLeads();
@@ -352,29 +357,29 @@ const Leads = () => {
                     />
                   </Field>
                 </div>
-                <div className="col-md-4 d-flex align-items-end">
-                  <div className="mb-3 w-100">
-                    <div className="form-check">
-                      <input
-                        type="checkbox"
-                        className="form-check-input"
-                        id="lead-mark-follow-up"
-                        checked={form.markForFollowUp}
-                        disabled={formLocked}
-                        onChange={(e) => {
-                          const checked = e.target.checked;
-                          setForm((prev) => ({
-                            ...prev,
-                            markForFollowUp: checked,
-                            nextFollowUpDate: checked ? prev.nextFollowUpDate : "",
-                          }));
-                        }}
-                      />
-                      <label className="form-check-label" htmlFor="lead-mark-follow-up">
-                        Follow up
-                      </label>
-                    </div>
-                  </div>
+                <div className="col-md-4">
+                  <Field label="Lead status">
+                    <select
+                      className="form-select"
+                      value={form.leadDisposition}
+                      disabled={formLocked}
+                      onChange={(e) => {
+                        const value = e.target.value as LeadFormState["leadDisposition"];
+                        setForm((prev) => ({
+                          ...prev,
+                          leadDisposition: value,
+                          nextFollowUpDate: value === "follow_up" ? prev.nextFollowUpDate : "",
+                          rejectionReason: value === "rejected" ? prev.rejectionReason : "",
+                        }));
+                      }}
+                    >
+                      {LEAD_FORM_DISPOSITION_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  </Field>
                 </div>
                 <div className="col-md-4">
                   <Field label="Next Follow-up Date" optional>
@@ -383,10 +388,23 @@ const Leads = () => {
                       className="form-control"
                       value={form.nextFollowUpDate}
                       onChange={(e) => setField("nextFollowUpDate", e.target.value)}
-                      disabled={!form.markForFollowUp || formLocked}
+                      disabled={form.leadDisposition !== "follow_up" || formLocked}
                     />
                   </Field>
                 </div>
+                {form.leadDisposition === "rejected" && (
+                  <div className="col-md-4">
+                    <Field label="Rejection reason" optional>
+                      <input
+                        className="form-control"
+                        value={form.rejectionReason}
+                        onChange={(e) => setField("rejectionReason", e.target.value)}
+                        disabled={formLocked}
+                        placeholder="Why was this lead rejected?"
+                      />
+                    </Field>
+                  </div>
+                )}
                 <div className="col-12">
                   <Field label="Follow-up Notes" optional>
                     <textarea
@@ -394,6 +412,7 @@ const Leads = () => {
                       rows={3}
                       value={form.followUpNotes}
                       onChange={(e) => setField("followUpNotes", e.target.value)}
+                      disabled={formLocked}
                     />
                   </Field>
                 </div>
