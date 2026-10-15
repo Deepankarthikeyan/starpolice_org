@@ -1,5 +1,28 @@
 export type ResidenceType = "Day Scholar" | "Hostel" | "";
 
+export type OnboardingCourse = "si" | "pc" | "army";
+
+export const ONBOARDING_COURSE_OPTIONS: { value: OnboardingCourse; label: string }[] = [
+  { value: "si", label: "SI" },
+  { value: "pc", label: "PC" },
+  { value: "army", label: "Army" },
+];
+
+export const ONBOARDING_PAYMENT_FILTER_OPTIONS = [
+  { value: "Paid", label: "Paid" },
+  { value: "Partial", label: "Partial Payment" },
+] as const;
+
+export function formatOnboardingCourse(course: string) {
+  return ONBOARDING_COURSE_OPTIONS.find((item) => item.value === course)?.label || course || "—";
+}
+
+export function onboardingAdmissionOnDate(admissionDate: string, filterDate: string) {
+  if (!filterDate) return true;
+  if (!admissionDate) return false;
+  return admissionDate.slice(0, 10) === filterDate;
+}
+
 export interface OnboardingMaterial {
   id?: string;
   materialName: string;

@@ -12,8 +12,14 @@ import {
   calculateTotalFees,
   displayBalanceAmount,
   emptyStudentOnboardingForm,
+  formatOnboardingCourse,
+  ONBOARDING_COURSE_OPTIONS,
+  ONBOARDING_PAYMENT_FILTER_OPTIONS,
+  onboardingAdmissionOnDate,
+  type OnboardingCourse,
   type OnboardingActivityLog,
   type OnboardingMaterial,
+  type ResidenceType,
   type StudentOnboardingFormState,
   type StudentOnboardingRecord,
 } from "./studentOnboardingDefaults";
@@ -179,6 +185,11 @@ const StudentOnboarding = () => {
   const [viewMode, setViewMode] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState("");
+  const [courseFilter, setCourseFilter] = useState<"" | OnboardingCourse>("");
+  const [batchFilter, setBatchFilter] = useState("");
+  const [residenceFilter, setResidenceFilter] = useState<"" | ResidenceType>("");
+  const [paymentFilter, setPaymentFilter] = useState("");
+  const [admissionDateFilter, setAdmissionDateFilter] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -200,10 +211,34 @@ const StudentOnboarding = () => {
     loadRecords().catch(console.error);
   }, [canManage]);
 
+  const hasActiveFilters = Boolean(
+    search.trim() ||
+      courseFilter ||
+      batchFilter.trim() ||
+      residenceFilter ||
+      paymentFilter ||
+      admissionDateFilter
+  );
+
+  const clearAllFilters = () => {
+    setSearch("");
+    setCourseFilter("");
+    setBatchFilter("");
+    setResidenceFilter("");
+    setPaymentFilter("");
+    setAdmissionDateFilter("");
+  };
+
   const filteredRecords = useMemo(() => {
     const query = search.trim().toLowerCase();
-    if (!query) return records;
+    const batchQuery = batchFilter.trim().toLowerCase();
     return records.filter((record) => {
+      if (courseFilter && record.course !== courseFilter) return false;
+      if (batchQuery && !record.batch.toLowerCase().includes(batchQuery)) return false;
+      if (residenceFilter && record.residenceType !== residenceFilter) return false;
+      if (paymentFilter && record.paymentStatus !== paymentFilter) return false;
+      if (!onboardingAdmissionOnDate(record.admissionDate, admissionDateFilter)) return false;
+      if (!query) return true;
       const fullName = `${record.firstName} ${record.middleName} ${record.lastName}`.toLowerCase();
       return (
         record.studentId.toLowerCase().includes(query) ||
@@ -216,7 +251,7 @@ const StudentOnboarding = () => {
         (record.paymentStatus || "").toLowerCase().includes(query)
       );
     });
-  }, [records, search]);
+  }, [records, search, courseFilter, batchFilter, residenceFilter, paymentFilter, admissionDateFilter]);
 
   const setField = <K extends keyof StudentOnboardingFormState>(key: K, value: StudentOnboardingFormState[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -478,7 +513,12 @@ const StudentOnboarding = () => {
       {!showForm ? (
         <div className="card spa-onboarding-records-card" ref={printRef}>
           <div className="card-header d-flex flex-wrap justify-content-between align-items-center gap-2 spa-no-print">
-            <h4 className="card-title mb-0">Student Onboarding Records</h4>
+            <div className="d-flex flex-wrap align-items-center gap-3">
+              <h4 className="card-title mb-0">Student Onboarding Records</h4>
+              <span className="badge spa-leads-person-count bg-primary">
+                Total students: {filteredRecords.length} / {records.length}
+              </span>
+            </div>
             <div className="d-flex flex-wrap gap-2">
               <button type="button" className="btn btn-outline-secondary" onClick={handlePrint}>
                 <i className="fa fa-print me-2" />
@@ -499,14 +539,91 @@ const StudentOnboarding = () => {
                 {filteredRecords.length === 1 ? "" : "s"}
               </p>
             </div>
-            <div className="spa-onboarding-search spa-no-print">
-              <input
-                type="search"
-                className="form-control"
-                placeholder="Search by ID, name, email, course, batch, or payment status..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
+            <div className="spa-no-print">
+              <div className="row g-2 mb-2">
+                <div className="col-md-12 col-lg-4">
+                  <input
+                    type="search"
+                    className="form-control"
+                    placeholder="Search by ID, name, email, course, batch, or payment status..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                </div>
+                <div className="col-md-6 col-lg-2">
+                  <select
+                    className="form-select"
+                    value={courseFilter}
+                    onChange={(e) => setCourseFilter(e.target.value as "" | OnboardingCourse)}
+                    aria-label="Filter by course"
+                  >
+                    <option value="">All Courses</option>
+                    {ONBOARDING_COURSE_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="col-md-6 col-lg-2">
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Batch"
+                    value={batchFilter}
+                    onChange={(e) => setBatchFilter(e.target.value)}
+                    aria-label="Filter by batch"
+                  />
+                </div>
+                <div className="col-md-6 col-lg-2">
+                  <select
+                    className="form-select"
+                    value={residenceFilter}
+                    onChange={(e) => setResidenceFilter(e.target.value as "" | ResidenceType)}
+                    aria-label="Filter by residence"
+                  >
+                    <option value="">Day Scholar / Hostel</option>
+                    <option value="Day Scholar">Day Scholar</option>
+                    <option value="Hostel">Hostel</option>
+                  </select>
+                </div>
+                <div className="col-md-6 col-lg-2">
+                  <select
+                    className="form-select"
+                    value={paymentFilter}
+                    onChange={(e) => setPaymentFilter(e.target.value)}
+                    aria-label="Filter by payment status"
+                  >
+                    <option value="">All Payments</option>
+                    {ONBOARDING_PAYMENT_FILTER_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="row g-2 align-items-center">
+                <div className="col-md-6 col-lg-2">
+                  <input
+                    type="date"
+                    className="form-control"
+                    value={admissionDateFilter}
+                    onChange={(e) => setAdmissionDateFilter(e.target.value)}
+                    aria-label="Filter by admission date"
+                  />
+                </div>
+                <div className="col-md-6 col-lg-auto">
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary"
+                    onClick={clearAllFilters}
+                    disabled={!hasActiveFilters}
+                  >
+                    Clear all filters
+                  </button>
+                </div>
+              </div>
             </div>
             <div className="table-responsive spa-onboarding-table-wrap">
               <table className="table table-striped table-hover align-middle mb-0 spa-onboarding-table">
@@ -557,7 +674,7 @@ const StudentOnboarding = () => {
                         </td>
                         <td className="spa-onboarding-id">{record.studentId}</td>
                         <td className="spa-onboarding-name">{fullName(record)}</td>
-                        <td>{record.course || "—"}</td>
+                        <td>{formatOnboardingCourse(record.course)}</td>
                         <td>{record.batch || "—"}</td>
                         <td>{formatResidenceType(record.residenceType)}</td>
                         <td>
@@ -749,7 +866,27 @@ const StudentOnboarding = () => {
 
           <SectionCard title="6. Course Details">
             <div className="row">
-              <div className="col-md-4"><Field label="Course"><TextInput value={form.course} onChange={(v) => setField("course", v)} /></Field></div>
+              <div className="col-md-4">
+                <Field label="Course">
+                  <select
+                    className="form-select"
+                    value={form.course}
+                    onChange={(e) => setField("course", e.target.value)}
+                    required
+                  >
+                    <option value="">Select course</option>
+                    {form.course &&
+                      !ONBOARDING_COURSE_OPTIONS.some((item) => item.value === form.course) && (
+                        <option value={form.course}>{formatOnboardingCourse(form.course)}</option>
+                      )}
+                    {ONBOARDING_COURSE_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+              </div>
               <div className="col-md-4"><Field label="Batch"><TextInput value={form.batch} onChange={(v) => setField("batch", v)} /></Field></div>
               <div className="col-md-4"><Field label="Branch/Campus"><TextInput value={form.branchCampus} onChange={(v) => setField("branchCampus", v)} /></Field></div>
               <div className="col-md-4"><Field label="Section"><TextInput value={form.section} onChange={(v) => setField("section", v)} /></Field></div>
