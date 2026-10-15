@@ -4,9 +4,17 @@ export type LeadSource =
   | "website"
   | "walk_in"
   | "referral"
-  | "social_media"
   | "phone"
-  | "other";
+  | "instagram"
+  | "google"
+  | "facebook"
+  | "whatsapp"
+  | "youtube"
+  | "other"
+  /** @deprecated legacy records only */
+  | "social_media";
+
+export type LeadCourse = "pc" | "si" | "army";
 
 export interface LeadRecord {
   id: string;
@@ -61,14 +69,53 @@ export const LEAD_STATUS_OPTIONS: { value: LeadStatus; label: string }[] = [
   { value: "converted", label: "Converted to Student" },
 ];
 
+/** Status filter on Lead List (excludes "new"). */
+export const LEAD_STATUS_FILTER_OPTIONS = LEAD_STATUS_OPTIONS.filter((item) => item.value !== "new");
+
 export const LEAD_SOURCE_OPTIONS: { value: LeadSource; label: string }[] = [
   { value: "walk_in", label: "Walk-in" },
   { value: "phone", label: "Phone" },
   { value: "website", label: "Website" },
   { value: "referral", label: "Referral" },
-  { value: "social_media", label: "Social Media" },
+  { value: "instagram", label: "Instagram" },
+  { value: "google", label: "Google" },
+  { value: "facebook", label: "Facebook" },
+  { value: "whatsapp", label: "WhatsApp" },
+  { value: "youtube", label: "YouTube" },
   { value: "other", label: "Other" },
 ];
+
+export const LEAD_COURSE_OPTIONS: { value: LeadCourse; label: string }[] = [
+  { value: "pc", label: "PC" },
+  { value: "si", label: "SI" },
+  { value: "army", label: "Army" },
+];
+
+export function formatLeadCreatedDate(createdAt: string) {
+  if (!createdAt) return "—";
+  const date = new Date(createdAt);
+  if (Number.isNaN(date.getTime())) return "—";
+  return date.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+export function leadCreatedOnDate(createdAt: string, filterDate: string) {
+  if (!filterDate) return true;
+  if (!createdAt) return false;
+  const date = new Date(createdAt);
+  if (Number.isNaN(date.getTime())) return false;
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}` === filterDate;
+}
+
+export function sourceLabel(source: LeadSource) {
+  return LEAD_SOURCE_OPTIONS.find((item) => item.value === source)?.label || source;
+}
 
 export function emptyLeadForm(): LeadFormState {
   return {

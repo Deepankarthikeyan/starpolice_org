@@ -7,12 +7,16 @@ import { getPanelMotherMenu } from "../panelLabels";
 import { notify } from "../toast";
 import {
   emptyLeadForm,
+  formatLeadCreatedDate,
   fullLeadName,
+  leadCreatedOnDate,
+  LEAD_COURSE_OPTIONS,
   LEAD_SOURCE_OPTIONS,
-  LEAD_STATUS_OPTIONS,
+  LEAD_STATUS_FILTER_OPTIONS,
   recordToForm,
   statusBadgeClass,
   statusLabel,
+  type LeadCourse,
   type LeadFormState,
   type LeadRecord,
   type LeadStatus,
@@ -40,6 +44,8 @@ const Leads = () => {
   const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<"" | LeadStatus>("");
+  const [courseFilter, setCourseFilter] = useState<"" | LeadCourse>("");
+  const [dateFilter, setDateFilter] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -55,8 +61,10 @@ const Leads = () => {
 
   const filteredLeads = useMemo(() => {
     const query = search.trim().toLowerCase();
-    if (!query) return leads;
     return leads.filter((lead) => {
+      if (courseFilter && lead.course !== courseFilter) return false;
+      if (!leadCreatedOnDate(lead.createdAt, dateFilter)) return false;
+      if (!query) return true;
       const name = fullLeadName(lead).toLowerCase();
       return (
         lead.leadId.toLowerCase().includes(query) ||
@@ -66,7 +74,7 @@ const Leads = () => {
         lead.course.toLowerCase().includes(query)
       );
     });
-  }, [leads, search]);
+  }, [leads, search, courseFilter, dateFilter]);
 
   const setField = <K extends keyof LeadFormState>(key: K, value: LeadFormState[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -306,11 +314,22 @@ const Leads = () => {
               <div className="row">
                 <div className="col-md-4">
                   <Field label="Course" optional>
-                    <input
-                      className="form-control"
+                    <select
+                      className="form-select"
                       value={form.course}
                       onChange={(e) => setField("course", e.target.value)}
-                    />
+                    >
+                      <option value="">Select course</option>
+                      {form.course &&
+                        !LEAD_COURSE_OPTIONS.some((item) => item.value === form.course) && (
+                          <option value={form.course}>{form.course}</option>
+                        )}
+                      {LEAD_COURSE_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
                   </Field>
                 </div>
                 <div className="col-md-4">
@@ -390,13 +409,36 @@ const Leads = () => {
         </div>
         <div className="card-body">
           <div className="row g-2 mb-3">
-            <div className="col-md-6">
+            <div className="col-md-12 col-lg-4">
               <input
                 type="text"
                 className="form-control"
                 placeholder="Search by name, ID, email, mobile, course..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            <div className="col-md-4 col-lg-2">
+              <select
+                className="form-select"
+                value={courseFilter}
+                onChange={(e) => setCourseFilter(e.target.value as "" | LeadCourse)}
+              >
+                <option value="">All Courses</option>
+                {LEAD_COURSE_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="col-md-4 col-lg-2">
+              <input
+                type="date"
+                className="form-control"
+                value={dateFilter}
+                onChange={(e) => setDateFilter(e.target.value)}
+                aria-label="Filter by date"
               />
             </div>
             <div className="col-md-4 col-lg-3">
@@ -406,7 +448,7 @@ const Leads = () => {
                 onChange={(e) => setStatusFilter(e.target.value as "" | LeadStatus)}
               >
                 <option value="">All Statuses</option>
-                {LEAD_STATUS_OPTIONS.map((option) => (
+                {LEAD_STATUS_FILTER_OPTIONS.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -420,6 +462,7 @@ const Leads = () => {
               <thead>
                 <tr>
                   <th>Lead ID</th>
+                  <th>Date</th>
                   <th>Name</th>
                   <th>Contact</th>
                   <th>Course</th>
@@ -430,7 +473,7 @@ const Leads = () => {
               <tbody>
                 {filteredLeads.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="text-center text-muted">
+                    <td colSpan={7} className="text-center text-muted">
                       No leads yet. Click Add Lead to create one.
                     </td>
                   </tr>
@@ -446,12 +489,17 @@ const Leads = () => {
                           {lead.leadId}
                         </button>
                       </td>
+                      <td>{formatLeadCreatedDate(lead.createdAt)}</td>
                       <td>{fullLeadName(lead)}</td>
                       <td>
                         <div>{lead.mobileNumber || "—"}</div>
                         <small className="text-muted">{lead.email || "—"}</small>
                       </td>
-                      <td>{lead.course || "—"}</td>
+                      <td>
+                        {LEAD_COURSE_OPTIONS.find((item) => item.value === lead.course)?.label ||
+                          lead.course ||
+                          "—"}
+                      </td>
                       <td>
                         <span className={`badge ${statusBadgeClass(lead.status)}`}>
                           {statusLabel(lead.status)}
