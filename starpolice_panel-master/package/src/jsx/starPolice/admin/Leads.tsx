@@ -36,6 +36,15 @@ function Field({ label, children, optional }: { label: string; children: React.R
   );
 }
 
+function ListFilterField({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="spa-list-filter-field h-100">
+      <label className="form-label spa-list-filter-label">{label}</label>
+      {children}
+    </div>
+  );
+}
+
 const Leads = () => {
   const { auth } = useContext(ThemeContext);
   const canManage = hasPermission(auth, "admin:leads");
@@ -464,64 +473,70 @@ const Leads = () => {
           </div>
         </div>
         <div className="card-body">
-          <div className="row g-2 mb-3">
-            <div className="col-md-12 col-lg-4">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Search by name, ID, email, mobile, course..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
+          <div className="row g-2 mb-3 align-items-end spa-leads-filters">
+            <div className="col-12 col-md-6 col-lg-3">
+              <ListFilterField label="Search">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Name, ID, email, mobile..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </ListFilterField>
             </div>
-            <div className="col-md-4 col-lg-2">
-              <select
-                className="form-select"
-                value={courseFilter}
-                onChange={(e) => setCourseFilter(e.target.value as "" | LeadCourse)}
-              >
-                <option value="">All Courses</option>
-                {LEAD_COURSE_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+            <div className="col-6 col-md-3 col-lg-2">
+              <ListFilterField label="Course">
+                <select
+                  className="form-select"
+                  value={courseFilter}
+                  onChange={(e) => setCourseFilter(e.target.value as "" | LeadCourse)}
+                >
+                  <option value="">All</option>
+                  {LEAD_COURSE_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </ListFilterField>
             </div>
-            <div className="col-md-4 col-lg-2">
-              <label className="form-label small text-muted mb-1">From</label>
-              <input
-                type="date"
-                className="form-control"
-                value={dateFromFilter}
-                onChange={(e) => setDateFromFilter(e.target.value)}
-                aria-label="From date"
-              />
+            <div className="col-6 col-md-3 col-lg-2">
+              <ListFilterField label="From">
+                <input
+                  type="date"
+                  className="form-control"
+                  value={dateFromFilter}
+                  onChange={(e) => setDateFromFilter(e.target.value)}
+                />
+              </ListFilterField>
             </div>
-            <div className="col-md-4 col-lg-2">
-              <label className="form-label small text-muted mb-1">To</label>
-              <input
-                type="date"
-                className="form-control"
-                value={dateToFilter}
-                min={dateFromFilter || undefined}
-                onChange={(e) => setDateToFilter(e.target.value)}
-                aria-label="To date"
-              />
+            <div className="col-6 col-md-3 col-lg-2">
+              <ListFilterField label="To">
+                <input
+                  type="date"
+                  className="form-control"
+                  value={dateToFilter}
+                  min={dateFromFilter || undefined}
+                  onChange={(e) => setDateToFilter(e.target.value)}
+                />
+              </ListFilterField>
             </div>
-            <div className="col-md-4 col-lg-2">
-              <select
-                className="form-select"
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value as "" | LeadStatus)}
-              >
-                <option value="">All Statuses</option>
-                {LEAD_STATUS_FILTER_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+            <div className="col-6 col-md-3 col-lg-3">
+              <ListFilterField label="Status">
+                <select
+                  className="form-select"
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value as "" | LeadStatus)}
+                >
+                  <option value="">All</option>
+                  {LEAD_STATUS_FILTER_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </ListFilterField>
             </div>
           </div>
 

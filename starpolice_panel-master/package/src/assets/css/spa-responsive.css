@@ -37,6 +37,24 @@ iframe {
   box-shadow: 0 0.15rem 0.45rem rgba(13, 110, 253, 0.35);
 }
 
+.spa-leads-filters .spa-list-filter-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--bs-secondary-color, #6c757d);
+  line-height: 1.2;
+  min-height: 0.9rem;
+}
+
+.spa-leads-filters .spa-list-filter-field .form-control,
+.spa-leads-filters .spa-list-filter-field .form-select {
+  width: 100%;
+  min-height: 2.75rem;
+}
+
 .spa-content-body {
   min-height: 100dvh;
   box-sizing: border-box;
