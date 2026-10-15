@@ -6,6 +6,7 @@ on:
     paths:
       - "starpolice_panel-master/server/**"
       - "starpolice_panel-master/render.yaml"
+      - "starpolice_panel-master/render-dev.yaml"
       - ".github/workflows/deploy-render.yml"
   workflow_dispatch:
 
