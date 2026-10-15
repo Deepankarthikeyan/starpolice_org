@@ -115,15 +115,24 @@ export function formatLeadCreatedDate(createdAt: string) {
   });
 }
 
-export function leadCreatedOnDate(createdAt: string, filterDate: string) {
-  if (!filterDate) return true;
-  if (!createdAt) return false;
+export function leadCreatedDateKey(createdAt: string) {
+  if (!createdAt) return "";
   const date = new Date(createdAt);
-  if (Number.isNaN(date.getTime())) return false;
+  if (Number.isNaN(date.getTime())) return "";
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, "0");
   const d = String(date.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}` === filterDate;
+  return `${y}-${m}-${d}`;
+}
+
+/** Inclusive range on lead created date (YYYY-MM-DD). Either bound may be empty. */
+export function leadCreatedInDateRange(createdAt: string, fromDate: string, toDate: string) {
+  if (!fromDate && !toDate) return true;
+  const key = leadCreatedDateKey(createdAt);
+  if (!key) return false;
+  if (fromDate && key < fromDate) return false;
+  if (toDate && key > toDate) return false;
+  return true;
 }
 
 export function sourceLabel(source: LeadSource) {

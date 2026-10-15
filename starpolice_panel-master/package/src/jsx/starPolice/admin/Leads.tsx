@@ -9,7 +9,7 @@ import {
   emptyLeadForm,
   formatLeadCreatedDate,
   fullLeadName,
-  leadCreatedOnDate,
+  leadCreatedInDateRange,
   LEAD_COURSE_OPTIONS,
   LEAD_FORM_DISPOSITION_OPTIONS,
   LEAD_SOURCE_OPTIONS,
@@ -47,7 +47,8 @@ const Leads = () => {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<"" | LeadStatus>("");
   const [courseFilter, setCourseFilter] = useState<"" | LeadCourse>("");
-  const [dateFilter, setDateFilter] = useState("");
+  const [dateFromFilter, setDateFromFilter] = useState("");
+  const [dateToFilter, setDateToFilter] = useState("");
   const [editingStatus, setEditingStatus] = useState<LeadStatus | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -67,7 +68,7 @@ const Leads = () => {
     return leads.filter((lead) => {
       if (statusFilter && lead.status !== statusFilter) return false;
       if (courseFilter && lead.course !== courseFilter) return false;
-      if (!leadCreatedOnDate(lead.createdAt, dateFilter)) return false;
+      if (!leadCreatedInDateRange(lead.createdAt, dateFromFilter, dateToFilter)) return false;
       if (!query) return true;
       const name = fullLeadName(lead).toLowerCase();
       return (
@@ -78,7 +79,7 @@ const Leads = () => {
         lead.course.toLowerCase().includes(query)
       );
     });
-  }, [leads, search, statusFilter, courseFilter, dateFilter]);
+  }, [leads, search, statusFilter, courseFilter, dateFromFilter, dateToFilter]);
 
   const onDownloadMobileNumbers = () => {
     const withMobile = filteredLeads.filter((lead) => lead.mobileNumber.trim());
@@ -488,15 +489,27 @@ const Leads = () => {
               </select>
             </div>
             <div className="col-md-4 col-lg-2">
+              <label className="form-label small text-muted mb-1">From</label>
               <input
                 type="date"
                 className="form-control"
-                value={dateFilter}
-                onChange={(e) => setDateFilter(e.target.value)}
-                aria-label="Filter by date"
+                value={dateFromFilter}
+                onChange={(e) => setDateFromFilter(e.target.value)}
+                aria-label="From date"
               />
             </div>
-            <div className="col-md-4 col-lg-3">
+            <div className="col-md-4 col-lg-2">
+              <label className="form-label small text-muted mb-1">To</label>
+              <input
+                type="date"
+                className="form-control"
+                value={dateToFilter}
+                min={dateFromFilter || undefined}
+                onChange={(e) => setDateToFilter(e.target.value)}
+                aria-label="To date"
+              />
+            </div>
+            <div className="col-md-4 col-lg-2">
               <select
                 className="form-select"
                 value={statusFilter}
