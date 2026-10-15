@@ -130,9 +130,7 @@ const Leads = () => {
     }
     if (leadDisposition === "follow_up") {
       await api.updateLeadStatus(leadId, "follow_up");
-      return;
     }
-    await api.updateLeadStatus(leadId, "new");
   };
 
   const onSubmit = async (event: FormEvent) => {
@@ -143,6 +141,7 @@ const Leads = () => {
       const payload: LeadFormState = {
         ...form,
         nextFollowUpDate: form.leadDisposition === "follow_up" ? form.nextFollowUpDate : "",
+        followUpNotes: form.leadDisposition === "follow_up" ? form.followUpNotes : "",
         rejectionReason: form.leadDisposition === "rejected" ? form.rejectionReason : "",
       };
 
@@ -369,10 +368,12 @@ const Leads = () => {
                           ...prev,
                           leadDisposition: value,
                           nextFollowUpDate: value === "follow_up" ? prev.nextFollowUpDate : "",
+                          followUpNotes: value === "follow_up" ? prev.followUpNotes : "",
                           rejectionReason: value === "rejected" ? prev.rejectionReason : "",
                         }));
                       }}
                     >
+                      <option value="">Select status</option>
                       {LEAD_FORM_DISPOSITION_OPTIONS.map((option) => (
                         <option key={option.value} value={option.value}>
                           {option.label}
@@ -405,17 +406,19 @@ const Leads = () => {
                     </Field>
                   </div>
                 )}
-                <div className="col-12">
-                  <Field label="Follow-up Notes" optional>
-                    <textarea
-                      className="form-control"
-                      rows={3}
-                      value={form.followUpNotes}
-                      onChange={(e) => setField("followUpNotes", e.target.value)}
-                      disabled={formLocked}
-                    />
-                  </Field>
-                </div>
+                {form.leadDisposition === "follow_up" && (
+                  <div className="col-12">
+                    <Field label="Follow-up Notes" optional>
+                      <textarea
+                        className="form-control"
+                        rows={3}
+                        value={form.followUpNotes}
+                        onChange={(e) => setField("followUpNotes", e.target.value)}
+                        disabled={formLocked}
+                      />
+                    </Field>
+                  </div>
+                )}
               </div>
             </div>
           </div>

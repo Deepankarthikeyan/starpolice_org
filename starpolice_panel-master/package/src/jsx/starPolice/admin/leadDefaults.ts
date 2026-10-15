@@ -16,8 +16,8 @@ export type LeadSource =
 
 export type LeadCourse = "pc" | "si" | "army";
 
-/** Editable lead status on Add/Edit form (excludes converted). */
-export type LeadFormDisposition = "new" | "follow_up" | "rejected";
+/** Lead status choice on Add/Edit form (empty = unchanged / stays New). */
+export type LeadFormDisposition = "" | "follow_up" | "rejected";
 
 export interface LeadRecord {
   id: string;
@@ -77,8 +77,10 @@ export const LEAD_STATUS_OPTIONS: { value: LeadStatus; label: string }[] = [
 /** Status filter on Lead List (excludes "new"). */
 export const LEAD_STATUS_FILTER_OPTIONS = LEAD_STATUS_OPTIONS.filter((item) => item.value !== "new");
 
-export const LEAD_FORM_DISPOSITION_OPTIONS: { value: LeadFormDisposition; label: string }[] = [
-  { value: "new", label: "New" },
+export const LEAD_FORM_DISPOSITION_OPTIONS: {
+  value: Exclude<LeadFormDisposition, "">;
+  label: string;
+}[] = [
   { value: "follow_up", label: "Follow up" },
   { value: "rejected", label: "Rejected" },
 ];
@@ -143,7 +145,7 @@ export function emptyLeadForm(): LeadFormState {
     previousQualification: "",
     careerGoal: "",
     source: "other",
-    leadDisposition: "new",
+    leadDisposition: "",
     rejectionReason: "",
     followUpNotes: "",
     nextFollowUpDate: "",
@@ -166,9 +168,7 @@ export function recordToForm(record: LeadRecord): LeadFormState {
     careerGoal: record.careerGoal,
     source: record.source,
     leadDisposition:
-      record.status === "follow_up" || record.status === "rejected"
-        ? record.status
-        : "new",
+      record.status === "follow_up" || record.status === "rejected" ? record.status : "",
     rejectionReason: record.rejectionReason || "",
     followUpNotes: record.followUpNotes,
     nextFollowUpDate: record.nextFollowUpDate,
