@@ -6,11 +6,14 @@ You can keep **real data only on live** and use a **separate dev database** for 
 
 ## Environments
 
+See **[ENVIRONMENTS.md](ENVIRONMENTS.md)** for official panel URLs.
+
 | Environment | Panel | API | Database |
 |-------------|-------|-----|----------|
-| **Live** | https://starpolice-panel.netlify.app | https://starpolice-api.onrender.com | MongoDB Atlas → database `starpolice_academy` (on Render `MONGODB_URI`) |
-| **Local dev** | `npm run dev` in `package/` | `npm start` in `server/` | Local MongoDB or Atlas **dev** database |
-| **Temp Cloudflare tunnel** | `*.trycloudflare.com` | paired tunnel URL | **Local MongoDB on that machine only** — not live |
+| **Live** | https://starpoliceacademy.in/admin/login | https://starpolice-api.onrender.com | Atlas → `starpolice_academy` |
+| **Dev (Netlify)** | https://starpoliceacademy-dev.netlify.app/admin | Dev Render API + `VITE_API_URL` on dev Netlify (see ENVIRONMENTS.md) | Atlas → `starpolice_academy_dev` |
+| **Local** | `npm run dev` in `package/` | `npm start` in `server/` | `starpolice_academy_dev` on localhost |
+| **Temp Cloudflare tunnel** | `*.trycloudflare.com` | tunnel URL | Local MongoDB only — not live |
 
 ## Rule: never overwrite live data
 
