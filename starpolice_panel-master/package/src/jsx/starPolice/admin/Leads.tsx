@@ -21,6 +21,7 @@ import {
   type LeadRecord,
   type LeadStatus,
 } from "./leadDefaults";
+import { downloadLeadMobileNumbersSheet } from "./leadExport";
 
 function Field({ label, children, optional }: { label: string; children: React.ReactNode; optional?: boolean }) {
   return (
@@ -50,18 +51,23 @@ const Leads = () => {
   const [loading, setLoading] = useState(false);
 
   const loadLeads = async () => {
-    const data = await api.getLeads(statusFilter || undefined);
+    const data = await api.getLeads();
     setLeads(data);
   };
 
   useEffect(() => {
     if (!canManage) return;
     loadLeads().catch(console.error);
-  }, [canManage, statusFilter]);
+  }, [canManage]);
+
+  const hasActiveFilters = Boolean(
+    search.trim() || statusFilter || courseFilter || dateFilter
+  );
 
   const filteredLeads = useMemo(() => {
     const query = search.trim().toLowerCase();
     return leads.filter((lead) => {
+      if (statusFilter && lead.status !== statusFilter) return false;
       if (courseFilter && lead.course !== courseFilter) return false;
       if (!leadCreatedOnDate(lead.createdAt, dateFilter)) return false;
       if (!query) return true;
@@ -74,7 +80,18 @@ const Leads = () => {
         lead.course.toLowerCase().includes(query)
       );
     });
-  }, [leads, search, courseFilter, dateFilter]);
+  }, [leads, search, statusFilter, courseFilter, dateFilter]);
+
+  const onDownloadMobileNumbers = () => {
+    const withMobile = filteredLeads.filter((lead) => lead.mobileNumber.trim());
+    if (withMobile.length === 0) {
+      notify.warning("No mobile numbers in the current list to export.");
+      return;
+    }
+    const datePart = new Date().toISOString().slice(0, 10);
+    downloadLeadMobileNumbersSheet(withMobile, `lead-mobile-numbers-${datePart}.xls`);
+    notify.success(`Downloaded ${withMobile.length} mobile number(s).`);
+  };
 
   const setField = <K extends keyof LeadFormState>(key: K, value: LeadFormState[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -402,10 +419,38 @@ const Leads = () => {
 
       <div className="card spa-leads-card">
         <div className="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
-          <h4 className="card-title mb-0">Lead List</h4>
-          <button type="button" className="btn btn-primary" onClick={startCreate}>
-            Add Lead
-          </button>
+          <div>
+            <h4 className="card-title mb-0">Lead List</h4>
+            <div className="small text-muted mt-1">
+              <span className="me-3">
+                Total persons: <strong>{leads.length}</strong>
+              </span>
+              <span>
+                {hasActiveFilters ? (
+                  <>
+                    Filtered persons: <strong>{filteredLeads.length}</strong>
+                  </>
+                ) : (
+                  <>
+                    Showing: <strong>{filteredLeads.length}</strong>
+                  </>
+                )}
+              </span>
+            </div>
+          </div>
+          <div className="d-flex flex-wrap gap-2">
+            <button
+              type="button"
+              className="btn btn-outline-success"
+              onClick={onDownloadMobileNumbers}
+              disabled={filteredLeads.every((lead) => !lead.mobileNumber.trim())}
+            >
+              Download mobile numbers (Excel)
+            </button>
+            <button type="button" className="btn btn-primary" onClick={startCreate}>
+              Add Lead
+            </button>
+          </div>
         </div>
         <div className="card-body">
           <div className="row g-2 mb-3">
