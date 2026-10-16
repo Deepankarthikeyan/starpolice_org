@@ -9,6 +9,7 @@ server/uploads/
 
 # Environment
 server/.env
+package/.env
 .env
 .env.local
 
