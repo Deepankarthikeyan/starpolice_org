@@ -107,10 +107,15 @@ This script will:
 
 Dev super admin (recommended): `spademo@gmail.com` / `spa123` — set once on **starpolice-api-dev** Shell:
 
+On **starpolice-api-dev** → **Shell** (root is already `server/` on Render):
+
 ```bash
-cd server
 SUPERADMIN_EMAIL=spademo@gmail.com SUPERADMIN_PASSWORD=spa123 npm run set-superadmin
 ```
+
+You should see: `Updated superadmin: … → spademo@gmail.com`. If you see `bad auth`, fix `MONGODB_URI` on that service first.
+
+**Until this runs**, dev login will show **Invalid credentials** for `spademo@gmail.com` — the account is not created yet. Try your **live** admin email/password on dev only if you copied the live database into dev.
 
 After `npm run seed` only (before set-superadmin): `superadmin@starpolice.academy` / `superadmin123`
 
