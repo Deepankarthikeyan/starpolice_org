@@ -105,7 +105,14 @@ This script will:
 | Dev API health | https://starpolice-api-dev.onrender.com/api/health |
 | Live login | https://starpoliceacademy.in/admin/login |
 
-Dev login after seed: `superadmin@starpolice.academy` / `superadmin123`
+Dev super admin (recommended): `spademo@gmail.com` / `spa123` — set once on **starpolice-api-dev** Shell:
+
+```bash
+cd server
+SUPERADMIN_EMAIL=spademo@gmail.com SUPERADMIN_PASSWORD=spa123 npm run set-superadmin
+```
+
+After `npm run seed` only (before set-superadmin): `superadmin@starpolice.academy` / `superadmin123`
 
 In DevTools → Network, dev panel API host must be **`starpolice-api-dev.onrender.com`**, not `starpolice-api`.
 
