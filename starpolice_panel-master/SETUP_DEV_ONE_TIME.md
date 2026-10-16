@@ -107,15 +107,28 @@ This script will:
 
 Dev super admin (recommended): `spademo@gmail.com` / `spa123` — set once on **starpolice-api-dev** Shell:
 
-On **starpolice-api-dev** → **Shell** (root is already `server/` on Render):
+**Render Shell is paid** — use one of these free options:
+
+### Option A — GitHub Actions (recommended)
+
+1. GitHub → repo **starpolice_org** → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**
+   - Name: `MONGODB_URI_DEV`
+   - Value: your Atlas URI with database **`starpolice_academy_dev`** (same user/password as Atlas; encode `@` in password as `%40`).
+2. **Actions** → **Set dev super admin login** → **Run workflow**
+   - Email: `spademo@gmail.com`
+   - Password: `spa123`
+3. When the job is green, log in on dev.
+
+### Option B — Your PC (Node.js)
 
 ```bash
+cd starpolice_panel-master/server
+npm ci
+export MONGODB_URI='mongodb+srv://...@deepan.wmec4vz.mongodb.net/starpolice_academy_dev?retryWrites=true&w=majority'
 SUPERADMIN_EMAIL=spademo@gmail.com SUPERADMIN_PASSWORD=spa123 npm run set-superadmin
 ```
 
-You should see: `Updated superadmin: … → spademo@gmail.com`. If you see `bad auth`, fix `MONGODB_URI` on that service first.
-
-**Until this runs**, dev login will show **Invalid credentials** for `spademo@gmail.com` — the account is not created yet. Try your **live** admin email/password on dev only if you copied the live database into dev.
+**Until this runs**, dev login shows **Invalid credentials** for `spademo@gmail.com`. If you copied live data into dev, try your **live** admin email/password on the dev site only.
 
 After `npm run seed` only (before set-superadmin): `superadmin@starpolice.academy` / `superadmin123`
 
