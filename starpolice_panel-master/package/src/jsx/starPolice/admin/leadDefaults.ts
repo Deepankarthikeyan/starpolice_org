@@ -104,6 +104,52 @@ export const LEAD_COURSE_OPTIONS: { value: LeadCourse; label: string }[] = [
   { value: "army", label: "Army" },
 ];
 
+const LEAD_COURSE_ALIASES: Record<string, LeadCourse> = {
+  si: "si",
+  pc: "pc",
+  army: "army",
+  "sub inspector": "si",
+  "sub-inspector": "si",
+  "police constable": "pc",
+  constable: "pc",
+};
+
+/** Map stored course strings (SI, Army, etc.) to filter values si / pc / army. */
+export function normalizeLeadCourse(course: string): LeadCourse | "" {
+  const raw = (course || "").trim();
+  if (!raw) return "";
+
+  const lower = raw.toLowerCase();
+  const alias = LEAD_COURSE_ALIASES[lower];
+  if (alias) return alias;
+
+  for (const option of LEAD_COURSE_OPTIONS) {
+    if (lower === option.value || lower === option.label.toLowerCase()) {
+      return option.value;
+    }
+  }
+
+  return "";
+}
+
+export function leadRecordMatchesCourseFilter(recordCourse: string, filter: "" | LeadCourse): boolean {
+  if (!filter) return true;
+  return normalizeLeadCourse(recordCourse) === filter;
+}
+
+export function leadRecordMatchesStatusFilter(recordStatus: string, filter: "" | LeadStatus): boolean {
+  if (!filter) return true;
+  return recordStatus === filter;
+}
+
+export function formatLeadCourse(course: string) {
+  const normalized = normalizeLeadCourse(course);
+  if (normalized) {
+    return LEAD_COURSE_OPTIONS.find((item) => item.value === normalized)?.label || normalized;
+  }
+  return course || "—";
+}
+
 export function formatLeadCreatedDate(createdAt: string) {
   if (!createdAt) return "—";
   const date = new Date(createdAt);
@@ -117,11 +163,13 @@ export function formatLeadCreatedDate(createdAt: string) {
 
 export function leadCreatedDateKey(createdAt: string) {
   if (!createdAt) return "";
+  const isoDay = createdAt.match(/^(\d{4}-\d{2}-\d{2})/)?.[1];
+  if (isoDay) return isoDay;
   const date = new Date(createdAt);
   if (Number.isNaN(date.getTime())) return "";
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
+  const y = date.getUTCFullYear();
+  const m = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const d = String(date.getUTCDate()).padStart(2, "0");
   return `${y}-${m}-${d}`;
 }
 
@@ -197,4 +245,27 @@ export function statusBadgeClass(status: LeadStatus) {
 
 export function statusLabel(status: LeadStatus) {
   return LEAD_STATUS_OPTIONS.find((item) => item.value === status)?.label || status;
+}
+
+export function leadRecordMatchesSearch(lead: LeadRecord, query: string): boolean {
+  if (!query) return true;
+  const q = query.toLowerCase();
+  const name = fullLeadName(lead).toLowerCase();
+  const courseLabel = formatLeadCourse(lead.course).toLowerCase();
+  const courseValue = normalizeLeadCourse(lead.course);
+  const statusText = statusLabel(lead.status as LeadStatus).toLowerCase();
+  const sourceText = sourceLabel(lead.source).toLowerCase();
+  return (
+    lead.leadId.toLowerCase().includes(q) ||
+    name.includes(q) ||
+    lead.email.toLowerCase().includes(q) ||
+    lead.mobileNumber.includes(q) ||
+    (lead.batch || "").toLowerCase().includes(q) ||
+    (lead.city || "").toLowerCase().includes(q) ||
+    (lead.course || "").toLowerCase().includes(q) ||
+    courseLabel.includes(q) ||
+    courseValue.includes(q) ||
+    statusText.includes(q) ||
+    sourceText.includes(q)
+  );
 }
