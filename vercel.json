@@ -1,0 +1,13 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "rewrites": [
+    { "source": "/admin", "destination": "/panel/index.html" },
+    { "source": "/admin/:path*", "destination": "/panel/index.html" },
+    { "source": "/staff", "destination": "/panel/index.html" },
+    { "source": "/staff/:path*", "destination": "/panel/index.html" },
+    { "source": "/student", "destination": "/panel/index.html" },
+    { "source": "/student/:path*", "destination": "/panel/index.html" }
+  ]
+}

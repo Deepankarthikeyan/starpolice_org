@@ -1,0 +1,66 @@
+name: Deploy frontend to Netlify
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: netlify-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: package/package-lock.json
+
+      - name: Install and build
+        working-directory: package
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+        run: |
+          npm ci
+          npm run build
+
+      - name: Deploy to Netlify
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
+        run: |
+          if [ -n "$NETLIFY_BUILD_HOOK" ]; then
+            echo "Triggering Netlify build hook..."
+            curl -fsS -X POST -d {} "$NETLIFY_BUILD_HOOK"
+            echo "Netlify build hook triggered. Check https://app.netlify.com/projects/starpolice-panel/deploys"
+            exit 0
+          fi
+
+          if [ -n "$NETLIFY_AUTH_TOKEN" ]; then
+            SITE_REF="${NETLIFY_SITE_ID:-starpolice-panel}"
+            echo "Deploying with Netlify CLI (site: $SITE_REF)..."
+            if npx netlify-cli@17 deploy \
+              --prod \
+              --dir package/dist \
+              --site "$SITE_REF" \
+              --auth "$NETLIFY_AUTH_TOKEN" \
+              --message "Deploy from GitHub Actions (${GITHUB_SHA:0:7})"; then
+              exit 0
+            fi
+            echo "::warning::Netlify CLI deploy failed (token expired or wrong site). Falling back instructions below."
+          fi
+
+          echo "::error::Netlify deploy failed — frontend not updated on https://starpolice-panel.netlify.app"
+          echo ""
+          echo "Fix ONE of these:"
+          echo "1. Netlify dashboard → starpolice-panel → Deploys → Trigger deploy → Deploy site"
+          echo "2. Add NETLIFY_BUILD_HOOK secret (Netlify → Build & deploy → Build hooks)"
+          echo "3. Update NETLIFY_AUTH_TOKEN + NETLIFY_SITE_ID in GitHub repo secrets"
+          echo "   https://github.com/${{ github.repository }}/settings/secrets/actions"
+          exit 1

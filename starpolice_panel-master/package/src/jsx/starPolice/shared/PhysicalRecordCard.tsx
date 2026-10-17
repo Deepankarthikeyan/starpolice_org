@@ -1,0 +1,351 @@
+import type {
+  OverallPerformance,
+  PerformanceCardType,
+  StudentPerformanceRecord,
+} from "../admin/performanceDefaults";
+import {
+  ALL_EVENT_DEFINITIONS,
+  isStarChecked,
+  mergeEventsWithDefaults,
+  overallPerformanceLabel,
+  OVERALL_PERFORMANCE_OPTIONS,
+  suggestOverallPerformance,
+  type PerformanceEventDefinition,
+} from "../admin/performanceDefaults";
+import { formatDisplayDate, statusLabel, todayDateString, type AttendanceStatus } from "../admin/attendanceDefaults";
+
+interface PhysicalRecordCardProps {
+  form: StudentPerformanceRecord;
+  readOnly?: boolean;
+  onChange?: (next: StudentPerformanceRecord) => void;
+  todayAttendanceStatus?: string;
+}
+
+function setField<K extends keyof StudentPerformanceRecord>(
+  form: StudentPerformanceRecord,
+  key: K,
+  value: StudentPerformanceRecord[K],
+  onChange?: (next: StudentPerformanceRecord) => void
+) {
+  if (!onChange) return;
+  onChange({ ...form, [key]: value });
+}
+
+function setStarField(
+  form: StudentPerformanceRecord,
+  eventKey: string,
+  type: "single" | "double",
+  checked: boolean,
+  onChange?: (next: StudentPerformanceRecord) => void
+) {
+  if (!onChange) return;
+  const events = mergeEventsWithDefaults(form.events, "all").map((event) => {
+    if (event.eventKey !== eventKey) return event;
+    if (type === "single") {
+      return { ...event, singleStar: checked ? "1" : "", doubleStar: checked ? "" : event.doubleStar };
+    }
+    return { ...event, doubleStar: checked ? "1" : "", singleStar: checked ? "" : event.singleStar };
+  });
+  onChange({ ...form, events });
+}
+
+function getEventForDefinition(form: StudentPerformanceRecord, definition: PerformanceEventDefinition) {
+  return (
+    mergeEventsWithDefaults(form.events, "all").find((event) => event.eventKey === definition.eventKey) || {
+      eventKey: definition.eventKey,
+      performance: "",
+      singleStar: "",
+      doubleStar: "",
+      remarks: "",
+    }
+  );
+}
+
+function eventIcon(eventKey: string) {
+  if (eventKey.includes("run") || eventKey.includes("sprint")) return "directions_run";
+  if (eventKey.includes("jump")) return "sports_gymnastics";
+  if (eventKey.includes("rope")) return "fitness_center";
+  if (eventKey.includes("ball") || eventKey.includes("shot")) return "sports_baseball";
+  return "sports";
+}
+
+export default function PhysicalRecordCard({
+  form,
+  readOnly = false,
+  onChange,
+  todayAttendanceStatus = "",
+}: PhysicalRecordCardProps) {
+  const cardType: PerformanceCardType = form.cardType;
+  const isMaleCard = cardType === "male";
+  const definitions = ALL_EVENT_DEFINITIONS;
+  const recordDate = form.recordDate || todayDateString();
+  const studentName = form.student?.fullName || "—";
+  const registerNo = form.student?.studentId || "—";
+  const batch = form.student?.batch || "—";
+  const attendanceLabel = todayAttendanceStatus
+    ? statusLabel(todayAttendanceStatus as AttendanceStatus)
+    : "Not marked";
+
+  return (
+    <div className="physical-record-card">
+      <div className="physical-record-header">
+        <div>
+          <div className="physical-record-academy">STAR POLICE ACADEMY</div>
+          <div className="physical-record-subtitle">NO. 1 POLICE ACADEMY IN TAMILNADU · VELLORE</div>
+        </div>
+        <div className="physical-record-title-wrap">
+          <div className="physical-record-title">
+            TNUSRB SI &amp; PC PHYSICAL EFFICIENCY RECORD CARD - {form.recordYear}
+          </div>
+          <div className="physical-record-card-name">STUDENT PHYSICAL RECORD CARD</div>
+          <div className="physical-record-date text-muted">Record Date: {formatDisplayDate(recordDate)}</div>
+        </div>
+      </div>
+
+      <div className="physical-record-info-grid">
+        <div>
+          <span className="physical-record-label">Student Name</span>
+          {readOnly ? (
+            <div className="physical-record-value">{studentName}</div>
+          ) : (
+            <input className="form-control form-control-sm" value={studentName} readOnly />
+          )}
+        </div>
+        <div>
+          <span className="physical-record-label">Register No.</span>
+          {readOnly ? (
+            <div className="physical-record-value">{registerNo}</div>
+          ) : (
+            <input className="form-control form-control-sm" value={registerNo} readOnly />
+          )}
+        </div>
+        <div>
+          <span className="physical-record-label">Batch</span>
+          {readOnly ? (
+            <div className="physical-record-value">{batch}</div>
+          ) : (
+            <input className="form-control form-control-sm" value={batch} readOnly />
+          )}
+        </div>
+        <div>
+          <span className="physical-record-label">Age</span>
+          {readOnly ? (
+            <div className="physical-record-value">{form.age || "—"}</div>
+          ) : (
+            <input
+              className="form-control form-control-sm"
+              value={form.age}
+              onChange={(e) => setField(form, "age", e.target.value, onChange)}
+            />
+          )}
+        </div>
+        <div>
+          <span className="physical-record-label">Gender</span>
+          <div className="physical-record-value">{form.student?.gender || (cardType === "female" ? "Female" : "Male")}</div>
+        </div>
+        <div>
+          <span className="physical-record-label">Height (cm)</span>
+          {readOnly ? (
+            <div className="physical-record-value">{form.heightCm || "—"}</div>
+          ) : (
+            <input
+              className="form-control form-control-sm"
+              value={form.heightCm}
+              onChange={(e) => setField(form, "heightCm", e.target.value, onChange)}
+            />
+          )}
+        </div>
+        <div>
+          <span className="physical-record-label">Weight (kg)</span>
+          {readOnly ? (
+            <div className="physical-record-value">{form.weightKg || "—"}</div>
+          ) : (
+            <input
+              className="form-control form-control-sm"
+              value={form.weightKg}
+              onChange={(e) => setField(form, "weightKg", e.target.value, onChange)}
+            />
+          )}
+        </div>
+        {isMaleCard && (
+          <>
+            <div>
+              <span className="physical-record-label">Chest Normal (cm)</span>
+              {readOnly ? (
+                <div className="physical-record-value">{form.chestNormalCm || "—"}</div>
+              ) : (
+                <input
+                  className="form-control form-control-sm"
+                  value={form.chestNormalCm}
+                  onChange={(e) => setField(form, "chestNormalCm", e.target.value, onChange)}
+                />
+              )}
+            </div>
+            <div>
+              <span className="physical-record-label">Chest Expansion (cm)</span>
+              {readOnly ? (
+                <div className="physical-record-value">{form.chestExpansionCm || "—"}</div>
+              ) : (
+                <input
+                  className="form-control form-control-sm"
+                  value={form.chestExpansionCm}
+                  onChange={(e) => setField(form, "chestExpansionCm", e.target.value, onChange)}
+                />
+              )}
+            </div>
+          </>
+        )}
+      </div>
+
+      <div className="table-responsive">
+        <table className="table physical-record-table mb-0">
+          <thead>
+            <tr>
+              <th>EVENTS</th>
+              <th>PERFORMANCE</th>
+              <th className="text-danger">SINGLE STAR</th>
+              <th className="text-danger">DOUBLE STAR</th>
+              <th>REMARKS</th>
+            </tr>
+          </thead>
+          <tbody>
+            {definitions.map((definition) => {
+              const event = getEventForDefinition(form, definition);
+
+              return (
+                <tr key={definition.eventKey}>
+                  <td>
+                    <div className="physical-record-event">
+                      <i className="material-symbols-outlined text-danger">{eventIcon(definition.eventKey)}</i>
+                      <span>{definition.label}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span className="physical-record-benchmark">{definition.benchmark}</span>
+                  </td>
+                  <td className="text-center">
+                    {readOnly ? (
+                      <span>{isStarChecked(event.singleStar) ? "✓" : "—"}</span>
+                    ) : (
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        checked={isStarChecked(event.singleStar)}
+                        onChange={(e) =>
+                          setStarField(form, definition.eventKey, "single", e.target.checked, onChange)
+                        }
+                      />
+                    )}
+                  </td>
+                  <td className="text-center">
+                    {readOnly ? (
+                      <span>{isStarChecked(event.doubleStar) ? "✓" : "—"}</span>
+                    ) : (
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        checked={isStarChecked(event.doubleStar)}
+                        onChange={(e) =>
+                          setStarField(form, definition.eventKey, "double", e.target.checked, onChange)
+                        }
+                      />
+                    )}
+                  </td>
+                  <td>
+                    {readOnly ? (
+                      <span>{event.remarks || "—"}</span>
+                    ) : (
+                      <input
+                        className="form-control form-control-sm"
+                        value={event.remarks}
+                        onChange={(e) => {
+                          if (!onChange) return;
+                          const events = mergeEventsWithDefaults(form.events, "all").map((item) =>
+                            item.eventKey === definition.eventKey ? { ...item, remarks: e.target.value } : item
+                          );
+                          onChange({ ...form, events });
+                        }}
+                      />
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="physical-record-footer">
+        <div className="physical-record-attendance">
+          <strong>ATTENDANCE — {formatDisplayDate(recordDate)}</strong>
+          <div className="physical-record-attendance-fields">
+            <label>
+              Today&apos;s Status
+              <input
+                className="form-control form-control-sm"
+                value={attendanceLabel}
+                disabled
+                readOnly
+              />
+            </label>
+          </div>
+        </div>
+        <div className="physical-record-overall">
+          <strong>OVERALL PERFORMANCE</strong>
+          <div className="physical-record-overall-options">
+            {OVERALL_PERFORMANCE_OPTIONS.map((option) => (
+              <label key={option.value} className="physical-record-checkbox">
+                <input
+                  type="checkbox"
+                  className="form-check-input"
+                  checked={form.overallPerformance === option.value}
+                  disabled={readOnly}
+                  onChange={() => {
+                    if (!onChange || readOnly) return;
+                    const next = form.overallPerformance === option.value ? "" : option.value;
+                    setField(form, "overallPerformance", next as OverallPerformance, onChange);
+                  }}
+                />
+                <span>{option.label}</span>
+              </label>
+            ))}
+          </div>
+          {!readOnly && (
+            <button
+              type="button"
+              className="btn btn-sm btn-outline-info mt-2"
+              onClick={() => {
+                if (!onChange) return;
+                const suggested = suggestOverallPerformance(mergeEventsWithDefaults(form.events, "all"));
+                if (suggested) setField(form, "overallPerformance", suggested, onChange);
+              }}
+            >
+              Auto-suggest from stars
+            </button>
+          )}
+          {readOnly && form.overallPerformance && (
+            <div className="mt-2">
+              <span className="badge badge-primary">{overallPerformanceLabel(form.overallPerformance)}</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="physical-record-remarks">
+        <strong>Trainer Remarks</strong>
+        {readOnly ? (
+          <p className="mb-0">{form.trainerRemarks || "—"}</p>
+        ) : (
+          <textarea
+            className="form-control"
+            rows={2}
+            value={form.trainerRemarks}
+            onChange={(e) => setField(form, "trainerRemarks", e.target.value, onChange)}
+          />
+        )}
+      </div>
+
+      <div className="physical-record-signature">Physical Director</div>
+    </div>
+  );
+}

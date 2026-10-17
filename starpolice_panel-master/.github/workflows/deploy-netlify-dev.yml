@@ -1,0 +1,59 @@
+name: Deploy frontend to Netlify (dev site)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "starpolice_panel-master/package/**"
+      - "starpolice_panel-master/netlify.toml"
+  workflow_dispatch:
+
+concurrency:
+  group: netlify-deploy-dev
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: starpolice_panel-master/package/package-lock.json
+
+      - name: Install and build (dev API)
+        working-directory: starpolice_panel-master/package
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL_DEV }}
+        run: |
+          if [ -z "$VITE_API_URL" ]; then
+            echo "::error::Add GitHub secret VITE_API_URL_DEV (e.g. https://starpolice-api-dev.onrender.com)"
+            exit 1
+          fi
+          npm ci
+          npm run build
+
+      - name: Deploy to Netlify dev site
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_DEV_SITE_ID: ${{ secrets.NETLIFY_DEV_SITE_ID }}
+          NETLIFY_DEV_BUILD_HOOK: ${{ secrets.NETLIFY_DEV_BUILD_HOOK }}
+        run: |
+          if [ -n "$NETLIFY_DEV_BUILD_HOOK" ]; then
+            curl -fsS -X POST -d {} "$NETLIFY_DEV_BUILD_HOOK"
+            echo "Dev Netlify build hook triggered."
+            exit 0
+          fi
+          if [ -z "$NETLIFY_AUTH_TOKEN" ] || [ -z "$NETLIFY_DEV_SITE_ID" ]; then
+            echo "::error::Set NETLIFY_AUTH_TOKEN and NETLIFY_DEV_SITE_ID (or NETLIFY_DEV_BUILD_HOOK)"
+            exit 1
+          fi
+          npx netlify-cli@17 deploy \
+            --prod \
+            --dir starpolice_panel-master/package/dist \
+            --site "$NETLIFY_DEV_SITE_ID" \
+            --auth "$NETLIFY_AUTH_TOKEN" \
+            --message "Dev deploy ${GITHUB_SHA:0:7}"

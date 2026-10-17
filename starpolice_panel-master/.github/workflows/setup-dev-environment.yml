@@ -1,0 +1,37 @@
+name: Setup dev environment (Atlas + Render dev + Netlify dev)
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: setup-dev-environment
+  cancel-in-progress: false
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: starpolice_panel-master/server/package-lock.json
+
+      - name: Install server deps for seed
+        working-directory: starpolice_panel-master/server
+        run: npm ci
+
+      - name: Configure dev stack
+        working-directory: starpolice_panel-master
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+          RENDER_DEV_SERVICE_ID: ${{ secrets.RENDER_DEV_SERVICE_ID }}
+          RENDER_DEV_DEPLOY_HOOK: ${{ secrets.RENDER_DEV_DEPLOY_HOOK }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_DEV_SITE_ID: ${{ secrets.NETLIFY_DEV_SITE_ID }}
+          NETLIFY_DEV_SITE_NAME: starpoliceacademy-dev
+          DEV_API_URL: ${{ secrets.VITE_API_URL_DEV }}
+        run: node scripts/setup-dev-environment.mjs

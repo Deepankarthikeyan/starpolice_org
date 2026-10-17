@@ -1,0 +1,50 @@
+# Free alternative to Render Shell (paid): reset dev super admin in Atlas.
+name: Set dev super admin login
+
+on:
+  workflow_dispatch:
+    inputs:
+      email:
+        description: Super admin email (dev only)
+        default: spademo@gmail.com
+        required: true
+      password:
+        description: Super admin password (dev only)
+        default: spa123
+        required: true
+
+concurrency:
+  group: set-dev-superadmin
+  cancel-in-progress: false
+
+jobs:
+  set-superadmin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: starpolice_panel-master/server/package-lock.json
+
+      - name: Install server dependencies
+        working-directory: starpolice_panel-master/server
+        run: npm ci
+
+      - name: Update superadmin in starpolice_academy_dev
+        working-directory: starpolice_panel-master/server
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI_DEV }}
+          SUPERADMIN_EMAIL: ${{ inputs.email }}
+          SUPERADMIN_PASSWORD: ${{ inputs.password }}
+        run: |
+          if [ -z "$MONGODB_URI" ]; then
+            echo "::error::Add repository secret MONGODB_URI_DEV (Atlas URI with database starpolice_academy_dev)."
+            exit 1
+          fi
+          if [[ "$MONGODB_URI" != *"starpolice_academy_dev"* ]]; then
+            echo "::warning::MONGODB_URI_DEV should end with /starpolice_academy_dev — double-check before using on live DB."
+          fi
+          npm run set-superadmin

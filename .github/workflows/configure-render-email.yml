@@ -1,0 +1,42 @@
+name: Configure Gmail SMTP on Render
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: configure-render-email
+  cancel-in-progress: false
+
+jobs:
+  configure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Set Gmail SMTP on Render and redeploy
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+          RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          CLIENT_URL: https://starpoliceacademy.in
+        run: |
+          if [ -z "$RENDER_API_KEY" ]; then
+            echo "::error::Add RENDER_API_KEY to GitHub repository secrets (Render → Account Settings → API Keys)."
+            exit 1
+          fi
+          if [ -z "$SMTP_USER" ]; then
+            echo "::error::Add SMTP_USER to GitHub repository secrets (Gmail address)."
+            exit 1
+          fi
+          if [ -z "$SMTP_PASS" ]; then
+            echo "::error::Add SMTP_PASS to GitHub repository secrets (Gmail app password)."
+            exit 1
+          fi
+          node starpolice_panel-master/scripts/configure-render-email.mjs
