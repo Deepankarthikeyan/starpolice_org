@@ -15,6 +15,9 @@ import {
   formatOnboardingCourse,
   ONBOARDING_COURSE_OPTIONS,
   ONBOARDING_PAYMENT_FILTER_OPTIONS,
+  normalizeOnboardingCourse,
+  onboardingRecordMatchesCourseFilter,
+  onboardingRecordMatchesPaymentFilter,
   onboardingAdmissionOnDate,
   type OnboardingCourse,
   type OnboardingActivityLog,
@@ -233,19 +236,23 @@ const StudentOnboarding = () => {
     const query = search.trim().toLowerCase();
     const batchQuery = batchFilter.trim().toLowerCase();
     return records.filter((record) => {
-      if (courseFilter && record.course !== courseFilter) return false;
+      if (!onboardingRecordMatchesCourseFilter(record.course, courseFilter)) return false;
       if (batchQuery && !record.batch.toLowerCase().includes(batchQuery)) return false;
       if (residenceFilter && record.residenceType !== residenceFilter) return false;
-      if (paymentFilter && record.paymentStatus !== paymentFilter) return false;
+      if (!onboardingRecordMatchesPaymentFilter(record.paymentStatus, paymentFilter)) return false;
       if (!onboardingAdmissionOnDate(record.admissionDate, admissionDateFilter)) return false;
       if (!query) return true;
       const fullName = `${record.firstName} ${record.middleName} ${record.lastName}`.toLowerCase();
+      const courseLabel = formatOnboardingCourse(record.course).toLowerCase();
+      const courseValue = normalizeOnboardingCourse(record.course);
       return (
         record.studentId.toLowerCase().includes(query) ||
         fullName.includes(query) ||
         record.email.toLowerCase().includes(query) ||
         record.loginEmail.toLowerCase().includes(query) ||
-        record.course.toLowerCase().includes(query) ||
+        (record.course || "").toLowerCase().includes(query) ||
+        courseLabel.includes(query) ||
+        courseValue.includes(query) ||
         record.batch.toLowerCase().includes(query) ||
         (record.residenceType || "").toLowerCase().includes(query) ||
         (record.paymentStatus || "").toLowerCase().includes(query)
@@ -582,7 +589,7 @@ const StudentOnboarding = () => {
                     onChange={(e) => setResidenceFilter(e.target.value as "" | ResidenceType)}
                     aria-label="Filter by residence"
                   >
-                    <option value="">Day Scholar / Hostel</option>
+                    <option value="">All residences</option>
                     <option value="Day Scholar">Day Scholar</option>
                     <option value="Hostel">Hostel</option>
                   </select>

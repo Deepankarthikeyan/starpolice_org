@@ -13,8 +13,59 @@ export const ONBOARDING_PAYMENT_FILTER_OPTIONS = [
   { value: "Partial", label: "Partial Payment" },
 ] as const;
 
+const ONBOARDING_COURSE_ALIASES: Record<string, OnboardingCourse> = {
+  si: "si",
+  pc: "pc",
+  army: "army",
+  "sub inspector": "si",
+  "sub-inspector": "si",
+  "police constable": "pc",
+  "constable": "pc",
+};
+
+/** Map stored course strings (SI, Army, legacy labels) to filter option values. */
+export function normalizeOnboardingCourse(course: string): OnboardingCourse | "" {
+  const raw = (course || "").trim();
+  if (!raw) return "";
+
+  const lower = raw.toLowerCase();
+  const alias = ONBOARDING_COURSE_ALIASES[lower];
+  if (alias) return alias;
+
+  for (const option of ONBOARDING_COURSE_OPTIONS) {
+    if (lower === option.value || lower === option.label.toLowerCase()) {
+      return option.value;
+    }
+  }
+
+  return "";
+}
+
+export function onboardingRecordMatchesCourseFilter(
+  recordCourse: string,
+  filter: "" | OnboardingCourse,
+): boolean {
+  if (!filter) return true;
+  return normalizeOnboardingCourse(recordCourse) === filter;
+}
+
+export function normalizeOnboardingPaymentStatus(status: string): string {
+  const value = (status || "").trim();
+  if (value === "Partial Payment") return "Partial";
+  return value;
+}
+
+export function onboardingRecordMatchesPaymentFilter(recordStatus: string, filter: string): boolean {
+  if (!filter) return true;
+  return normalizeOnboardingPaymentStatus(recordStatus) === filter;
+}
+
 export function formatOnboardingCourse(course: string) {
-  return ONBOARDING_COURSE_OPTIONS.find((item) => item.value === course)?.label || course || "—";
+  const normalized = normalizeOnboardingCourse(course);
+  if (normalized) {
+    return ONBOARDING_COURSE_OPTIONS.find((item) => item.value === normalized)?.label || normalized;
+  }
+  return course || "—";
 }
 
 export function onboardingAdmissionOnDate(admissionDate: string, filterDate: string) {

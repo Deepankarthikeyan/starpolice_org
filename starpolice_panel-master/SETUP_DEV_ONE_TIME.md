@@ -119,6 +119,12 @@ Dev super admin (recommended): `spademo@gmail.com` / `spa123` — set once on **
    - Password: `spa123`
 3. When the job is green, log in on dev.
 
+### Seed demo students on dev (onboarding filter test rows)
+
+1. Ensure **`MONGODB_URI_DEV`** is set (same secret as above).
+2. GitHub → **Actions** → **Seed dev database (demo students)** → **Run workflow** on `main`.
+3. Open **Student Onboarding** on dev and filter by **SI / PC / Army** — look for `SPA2025F01`–`SPA2025F03`.
+
 ### Option B — Your PC (Node.js)
 
 ```bash
