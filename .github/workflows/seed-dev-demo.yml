@@ -1,0 +1,47 @@
+# Load demo users, leads, and student onboarding rows into dev Atlas (starpolice_academy_dev).
+name: Seed dev database (demo students)
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: seed-dev-demo
+  cancel-in-progress: false
+
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: starpolice_panel-master/server/package-lock.json
+
+      - name: Install server dependencies
+        working-directory: starpolice_panel-master/server
+        run: npm ci
+
+      - name: Seed starpolice_academy_dev
+        working-directory: starpolice_panel-master/server
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI_DEV }}
+        run: |
+          if [ -z "$MONGODB_URI" ]; then
+            echo "::error::Add repository secret MONGODB_URI_DEV (Atlas URI ending with /starpolice_academy_dev)."
+            exit 1
+          fi
+          if [[ "$MONGODB_URI" != *"starpolice_academy_dev"* ]]; then
+            echo "::error::MONGODB_URI_DEV must use database starpolice_academy_dev, not live."
+            exit 1
+          fi
+          npm run seed
+
+      - name: Demo logins (dev only)
+        run: |
+          echo "Dev panel: https://starpoliceacademy-dev.netlify.app/admin/login"
+          echo "Super admin: superadmin@starpolice.academy / superadmin123"
+          echo "Course filter test IDs: SPA2025F01 (SI), SPA2025F02 (PC), SPA2025F03 (Army)"
+          echo "Student Onboarding: Admin menu → Student Onboarding"
