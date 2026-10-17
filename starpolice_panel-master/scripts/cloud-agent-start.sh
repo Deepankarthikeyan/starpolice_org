@@ -16,8 +16,26 @@ for _ in $(seq 1 20); do
   sleep 1
 done
 
-cd "$ROOT/server"
-if ! node --input-type=module -e "
+uri="${MONGODB_URI:-}"
+if [ -f "$ROOT/server/.env" ]; then
+  # shellcheck disable=SC1090
+  set -a
+  source "$ROOT/server/.env"
+  set +a
+  uri="${MONGODB_URI:-}"
+fi
+
+should_seed=1
+if [[ -n "$uri" && "$uri" == *"starpolice_academy"* && "$uri" != *"starpolice_academy_dev"* ]]; then
+  should_seed=0
+fi
+if [[ -n "$uri" && "$uri" != *"127.0.0.1"* && "$uri" != *"localhost"* && "$uri" != *"_dev"* ]]; then
+  should_seed=0
+fi
+
+if [ "$should_seed" = 1 ]; then
+  cd "$ROOT/server"
+  if ! node --input-type=module -e "
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -26,5 +44,6 @@ const count = await mongoose.connection.db.collection('users').countDocuments({ 
 await mongoose.disconnect();
 process.exit(count > 0 ? 0 : 1);
 " 2>/dev/null; then
-  npm run seed
+    npm run seed
+  fi
 fi
