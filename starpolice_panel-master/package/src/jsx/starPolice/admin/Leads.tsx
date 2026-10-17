@@ -13,7 +13,11 @@ import {
   LEAD_COURSE_OPTIONS,
   LEAD_FORM_DISPOSITION_OPTIONS,
   LEAD_SOURCE_OPTIONS,
-  LEAD_STATUS_FILTER_OPTIONS,
+  LEAD_STATUS_OPTIONS,
+  formatLeadCourse,
+  leadRecordMatchesCourseFilter,
+  leadRecordMatchesSearch,
+  leadRecordMatchesStatusFilter,
   recordToForm,
   statusBadgeClass,
   statusLabel,
@@ -72,23 +76,28 @@ const Leads = () => {
     loadLeads().catch(console.error);
   }, [canManage]);
 
+  const searchQuery = search.trim();
+
+  const hasActiveFilters = Boolean(
+    searchQuery || statusFilter || courseFilter || dateFromFilter || dateToFilter,
+  );
+
+  const clearAllFilters = () => {
+    setSearch("");
+    setStatusFilter("");
+    setCourseFilter("");
+    setDateFromFilter("");
+    setDateToFilter("");
+  };
+
   const filteredLeads = useMemo(() => {
-    const query = search.trim().toLowerCase();
     return leads.filter((lead) => {
-      if (statusFilter && lead.status !== statusFilter) return false;
-      if (courseFilter && lead.course !== courseFilter) return false;
+      if (!leadRecordMatchesStatusFilter(lead.status, statusFilter)) return false;
+      if (!leadRecordMatchesCourseFilter(lead.course, courseFilter)) return false;
       if (!leadCreatedInDateRange(lead.createdAt, dateFromFilter, dateToFilter)) return false;
-      if (!query) return true;
-      const name = fullLeadName(lead).toLowerCase();
-      return (
-        lead.leadId.toLowerCase().includes(query) ||
-        name.includes(query) ||
-        lead.email.toLowerCase().includes(query) ||
-        lead.mobileNumber.includes(query) ||
-        lead.course.toLowerCase().includes(query)
-      );
+      return leadRecordMatchesSearch(lead, searchQuery);
     });
-  }, [leads, search, statusFilter, courseFilter, dateFromFilter, dateToFilter]);
+  }, [leads, searchQuery, statusFilter, courseFilter, dateFromFilter, dateToFilter]);
 
   const onDownloadMobileNumbers = () => {
     const withMobile = filteredLeads.filter((lead) => lead.mobileNumber.trim());
@@ -492,7 +501,7 @@ const Leads = () => {
                   value={courseFilter}
                   onChange={(e) => setCourseFilter(e.target.value as "" | LeadCourse)}
                 >
-                  <option value="">All</option>
+                  <option value="">All courses</option>
                   {LEAD_COURSE_OPTIONS.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
@@ -529,13 +538,25 @@ const Leads = () => {
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value as "" | LeadStatus)}
                 >
-                  <option value="">All</option>
-                  {LEAD_STATUS_FILTER_OPTIONS.map((option) => (
+                  <option value="">All statuses</option>
+                  {LEAD_STATUS_OPTIONS.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>
                   ))}
                 </select>
+              </ListFilterField>
+            </div>
+            <div className="col-6 col-md-3 col-lg-auto">
+              <ListFilterField label=" ">
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary w-100"
+                  onClick={clearAllFilters}
+                  disabled={!hasActiveFilters}
+                >
+                  Clear filters
+                </button>
               </ListFilterField>
             </div>
           </div>
@@ -579,9 +600,7 @@ const Leads = () => {
                         <small className="text-muted">{lead.email || "—"}</small>
                       </td>
                       <td>
-                        {LEAD_COURSE_OPTIONS.find((item) => item.value === lead.course)?.label ||
-                          lead.course ||
-                          "—"}
+                        {formatLeadCourse(lead.course)}
                       </td>
                       <td>
                         <span className={`badge ${statusBadgeClass(lead.status)}`}>
