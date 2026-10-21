@@ -10448,7 +10448,7 @@ body.star-site .spa-gallery-lightbox__caption p {
 }
 
 .star-vt-intro {
-  margin-bottom: 42px;
+  margin-bottom: 28px;
   max-width: 720px;
   margin-left: auto;
   margin-right: auto;
@@ -10485,7 +10485,7 @@ body.star-site .spa-gallery-lightbox__caption p {
 }
 
 .star-vt-strip__item-wrap {
-  flex: 0 0 clamp(100px, 22vw, 140px);
+  flex: 0 0 clamp(72px, 14vw, 96px);
   scroll-snap-align: center;
 }
 
@@ -10496,7 +10496,8 @@ body.star-site .spa-gallery-lightbox__caption p {
 
 .star-vt-strip__item,
 .star-vt-strip__item--playing {
-  aspect-ratio: 9 / 16;
+  aspect-ratio: 3 / 4;
+  max-height: 128px;
   background: #0f2239;
   border: 3px solid transparent;
   border-radius: 14px;
@@ -10584,9 +10585,9 @@ body.star-site .spa-gallery-lightbox__caption p {
 }
 
 .star-vt-strip__play-icon {
-  bottom: 8px;
+  bottom: 6px;
   color: #ffffff;
-  font-size: 22px;
+  font-size: 18px;
   position: absolute;
   right: 8px;
   text-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
@@ -10595,7 +10596,12 @@ body.star-site .spa-gallery-lightbox__caption p {
 
 @media (max-width: 575px) {
   .star-vt-strip__item-wrap {
-    flex-basis: 108px;
+    flex-basis: 80px;
+  }
+
+  .star-vt-strip__item,
+  .star-vt-strip__item--playing {
+    max-height: 108px;
   }
 
   .star-vt-strip__arrow {
