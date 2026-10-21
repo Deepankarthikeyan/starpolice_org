@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
 import { videoTestimonials } from "../lib/star-content";
 import { AUTO_SLIDER_INTERVAL_MS, useAutoSliderPause } from "../lib/useAutoSlider";
-
-const SLIDE_TRANSITIONS = ["fade", "slide-left", "slide-up", "zoom"];
 
 function youtubeThumbnail(videoId) {
   return `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
@@ -23,270 +20,147 @@ function youtubeEmbedUrl(videoId, autoplay = false) {
   return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
 }
 
-function VideoLightbox({ videoId, title, index, total, onClose, onPrevious, onNext }) {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    const onKeyDown = (event) => {
-      if (event.key === "Escape") {
-        onClose();
-      }
-      if (event.key === "ArrowLeft") {
-        onPrevious();
-      }
-      if (event.key === "ArrowRight") {
-        onNext();
-      }
-    };
-
-    window.addEventListener("keydown", onKeyDown);
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [onClose, onNext, onPrevious]);
-
-  if (!isMounted) {
-    return null;
-  }
-
-  return createPortal(
-    <div
-      className="star-vt-lightbox"
-      role="dialog"
-      aria-modal="true"
-      aria-label={`Video testimonial: ${title}`}
-      onClick={onClose}
-    >
-      <button
-        type="button"
-        className="star-vt-lightbox__nav star-vt-lightbox__nav--prev"
-        aria-label="Previous video"
-        onClick={(event) => {
-          event.stopPropagation();
-          onPrevious();
-        }}
-      >
-        ‹
-      </button>
-      <div className="star-vt-lightbox__panel" onClick={(event) => event.stopPropagation()}>
-        <button
-          className="star-vt-lightbox__close"
-          type="button"
-          aria-label="Close video"
-          onClick={onClose}
-        >
-          ×
-        </button>
-        <div className="star-vt-lightbox__player">
-          <iframe
-            title={title}
-            src={youtubeEmbedUrl(videoId, true)}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-          />
-        </div>
-        <div className="star-vt-lightbox__caption">
-          <span className="star-vt-lightbox__counter">{index + 1} / {total}</span>
-          <h3>{title}</h3>
-          <p>Real feedback from Star Police Academy students and families.</p>
-        </div>
-      </div>
-      <button
-        type="button"
-        className="star-vt-lightbox__nav star-vt-lightbox__nav--next"
-        aria-label="Next video"
-        onClick={(event) => {
-          event.stopPropagation();
-          onNext();
-        }}
-      >
-        ›
-      </button>
-    </div>,
-    document.body,
-  );
-}
-
-function FeaturedSlide({ item, index, isActive, transition, onPlay }) {
-  const layoutClass = `star-vt-slide--${item.layout}`;
-
-  return (
-    <article
-      className={`star-vt-slide ${layoutClass} star-vt-slide--${transition}${isActive ? " is-active" : ""}`}
-      aria-hidden={!isActive}
-    >
-      <div className="star-vt-slide__glow" aria-hidden="true" />
-      <button type="button" className="star-vt-slide__main" onClick={() => onPlay(index)}>
-        <img
-          src={youtubeThumbnail(item.id)}
-          alt=""
-          className="star-vt-slide__thumb"
-          loading="lazy"
-        />
-        <span className="star-vt-slide__play" aria-hidden="true">
-          <span className="material-symbols-outlined">play_circle</span>
-        </span>
-        <span className="star-vt-slide__badge">Story {index + 1}</span>
-      </button>
-      <div className="star-vt-slide__copy">
-        <span className="star-vt-slide__eyebrow">Student voice</span>
-        <h2>{item.title}</h2>
-        <p>Tap to watch this short testimonial on YouTube.</p>
-        <span className="star-vt-slide__cta">
-          <span className="material-symbols-outlined" aria-hidden="true">videocam</span>
-          Play video
-        </span>
-      </div>
-    </article>
-  );
-}
-
 export default function VideoTestimonialsPage() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [lightboxIndex, setLightboxIndex] = useState(null);
-  const [transitionName, setTransitionName] = useState(SLIDE_TRANSITIONS[0]);
+  const [isPlaying, setIsPlaying] = useState(false);
   const { isPaused, pauseProps } = useAutoSliderPause();
   const total = videoTestimonials.length;
+  const activeItem = videoTestimonials[activeIndex];
 
-  const goTo = (nextIndex, transitionOverride) => {
-    const normalized = (nextIndex + total) % total;
-    setTransitionName(transitionOverride || SLIDE_TRANSITIONS[normalized % SLIDE_TRANSITIONS.length]);
-    setActiveIndex(normalized);
+  const selectStory = (index) => {
+    setActiveIndex(index);
+    setIsPlaying(false);
   };
 
   useEffect(() => {
-    if (isPaused || lightboxIndex !== null) {
+    setIsPlaying(false);
+  }, [activeIndex]);
+
+  useEffect(() => {
+    if (isPaused || isPlaying) {
       return undefined;
     }
 
     const timer = window.setInterval(() => {
-      setActiveIndex((current) => {
-        const next = (current + 1) % total;
-        setTransitionName(SLIDE_TRANSITIONS[next % SLIDE_TRANSITIONS.length]);
-        return next;
-      });
+      setActiveIndex((current) => (current + 1) % total);
     }, AUTO_SLIDER_INTERVAL_MS);
 
     return () => window.clearInterval(timer);
-  }, [isPaused, lightboxIndex, total]);
-
-  const openLightbox = (index) => {
-    setLightboxIndex(index);
-  };
-
-  const closeLightbox = () => {
-    setLightboxIndex(null);
-  };
-
-  const lightboxItem = lightboxIndex !== null ? videoTestimonials[lightboxIndex] : null;
+  }, [isPaused, isPlaying, total]);
 
   return (
-    <>
     <section className="star-vt-page pt---80 pb---120">
-        <div className="container">
-          <div className="star-vt-intro text-center">
-            <h2 className="spa-section-title">Hear from our achievers</h2>
-            <p className="spa-section-text">
-              Swipe through student stories, campus moments, and short video testimonials from Star Police Academy.
-            </p>
-          </div>
+      <div className="container">
+        <div className="star-vt-intro text-center">
+          <span className="star-vt-intro__eyebrow">Student voices</span>
+          <h2 className="spa-section-title">Hear from our achievers</h2>
+          <p className="spa-section-text">
+            One story at a time — tap play to watch inside the same frame, or pick another success story below.
+          </p>
+        </div>
 
-          <div className="star-vt-showcase" {...pauseProps}>
-            <div className="star-vt-showcase__stage">
-              {videoTestimonials.map((item, index) => (
-                <FeaturedSlide
-                  key={item.id}
-                  item={item}
-                  index={index}
-                  isActive={index === activeIndex}
-                  transition={transitionName}
-                  onPlay={openLightbox}
-                />
-              ))}
-            </div>
-            <div className="star-vt-showcase__controls">
-              <button
-                type="button"
-                className="star-vt-showcase__arrow"
-                aria-label="Previous story"
-                onClick={() => goTo(activeIndex - 1, "slide-left")}
-              >
-                ‹
-              </button>
-              <div className="star-vt-showcase__progress" aria-live="polite">
-                <span className="star-vt-showcase__counter">
-                  Story {activeIndex + 1} of {total}
-                </span>
-                <div
-                  className="star-vt-showcase__bar"
-                  role="progressbar"
-                  aria-valuemin={1}
-                  aria-valuemax={total}
-                  aria-valuenow={activeIndex + 1}
-                  aria-label="Slideshow progress"
-                >
-                  <span style={{ width: `${((activeIndex + 1) / total) * 100}%` }} />
+        <div className="star-vt-spotlight" {...pauseProps}>
+          <div className="star-vt-spotlight__shell">
+            <div className="star-vt-spotlight__accent" aria-hidden="true" />
+            <div className="star-vt-spotlight__frame">
+              {isPlaying ? (
+                <div className="star-vt-spotlight__player">
+                  <iframe
+                    title={activeItem.title}
+                    src={youtubeEmbedUrl(activeItem.id, true)}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  />
+                  <button
+                    type="button"
+                    className="star-vt-spotlight__close"
+                    aria-label="Stop video and show thumbnail"
+                    onClick={() => setIsPlaying(false)}
+                  >
+                    ×
+                  </button>
                 </div>
+              ) : (
+                <button
+                  type="button"
+                  className="star-vt-spotlight__poster"
+                  aria-label={`Play ${activeItem.title}`}
+                  onClick={() => setIsPlaying(true)}
+                >
+                  <img
+                    src={youtubeThumbnail(activeItem.id)}
+                    alt=""
+                    className="star-vt-spotlight__thumb"
+                  />
+                  <span className="star-vt-spotlight__play" aria-hidden="true">
+                    <span className="material-symbols-outlined">play_circle</span>
+                  </span>
+                </button>
+              )}
+
+              <div className="star-vt-spotlight__meta">
+                <span className="star-vt-spotlight__quote" aria-hidden="true">“</span>
+                <span className="star-vt-spotlight__badge">Story {activeIndex + 1} of {total}</span>
+                <h2>{activeItem.title}</h2>
+                <p>Real feedback from Star Police Academy students and families.</p>
               </div>
-              <button
-                type="button"
-                className="star-vt-showcase__arrow"
-                aria-label="Next story"
-                onClick={() => goTo(activeIndex + 1, "slide-left")}
-              >
-                ›
-              </button>
             </div>
           </div>
 
-          <div className="star-vt-grid-head">
-            <h3>All video testimonials</h3>
-            <p>Click any card to open the video in a popup player.</p>
-          </div>
-          <div className="star-vt-grid">
-            {videoTestimonials.map((item, index) => (
-              <button
-                type="button"
-                key={item.id}
-                className={`star-vt-grid__card star-vt-grid__card--${(index % 5) + 1}`}
-                onClick={() => openLightbox(index)}
-              >
-                <img
-                  src={youtubeThumbnail(item.id)}
-                  alt={item.title}
-                  className="star-vt-grid__thumb"
-                  loading="lazy"
-                />
-                <span className="star-vt-grid__overlay">
-                  <span className="material-symbols-outlined" aria-hidden="true">play_circle</span>
-                  <strong>{item.title}</strong>
-                </span>
-              </button>
-            ))}
+          <div className="star-vt-spotlight__nav">
+            <button
+              type="button"
+              className="star-vt-spotlight__arrow"
+              aria-label="Previous story"
+              onClick={() => selectStory((activeIndex - 1 + total) % total)}
+            >
+              ‹
+            </button>
+            <div
+              className="star-vt-spotlight__bar"
+              role="progressbar"
+              aria-valuemin={1}
+              aria-valuemax={total}
+              aria-valuenow={activeIndex + 1}
+              aria-label="Story progress"
+            >
+              <span style={{ width: `${((activeIndex + 1) / total) * 100}%` }} />
+            </div>
+            <button
+              type="button"
+              className="star-vt-spotlight__arrow"
+              aria-label="Next story"
+              onClick={() => selectStory((activeIndex + 1) % total)}
+            >
+              ›
+            </button>
           </div>
         </div>
-      </section>
 
-      {lightboxItem && (
-        <VideoLightbox
-          videoId={lightboxItem.id}
-          title={lightboxItem.title}
-          index={lightboxIndex}
-          total={total}
-          onClose={closeLightbox}
-          onPrevious={() => setLightboxIndex((current) => (current - 1 + total) % total)}
-          onNext={() => setLightboxIndex((current) => (current + 1) % total)}
-        />
-      )}
-    </>
+        <div className="star-vt-strip-head">
+          <h3>More success stories</h3>
+          <p>Select a thumbnail — it loads in the player above.</p>
+        </div>
+
+        <div className="star-vt-strip" role="tablist" aria-label="Video testimonials">
+          {videoTestimonials.map((item, index) => (
+            <button
+              type="button"
+              key={item.id}
+              role="tab"
+              aria-selected={index === activeIndex}
+              className={`star-vt-strip__item${index === activeIndex ? " is-active" : ""}`}
+              onClick={() => selectStory(index)}
+            >
+              <img src={youtubeThumbnail(item.id)} alt="" loading="lazy" />
+              <span className="star-vt-strip__index">{index + 1}</span>
+              <span className="star-vt-strip__play-icon material-symbols-outlined" aria-hidden="true">
+                play_arrow
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
