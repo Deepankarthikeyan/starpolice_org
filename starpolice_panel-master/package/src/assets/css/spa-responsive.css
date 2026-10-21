@@ -330,16 +330,23 @@ iframe {
     font-size: 0.75rem;
   }
 
-  .form-control,
-  .form-select,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .form-control,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .form-select,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content textarea.form-control,
+  .spa-auth-page .form-control,
+  .spa-auth-page .form-select,
   .spa-auth-input {
     font-size: 16px;
   }
 
-  .form-control:not(.form-control-sm),
-  .form-select,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .form-control:not(.form-control-sm),
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .form-select,
+  .spa-auth-page .form-control:not(.form-control-sm),
+  .spa-auth-page .form-select,
   .spa-auth-input {
-    min-height: 2.75rem;
+    min-height: 2.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
   }
 
   .spa-toolbar-search {
