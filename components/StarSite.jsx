@@ -113,14 +113,17 @@ const headerNavSections = {
     "/youtube",
     "/test-batch",
   ],
+  testimonials: [
+    "/star-police-academy-testimonials",
+    "/testimonials",
+    "/video-testimonials",
+  ],
   training: [
     "/star-police-academy-toppers-and-achievers",
-    "/star-police-academy-testimonials",
     "/star-police-academy-training-materials",
     "/star-police-academy-question-papers",
     "/star-police-academy-answer-keys",
     "/toppers",
-    "/testimonials",
     "/materials",
     "/questions",
     "/ansewrkey",
@@ -603,6 +606,21 @@ function Header() {
                       </li>
                     ))}
                   </NavDropdown>
+                  <li
+                    className={
+                      isNavSectionActive(currentPath, headerNavSections.testimonials)
+                        ? "menu-active"
+                        : undefined
+                    }
+                  >
+                    <SiteLink
+                      href="/star-police-academy-testimonials"
+                      onClick={closeNavigation}
+                      className={navLinkClassName(currentPath, "/star-police-academy-testimonials")}
+                    >
+                      Testimonials
+                    </SiteLink>
+                  </li>
                   <NavDropdown
                     label="Notifications"
                     href="/star-police-academy-current-affairs"
@@ -684,23 +702,6 @@ function Header() {
                         className={navLinkClassName(currentPath, "/star-police-academy-toppers-and-achievers")}
                       >
                         Toppers and Achievers
-                      </SiteLink>
-                    </li>
-                    <li
-                      className={
-                        isNavPathMatch(currentPath, "/star-police-academy-testimonials") ||
-                        isNavPathMatch(currentPath, "/testimonials") ||
-                        isNavPathMatch(currentPath, "/video-testimonials")
-                          ? "menu-active"
-                          : undefined
-                      }
-                    >
-                      <SiteLink
-                        href="/star-police-academy-testimonials"
-                        onClick={closeNavigation}
-                        className={navLinkClassName(currentPath, "/star-police-academy-testimonials")}
-                      >
-                        Video Testimonials
                       </SiteLink>
                     </li>
                     <li
@@ -828,7 +829,7 @@ function Footer() {
                     <li><SiteLink href="/star-police-academy-youtube">Youtube Channel</SiteLink></li>
                     <li><SiteLink href="/star-police-academy-test-batches">Test Batches</SiteLink></li>
                     <li><SiteLink href="/star-police-academy-toppers-and-achievers">Toppers and Achievers</SiteLink></li>
-                    <li><SiteLink href="/star-police-academy-testimonials">Video Testimonials</SiteLink></li>
+                    <li><SiteLink href="/star-police-academy-testimonials">Testimonials</SiteLink></li>
                     <li><SiteLink href="/star-police-academy-training-materials">Training Materials</SiteLink></li>
                     <li><SiteLink href="/star-police-academy-question-papers">Question papers</SiteLink></li>
                     <li><SiteLink href="/star-police-academy-answer-keys">Answer Keys</SiteLink></li>
@@ -3984,7 +3985,7 @@ function PageContent({ page, path = "/" }) {
     case "video-testimonials":
       return (
         <>
-          <ExactBreadcrumb title="Video Testimonials" />
+          <ExactBreadcrumb title="Testimonials" className="exact-testimonials-breadcrumb" />
           <VideoTestimonialsPage />
         </>
       );

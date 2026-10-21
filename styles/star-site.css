@@ -6841,7 +6841,9 @@ body.star-site .react-breadcrumbs.exact-about-breadcrumb .breadcrumbs-title {
   line-height: 1.2;
   margin: 0 auto 14px;
   max-width: 800px;
+  text-align: center;
   text-shadow: 0 3px 18px rgba(0, 0, 0, 0.35);
+  width: 100%;
 }
 
 body.star-site .react-breadcrumbs.exact-about-breadcrumb .back-nav ul {
@@ -6855,10 +6857,15 @@ body.star-site .react-breadcrumbs.exact-about-breadcrumb .back-nav a {
 }
 
 body.star-site .react-breadcrumbs.exact-test-batches-breadcrumb .breadcrumbs-inner,
+body.star-site .react-breadcrumbs.exact-testimonials-breadcrumb .breadcrumbs-inner,
 body.star-site .react-breadcrumbs.exact-test-batches-breadcrumb .breadcrumbs-text,
+body.star-site .react-breadcrumbs.exact-testimonials-breadcrumb .breadcrumbs-text,
 body.star-site .react-breadcrumbs.exact-test-batches-breadcrumb .breadcrumbs-title,
+body.star-site .react-breadcrumbs.exact-testimonials-breadcrumb .breadcrumbs-title,
 body.star-site .react-breadcrumbs.exact-test-batches-breadcrumb .back-nav,
-body.star-site .react-breadcrumbs.exact-test-batches-breadcrumb .back-nav ul {
+body.star-site .react-breadcrumbs.exact-testimonials-breadcrumb .back-nav,
+body.star-site .react-breadcrumbs.exact-test-batches-breadcrumb .back-nav ul,
+body.star-site .react-breadcrumbs.exact-testimonials-breadcrumb .back-nav ul {
   display: flex;
   justify-content: center;
   margin-left: auto;
@@ -6867,17 +6874,20 @@ body.star-site .react-breadcrumbs.exact-test-batches-breadcrumb .back-nav ul {
   width: 100%;
 }
 
-body.star-site .react-breadcrumbs.exact-test-batches-breadcrumb .breadcrumbs-text {
+body.star-site .react-breadcrumbs.exact-test-batches-breadcrumb .breadcrumbs-text,
+body.star-site .react-breadcrumbs.exact-testimonials-breadcrumb .breadcrumbs-text {
   align-items: center;
   flex-direction: column;
 }
 
-body.star-site .react-breadcrumbs.exact-test-batches-breadcrumb .breadcrumbs-title {
+body.star-site .react-breadcrumbs.exact-test-batches-breadcrumb .breadcrumbs-title,
+body.star-site .react-breadcrumbs.exact-testimonials-breadcrumb .breadcrumbs-title {
   display: block;
   width: 100%;
 }
 
-body.star-site .react-breadcrumbs.exact-test-batches-breadcrumb .back-nav ul {
+body.star-site .react-breadcrumbs.exact-test-batches-breadcrumb .back-nav ul,
+body.star-site .react-breadcrumbs.exact-testimonials-breadcrumb .back-nav ul {
   flex-wrap: wrap;
   list-style: none;
   margin: 0;
