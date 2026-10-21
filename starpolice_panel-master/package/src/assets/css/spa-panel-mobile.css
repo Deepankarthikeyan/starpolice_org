@@ -253,27 +253,11 @@
   }
 
   #main-wrapper[class*="spa-panel-"] .spa-stat-metric-card .card-body h6 {
-    font-size: 0.58rem;
-    line-height: 1.15;
-    margin-bottom: 0.2rem;
-    font-weight: 600;
     word-break: break-word;
     hyphens: auto;
   }
 
-  #main-wrapper[class*="spa-panel-"] .spa-stat-metric-card .card-body h2 {
-    font-size: clamp(1rem, 5.5vw, 1.25rem);
-    margin-bottom: 0;
-    line-height: 1.1;
-  }
-
-  #main-wrapper[class*="spa-panel-"] .spa-stat-metric-card .card-body small {
-    font-size: 0.58rem;
-    line-height: 1.15;
-  }
-
   #main-wrapper[class*="spa-panel-"] .spa-stat-metric-card .badge {
-    font-size: 0.62rem;
     padding: 0.25rem 0.4rem;
     max-width: 100%;
     white-space: normal;
@@ -289,26 +273,8 @@
 
   #main-wrapper[class*="spa-panel-"] .spa-dashboard-stat-grid .card-body h6,
   #main-wrapper[class*="spa-panel-"] .spa-student-stat-grid .card-body h6 {
-    font-size: 0.6rem;
-    line-height: 1.2;
-    margin-bottom: 0.25rem;
-    font-weight: 600;
-    letter-spacing: 0.01em;
     word-break: break-word;
     hyphens: auto;
-  }
-
-  #main-wrapper[class*="spa-panel-"] .spa-dashboard-stat-grid .card-body h2,
-  #main-wrapper[class*="spa-panel-"] .spa-student-stat-grid .card-body h2 {
-    font-size: 1.2rem;
-    margin-bottom: 0;
-    line-height: 1.15;
-  }
-
-  #main-wrapper[class*="spa-panel-"] .spa-dashboard-stat-grid .card-body small,
-  #main-wrapper[class*="spa-panel-"] .spa-student-stat-grid .card-body small {
-    font-size: 0.625rem;
-    line-height: 1.2;
   }
 
   #main-wrapper[class*="spa-panel-"] .spa-dashboard-stat-grid .card,
@@ -425,10 +391,6 @@
     --bs-gutter-y: 0.65rem;
   }
 
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content {
-    font-size: 0.875rem;
-  }
-
   #main-wrapper[class*="spa-panel-"] .spa-panel-content .row:not(.spa-dashboard-stat-grid):not(.spa-student-stat-grid) > [class*="col-"] {
     flex: 0 0 100% !important;
     max-width: 100% !important;
@@ -437,40 +399,6 @@
   #main-wrapper[class*="spa-panel-"] .spa-panel-content .spa-leads-filters .row > [class*="col-"] {
     flex: 0 0 100% !important;
     max-width: 100% !important;
-  }
-
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content .text-muted,
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content small,
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content .small {
-    font-size: 0.75rem;
-  }
-
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content .card-body {
-    font-size: 0.8125rem;
-  }
-
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content .fw-semibold {
-    font-size: 0.875rem;
-  }
-
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content > .d-flex.justify-content-between,
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content .card-body > .d-flex.justify-content-between,
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content .list-group-item > .d-flex.justify-content-between {
-    flex-direction: column;
-    align-items: stretch !important;
-    gap: 0.35rem;
-  }
-
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content .card-body > .d-flex.justify-content-between > *:last-child {
-    text-align: left !important;
-  }
-
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content .input-group,
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content .input-group > .form-control,
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content .input-group > .form-select,
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content .input-group > .btn {
-    flex-wrap: wrap;
-    width: 100%;
   }
 
   #main-wrapper[class*="spa-panel-"] .spa-panel-content .form-control,
