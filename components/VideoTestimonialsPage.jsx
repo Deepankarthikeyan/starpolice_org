@@ -204,7 +204,7 @@ export default function VideoTestimonialsPage() {
                 onClick={() => openLightbox(activeIndex)}
                 aria-label={`Play ${active.title}`}
               >
-                <VideoThumb videoId={active.id} className="star-vt-featured__thumb" alt={active.title} />
+                <VideoThumb videoId={active.id} className="star-vt-featured__media" alt="" />
                 <span className="star-vt-featured__play" aria-hidden="true">
                   <span className="material-symbols-outlined">play_circle</span>
                 </span>
@@ -253,7 +253,7 @@ export default function VideoTestimonialsPage() {
                   onClick={() => openLightbox(index)}
                   aria-label={`Play ${item.title}`}
                 >
-                  <VideoThumb videoId={item.id} className="star-vt-gallery__thumb" alt={item.title} />
+                  <VideoThumb videoId={item.id} className="star-vt-gallery__media" alt="" />
                   <span className="star-vt-gallery__play" aria-hidden="true">
                     <span className="material-symbols-outlined">play_circle</span>
                   </span>

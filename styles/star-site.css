@@ -10506,10 +10506,9 @@ body.star-site .spa-gallery-lightbox__caption p {
 .star-vt-featured__row {
   align-items: center;
   display: flex;
-  gap: 16px;
+  gap: 12px;
   justify-content: center;
   margin: 0 auto;
-  max-width: min(100%, 900px);
   width: 100%;
 }
 
@@ -10534,46 +10533,50 @@ body.star-site .spa-gallery-lightbox__caption p {
 }
 
 .star-vt-featured__frame {
-  background: #000000;
+  aspect-ratio: 9 / 16;
+  background: transparent;
   border: 0;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
   cursor: pointer;
-  flex: 1 1 auto;
-  max-width: min(100%, 720px);
+  flex: 0 0 auto;
   overflow: hidden;
   padding: 0;
   position: relative;
-  width: 100%;
+  width: min(56vw, 220px);
 }
 
-.star-vt-featured__thumb {
-  aspect-ratio: 16 / 9;
+.star-vt-featured__media {
+  border: 0;
   display: block;
+  height: 100%;
+  inset: 0;
   object-fit: cover;
   object-position: center center;
+  position: absolute;
   width: 100%;
 }
 
 .star-vt-featured__play {
   align-items: center;
-  background: rgba(0, 0, 0, 0.28);
+  background: none;
   color: #f7c948;
   display: flex;
   inset: 0;
   justify-content: center;
+  pointer-events: none;
   position: absolute;
 }
 
 .star-vt-featured__play .material-symbols-outlined {
-  font-size: clamp(3rem, 10vw, 4rem);
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+  font-size: 2.75rem;
+  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.65));
 }
 
 .star-vt-featured__hint {
   color: #4a5d73;
   font-size: 14px;
-  margin: 0;
+  margin: 14px 0 12px;
   text-align: center;
 }
 
@@ -10627,8 +10630,11 @@ body.star-site .star-vt-gallery__text {
 
 .star-vt-gallery {
   display: grid;
-  gap: 22px 16px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 12px;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  justify-items: center;
+  max-width: 920px;
+  margin: 0 auto;
 }
 
 .star-vt-gallery__card {
@@ -10639,35 +10645,40 @@ body.star-site .star-vt-gallery__text {
 }
 
 .star-vt-gallery__photo {
-  background: #000000;
+  aspect-ratio: 9 / 16;
+  background: transparent;
   border: 0;
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   overflow: hidden;
   padding: 0;
   position: relative;
-  width: 100%;
+  width: min(100%, 150px);
 }
 
-.star-vt-gallery__thumb {
-  aspect-ratio: 16 / 9;
+.star-vt-gallery__media {
+  border: 0;
   display: block;
+  height: 100%;
+  inset: 0;
   object-fit: cover;
   object-position: center center;
+  position: absolute;
   width: 100%;
 }
 
 .star-vt-gallery__play {
   align-items: center;
-  background: rgba(0, 0, 0, 0.35);
+  background: none;
   color: #f7c948;
   display: flex;
   inset: 0;
   justify-content: center;
   opacity: 0;
+  pointer-events: none;
   position: absolute;
-  transition: opacity 0.25s ease;
+  transition: opacity 0.2s ease;
 }
 
 .star-vt-gallery__card:hover .star-vt-gallery__play,
@@ -10723,8 +10734,8 @@ body.star-site .star-vt-gallery__text {
   border: 0;
   border-radius: 12px;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
-  max-height: 94vh;
-  max-width: min(92vw, 720px);
+  max-height: 90vh;
+  max-width: min(88vw, 300px);
   overflow: hidden;
   position: relative;
   width: 100%;
@@ -10747,7 +10758,7 @@ body.star-site .star-vt-gallery__text {
 }
 
 .star-vt-lightbox__player {
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 9 / 16;
   background: #000000;
   position: relative;
   width: 100%;
