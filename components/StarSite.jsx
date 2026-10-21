@@ -12,6 +12,7 @@ import NavyLandingPage from "./NavyLandingPage";
 import AirForceLandingPage from "./AirForceLandingPage";
 import RpfLandingPage from "./RpfLandingPage";
 import CapfLandingPage from "./CapfLandingPage";
+import VideoTestimonialsPage from "./VideoTestimonialsPage";
 import {
   academy,
   contact,
@@ -114,10 +115,12 @@ const headerNavSections = {
   ],
   training: [
     "/star-police-academy-toppers-and-achievers",
+    "/star-police-academy-testimonials",
     "/star-police-academy-training-materials",
     "/star-police-academy-question-papers",
     "/star-police-academy-answer-keys",
     "/toppers",
+    "/testimonials",
     "/materials",
     "/questions",
     "/ansewrkey",
@@ -685,6 +688,23 @@ function Header() {
                     </li>
                     <li
                       className={
+                        isNavPathMatch(currentPath, "/star-police-academy-testimonials") ||
+                        isNavPathMatch(currentPath, "/testimonials") ||
+                        isNavPathMatch(currentPath, "/video-testimonials")
+                          ? "menu-active"
+                          : undefined
+                      }
+                    >
+                      <SiteLink
+                        href="/star-police-academy-testimonials"
+                        onClick={closeNavigation}
+                        className={navLinkClassName(currentPath, "/star-police-academy-testimonials")}
+                      >
+                        Video Testimonials
+                      </SiteLink>
+                    </li>
+                    <li
+                      className={
                         isNavPathMatch(currentPath, "/star-police-academy-training-materials") ||
                         isNavPathMatch(currentPath, "/materials")
                           ? "menu-active"
@@ -808,6 +828,7 @@ function Footer() {
                     <li><SiteLink href="/star-police-academy-youtube">Youtube Channel</SiteLink></li>
                     <li><SiteLink href="/star-police-academy-test-batches">Test Batches</SiteLink></li>
                     <li><SiteLink href="/star-police-academy-toppers-and-achievers">Toppers and Achievers</SiteLink></li>
+                    <li><SiteLink href="/star-police-academy-testimonials">Video Testimonials</SiteLink></li>
                     <li><SiteLink href="/star-police-academy-training-materials">Training Materials</SiteLink></li>
                     <li><SiteLink href="/star-police-academy-question-papers">Question papers</SiteLink></li>
                     <li><SiteLink href="/star-police-academy-answer-keys">Answer Keys</SiteLink></li>
@@ -3960,6 +3981,13 @@ function PageContent({ page, path = "/" }) {
       );
     case "youtube":
       return <YoutubePage />;
+    case "video-testimonials":
+      return (
+        <>
+          <ExactBreadcrumb title="Video Testimonials" />
+          <VideoTestimonialsPage />
+        </>
+      );
     case "toppers":
       return <ToppersPage />;
     case "si-landing":
