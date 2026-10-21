@@ -1,0 +1,596 @@
+/* =============================================================================
+   Star Police Academy — public website mobile/tablet (desktop unchanged)
+   Loaded last so it can override template style.css / menus.css / responsive.css
+   Breakpoints: ≤480px, ≤767px, ≤991px
+============================================================================= */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+@media (max-width: 1024px) {
+  html,
+  body.star-site {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  body.star-site img,
+  body.star-site video,
+  body.star-site iframe,
+  body.star-site svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  body.star-site iframe {
+    height: auto;
+  }
+
+  body.star-site .container,
+  body.star-site .container-fluid {
+    max-width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  body.star-site .row > [class*="col-"] {
+    min-width: 0;
+  }
+
+  body.star-site .star-main,
+  body.star-site .react-wrapper {
+    overflow-x: clip;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Header + hamburger (≤991px)                                                */
+/* -------------------------------------------------------------------------- */
+@media (max-width: 991px) {
+  :root {
+    --exact-header-height: 72px;
+  }
+
+  body.star-site {
+    padding-top: var(--exact-header-height) !important;
+  }
+
+  body.star-site #react-header.react-header.exact-home-header .menu-part .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .exact-home-header .react-main-menu nav {
+    display: block;
+    min-height: var(--exact-header-height);
+  }
+
+  .exact-home-header .menu-toggle {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+    min-height: var(--exact-header-height);
+    width: 100%;
+  }
+
+  .exact-home-header .logo .logo-text {
+    padding: 6px 4px;
+  }
+
+  .exact-home-header .logo img,
+  .exact-home-header .logo .star-brand-logo,
+  body.star-site .exact-home-header .logo .star-brand-logo {
+    height: auto;
+    max-height: 48px;
+    max-width: min(190px, 62vw);
+    object-fit: contain;
+    width: auto;
+  }
+
+  .menu-toggle #menu-btn,
+  .exact-home-header .menu-toggle #menu-btn {
+    align-items: center;
+    background: #3270fc;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex !important;
+    flex-direction: column;
+    float: none;
+    height: 44px;
+    justify-content: center;
+    margin: 0;
+    min-width: 44px;
+    padding: 8px;
+    width: 44px;
+    z-index: 100003;
+  }
+
+  .exact-home-header .menu-toggle .icon-bar {
+    background-color: #ffffff !important;
+    display: block;
+    height: 2px;
+    margin: 2.5px 0;
+    width: 20px;
+  }
+
+  .exact-home-header__backdrop {
+    inset: var(--exact-header-height) 0 0;
+  }
+
+  .exact-home-menus.is-open {
+    max-height: calc(100dvh - var(--exact-header-height) - env(safe-area-inset-bottom, 0px));
+    padding: 8px 16px 24px;
+  }
+
+  .exact-home-header .react-menus > li > a,
+  .exact-home-header .exact-menu-link-row > a {
+    font-size: 15px;
+    line-height: 1.3;
+    padding: 12px 0;
+    white-space: normal;
+  }
+
+  .exact-home-header .exact-menu-courses-dropdown > ul.sub-menu {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .exact-home-header .react-menus > li > ul.sub-menu > li {
+    width: 100% !important;
+  }
+
+  .exact-home-header .react-menus li ul.sub-menu > li {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --exact-header-height: 64px;
+  }
+
+  .exact-home-header .logo img,
+  .exact-home-header .logo .star-brand-logo,
+  body.star-site .exact-home-header .logo .star-brand-logo {
+    max-height: 42px;
+    max-width: min(168px, 58vw);
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Homepage hero                                                              */
+/* -------------------------------------------------------------------------- */
+@media (max-width: 991px) {
+  .exact-home-page .spa-main-hero,
+  .exact-home-page .hero3__area.exact-spa-hero {
+    background-position: center 28%;
+    background-size: cover;
+    min-height: 0;
+    padding: 36px 0 48px;
+  }
+
+  .exact-home-page .spa-main-hero__title {
+    font-size: clamp(24px, 6.5vw, 34px);
+    line-height: 1.22;
+  }
+
+  body.star-site .exact-home-page .spa-main-hero__text {
+    font-size: 14px;
+    max-width: none;
+  }
+
+  .exact-home-page .spa-main-hero__card {
+    margin-top: 8px;
+    padding: 22px 18px;
+  }
+
+  .exact-home-page .spa-main-hero__card h3 {
+    font-size: 20px;
+  }
+
+  .exact-home-page .spa-main-hero__card p {
+    font-size: 14px;
+  }
+
+  .exact-home-page .spa-main-hero__stats strong {
+    font-size: clamp(22px, 7vw, 32px);
+  }
+
+  .exact-home-page .spa-main-hero__stats span {
+    font-size: 12px;
+  }
+
+  .si-landing-page .spa-main-hero,
+  .si-landing-page .hero3__area.exact-spa-hero {
+    min-height: 0;
+    padding: 36px 0 48px;
+  }
+}
+
+@media (max-width: 767px) {
+  .exact-home-page .spa-main-hero {
+    padding: 28px 0 40px;
+  }
+
+  .exact-home-page .spa-main-hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .exact-home-page .spa-main-hero__actions a,
+  .exact-home-page .spa-main-hero__actions .react-btn {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .exact-home-page .spa-main-hero__highlights {
+    grid-template-columns: 1fr;
+    text-align: left;
+  }
+
+  .exact-home-page .spa-main-hero__highlights li {
+    justify-content: flex-start;
+  }
+
+  .exact-home-page .spa-main-hero__card img {
+    max-width: 140px;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Home sections: cards, galleries, sliders, FAQ                              */
+/* -------------------------------------------------------------------------- */
+@media (max-width: 991px) {
+  .exact-home-page .spa-feature-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .exact-home-page .spa-course-hero-card__body {
+    padding: 16px;
+  }
+
+  .exact-home-page .spa-course-hero-card__body h3 {
+    font-size: 16px;
+  }
+
+  .exact-home-page .spa-facilities-slider__arrow,
+  .exact-home-page .spa-winner-carousel__arrow {
+    height: 40px;
+    width: 40px;
+  }
+
+  .exact-home-page h2,
+  .exact-home-page .react__tittle,
+  .exact-home-page .spa-section-title {
+    font-size: clamp(22px, 5vw, 32px);
+    line-height: 1.25;
+  }
+}
+
+@media (max-width: 767px) {
+  .exact-home-page .spa-feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .exact-home-page .spa-physical-gallery__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .exact-home-page .spa-student-results__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .exact-home-page .spa-lizard-process__step.is-left,
+  .exact-home-page .spa-lizard-process__step.is-right {
+    padding-left: 56px;
+  }
+
+  .exact-home-page .spa-lizard-process__track::before {
+    left: 22px;
+  }
+
+  .exact-home-page .spa-lizard-process__node {
+    left: 22px;
+  }
+
+  .exact-home-page .spa-faq-expanded__item button,
+  .exact-home-page .accordion__wrapper-1 button,
+  .exact-home-page .accordion-button {
+    min-height: 44px;
+    text-align: left;
+  }
+}
+
+@media (max-width: 480px) {
+  .exact-home-page .spa-physical-gallery__grid {
+    gap: 8px;
+  }
+
+  .exact-home-page .spa-feature-grid__item {
+    padding: 12px 14px;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Breadcrumbs, inner pages                                                   */
+/* -------------------------------------------------------------------------- */
+@media (max-width: 991px) {
+  body.star-site .react-breadcrumbs .breadcrumbs-title,
+  body.star-site .react-breadcrumbs.exact-about-breadcrumb .breadcrumbs-title {
+    font-size: clamp(24px, 7vw, 36px);
+    line-height: 1.2;
+    word-break: break-word;
+  }
+
+  body.star-site .star-contact,
+  body.star-site .star-register,
+  body.star-site .star-course-detail,
+  body.star-site .star-youtube-page,
+  body.star-site .star-notification-page,
+  .pt---100 {
+    padding-top: 48px !important;
+    padding-bottom: 48px !important;
+  }
+
+  .star-card,
+  .star-detail-card,
+  .star-sidebar {
+    max-width: 100%;
+  }
+
+  .star-detail-card img,
+  .star-course-card img {
+    display: block;
+    height: auto;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .star-notification-intro,
+  .star-notification-card,
+  .star-question-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  .star-contact-form-panel h2 {
+    font-size: clamp(22px, 6vw, 30px);
+    line-height: 1.25;
+  }
+
+  .star-form input,
+  .star-form textarea,
+  .star-form select,
+  .star-contact-form-panel .star-form input,
+  .star-contact-form-panel .star-form textarea {
+    box-sizing: border-box;
+    font-size: 16px;
+    max-width: 100%;
+    min-height: 44px;
+    width: 100%;
+  }
+
+  .star-form .row > [class*="col-"] {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .star-radio-group {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .star-form .react-btn,
+  .star-sidebar .react-btn {
+    min-height: 46px;
+    width: 100%;
+  }
+
+  .star-contact-info-item {
+    align-items: flex-start;
+  }
+
+  .star-contact-map {
+    height: 280px;
+    margin-top: 32px;
+    max-width: 100%;
+  }
+
+  .star-contact-map iframe {
+    height: 100%;
+    min-height: 280px;
+  }
+
+  .star-contact-map__location-card {
+    left: 8px;
+    max-width: calc(100% - 16px);
+    padding: 10px 12px;
+    top: 8px;
+  }
+
+  .star-contact-map__cta {
+    bottom: 8px;
+    font-size: 12px;
+    padding: 8px 12px;
+    right: 8px;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Toppers / gallery / materials / questions                                  */
+/* -------------------------------------------------------------------------- */
+@media (max-width: 767px) {
+  .star-toppers-showcase__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 10px;
+  }
+
+  .star-toppers-page__title {
+    font-size: clamp(1.2rem, 5.5vw, 1.7rem);
+  }
+
+  .star-toppers-page__subtitle {
+    font-size: clamp(0.95rem, 4vw, 1.2rem);
+  }
+
+  .star-toppers-showcase__photo {
+    height: 180px;
+  }
+
+  .star-materials-page h1 {
+    font-size: clamp(1.5rem, 6vw, 2rem) !important;
+  }
+
+  .star-materials-page img {
+    height: auto !important;
+    max-height: 200px;
+    object-fit: cover;
+  }
+
+  .spa-achiever-grid,
+  .star-toppers-grid,
+  .star-gallery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .spa-achiever-card,
+  .star-topper-card {
+    min-width: 0;
+  }
+
+  .spa-achiever-card img,
+  .star-topper-card img {
+    object-fit: cover;
+    width: 100%;
+  }
+}
+
+@media (max-width: 400px) {
+  .spa-achiever-grid,
+  .star-toppers-grid,
+  .star-gallery-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Footer                                                                     */
+/* -------------------------------------------------------------------------- */
+@media (max-width: 991px) {
+  .react-footer-two.pt---120 {
+    padding-top: 48px;
+  }
+
+  .react-footer-two .footer-top-cta .row {
+    align-items: flex-start;
+  }
+
+  .react-footer-two .footer-top-cta .text-right {
+    text-align: left !important;
+    margin-top: 16px;
+  }
+
+  .react-footer-two .footer-top-cta h3 {
+    font-size: clamp(22px, 6vw, 32px);
+    line-height: 1.25;
+  }
+
+  .react-footer-two .footer-top-cta h3 br {
+    display: none;
+  }
+
+  .react-footer-two .footer-logo .star-brand-logo,
+  body.star-site .react-footer-two .footer-logo .star-brand-logo--footer {
+    max-height: 64px;
+    max-width: 200px;
+  }
+
+  .react-footer-two .footer-address a,
+  .react-footer-two .footer-menu a {
+    overflow-wrap: anywhere;
+  }
+
+  #backscrollUp {
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    right: 12px;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Landing pages (SI, TNUSRB, Army, Navy, Air Force, RPF, CAPF)               */
+/* -------------------------------------------------------------------------- */
+@media (max-width: 767px) {
+  .si-landing-page .spa-feature-grid,
+  .si-landing-page .si-landing-feature-band,
+  .si-landing-page .si-landing-flow-grid,
+  .si-landing-page .si-landing-table__topics {
+    grid-template-columns: 1fr;
+  }
+
+  .si-landing-page .spa-main-hero__highlights {
+    grid-template-columns: 1fr;
+  }
+
+  .si-landing-page .si-landing-course-slider__shell,
+  .si-landing-page .si-training-showcase__shell {
+    padding: 0 40px;
+  }
+
+  .si-landing-page .si-landing-course-slider__visual img {
+    height: auto;
+    max-height: 220px;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .si-landing-page .spa-main-hero__actions {
+    flex-direction: column;
+  }
+
+  .si-landing-page .spa-main-hero__actions a {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Template leftovers that overflow on phones                                 */
+/* -------------------------------------------------------------------------- */
+@media (max-width: 767px) {
+  .hero3__area .hero3__image-1,
+  .hero3__area .hero3__image-2,
+  .hero3__area .hero3__shape-2,
+  .react__shape__abc,
+  .about__image_rig {
+    max-width: 100%;
+  }
+
+  .owl-carousel .owl-nav,
+  .owl-theme .owl-nav {
+    pointer-events: none;
+  }
+
+  .owl-carousel .owl-nav button {
+    pointer-events: auto;
+  }
+
+  body.star-site .text-right {
+    text-align: left !important;
+  }
+
+  body.star-site table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}

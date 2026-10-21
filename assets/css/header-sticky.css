@@ -24,6 +24,12 @@ body.star-site #react-header.react-header.exact-home-header .menu-part {
 
 @media (max-width: 991px) {
   :root {
-    --exact-header-height: 76px;
+    --exact-header-height: 72px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --exact-header-height: 64px;
   }
 }

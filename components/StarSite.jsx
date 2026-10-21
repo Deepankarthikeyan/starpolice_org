@@ -268,7 +268,7 @@ function SiteHead({ seo }) {
       <meta name="geo.region" content={seo.geoRegion} />
       <meta name="geo.placename" content={seo.geoPlaceName} />
       <meta name="language" content={seo.language} />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
       <link rel="canonical" href={seo.canonicalUrl} />
       <link rel="shortcut icon" type="image/x-icon" href={seo.favicon} />
 
@@ -317,6 +317,7 @@ function SiteHead({ seo }) {
       <link rel="stylesheet" type="text/css" href="/assets/css/responsive.css" />
       <link rel="stylesheet" type="text/css" href="/assets/css/header-sticky.css" />
       <link rel="stylesheet" type="text/css" href="/assets/css/brand-theme.css" />
+      <link rel="stylesheet" type="text/css" href="/assets/css/star-site-mobile.css" />
     </Head>
   );
 }
@@ -512,6 +513,11 @@ function Header() {
       document.body.style.overflow = previousOverflow;
     };
   }, [open]);
+
+  useEffect(() => {
+    setOpen(false);
+    setExpandedMenu(null);
+  }, [currentPath]);
 
   return (
     <header
