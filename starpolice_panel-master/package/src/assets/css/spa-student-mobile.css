@@ -41,18 +41,21 @@
   }
 
   #main-wrapper.spa-panel-student .spa-student-stat-grid .card-body {
-    padding: 0.85rem 0.75rem;
+    padding: 0.65rem 0.5rem;
   }
 
   #main-wrapper.spa-panel-student .spa-student-stat-grid .card-body h2 {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     margin-bottom: 0;
+    line-height: 1.15;
   }
 
   #main-wrapper.spa-panel-student .spa-student-stat-grid .card-body h6 {
-    font-size: 0.7rem;
-    line-height: 1.25;
-    margin-bottom: 0.35rem;
+    font-size: 0.6rem;
+    line-height: 1.2;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+    word-break: break-word;
   }
 
   #main-wrapper.spa-panel-student .spa-student-upload-card {

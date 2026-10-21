@@ -209,34 +209,52 @@
   font-size: 1.05rem;
 }
 
-/* Dashboard stat cards — 2 per row on phones (2 rows for 4 metrics) */
-@media only screen and (max-width: 47.9375rem) {
-  #main-wrapper[class*="spa-panel-"] .spa-dashboard-stat-grid > .col-6,
-  #main-wrapper[class*="spa-panel-"] .spa-student-stat-grid > .col-6 {
-    flex: 0 0 50%;
-    max-width: 50%;
+/* Dashboard stat cards — 2×2 grid on tablet/phone (two rows of two) */
+@media only screen and (max-width: 63.9375rem) {
+  #main-wrapper[class*="spa-panel-"] .spa-dashboard-stat-grid > [class*="col-"],
+  #main-wrapper[class*="spa-panel-"] .spa-student-stat-grid > [class*="col-"] {
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
   }
+}
 
+@media only screen and (max-width: 47.9375rem) {
   #main-wrapper[class*="spa-panel-"] .spa-dashboard-stat-grid .card-body,
   #main-wrapper[class*="spa-panel-"] .spa-student-stat-grid .card-body {
-    padding: 0.85rem 0.65rem;
+    padding: 0.65rem 0.5rem;
   }
 
   #main-wrapper[class*="spa-panel-"] .spa-dashboard-stat-grid .card-body h6,
   #main-wrapper[class*="spa-panel-"] .spa-student-stat-grid .card-body h6 {
-    font-size: 0.68rem;
-    line-height: 1.25;
-    margin-bottom: 0.35rem;
+    font-size: 0.6rem;
+    line-height: 1.2;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    word-break: break-word;
+    hyphens: auto;
   }
 
   #main-wrapper[class*="spa-panel-"] .spa-dashboard-stat-grid .card-body h2,
   #main-wrapper[class*="spa-panel-"] .spa-student-stat-grid .card-body h2 {
-    font-size: 1.45rem;
+    font-size: 1.2rem;
+    margin-bottom: 0;
+    line-height: 1.15;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-dashboard-stat-grid .card-body small,
+  #main-wrapper[class*="spa-panel-"] .spa-student-stat-grid .card-body small {
+    font-size: 0.625rem;
+    line-height: 1.2;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-dashboard-stat-grid .card,
+  #main-wrapper[class*="spa-panel-"] .spa-student-stat-grid .card {
     margin-bottom: 0;
   }
 
-  #main-wrapper[class*="spa-panel-"] .content-body .row > [class*="col-xl-"]:not([class*="col-6"]),
-  #main-wrapper[class*="spa-panel-"] .content-body .row > [class*="col-lg-"]:not([class*="col-6"]) {
+  #main-wrapper[class*="spa-panel-"] .content-body .row:not(.spa-dashboard-stat-grid):not(.spa-student-stat-grid) > [class*="col-xl-"]:not([class*="col-6"]),
+  #main-wrapper[class*="spa-panel-"] .content-body .row:not(.spa-dashboard-stat-grid):not(.spa-student-stat-grid) > [class*="col-lg-"]:not([class*="col-6"]) {
     flex: 0 0 100%;
     max-width: 100%;
   }
@@ -317,8 +335,8 @@
 /* All panel pages — tablet (≤1023px): stack multi-column layouts      */
 /* ------------------------------------------------------------------ */
 @media only screen and (max-width: 63.9375rem) {
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content .row > [class*="col-xl-"],
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content .row > [class*="col-lg-"]:not([class*="col-md-"]) {
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .row:not(.spa-dashboard-stat-grid):not(.spa-student-stat-grid) > [class*="col-xl-"],
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .row:not(.spa-dashboard-stat-grid):not(.spa-student-stat-grid) > [class*="col-lg-"]:not([class*="col-md-"]) {
     flex: 0 0 100%;
     max-width: 100%;
   }
@@ -344,11 +362,29 @@
     --bs-gutter-y: 0.65rem;
   }
 
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content .row > [class*="col-md-"],
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content .row > [class*="col-lg-"],
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content .row > [class*="col-xl-"]:not([class*="col-6"]) {
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content {
+    font-size: 0.875rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .row:not(.spa-dashboard-stat-grid):not(.spa-student-stat-grid) > [class*="col-md-"],
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .row:not(.spa-dashboard-stat-grid):not(.spa-student-stat-grid) > [class*="col-lg-"],
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .row:not(.spa-dashboard-stat-grid):not(.spa-student-stat-grid) > [class*="col-xl-"]:not([class*="col-6"]) {
     flex: 0 0 100%;
     max-width: 100%;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .text-muted,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content small,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .small {
+    font-size: 0.75rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .card-body {
+    font-size: 0.8125rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .fw-semibold {
+    font-size: 0.875rem;
   }
 
   #main-wrapper[class*="spa-panel-"] .spa-panel-content > .d-flex.justify-content-between,
