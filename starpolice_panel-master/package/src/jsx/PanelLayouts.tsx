@@ -2,6 +2,7 @@ import { Outlet, Navigate } from "react-router-dom";
 import { useContext } from "react";
 import Nav from "./layouts/nav";
 import Footer from "./layouts/Footer";
+import StudentMobileNav from "./layouts/nav/StudentMobileNav";
 import { ThemeContext } from "../context/ThemeContext";
 
 export function AdminLayout() {
@@ -52,7 +53,10 @@ export function StudentLayout() {
   }
 
   return (
-    <div id="main-wrapper" className={`show ${openMenuToggle ? "menu-toggle" : ""}`}>
+    <div
+      id="main-wrapper"
+      className={`show spa-panel-student ${openMenuToggle ? "menu-toggle" : ""}`}
+    >
       <Nav basePath="/student" panel="student" />
       <div className="content-body spa-content-body">
         <div className="container-fluid">
@@ -60,6 +64,7 @@ export function StudentLayout() {
         </div>
       </div>
       <Footer changeFooter="out-footer style-2" />
+      <StudentMobileNav />
     </div>
   );
 }

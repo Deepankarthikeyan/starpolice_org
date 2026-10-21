@@ -29,7 +29,7 @@ const StudentDashboard = () => {
   return (
     <>
       <PageTitle motherMenu="Student Panel" activeMenu="Dashboard" pageContent="" />
-      <div className="row">
+      <div className="row spa-student-stat-grid g-2 g-md-3">
         <div className="col-6 col-xl-3">
           <div className="card">
             <div className="card-body">
@@ -76,26 +76,38 @@ const StudentDashboard = () => {
           {!stats?.latestUploads?.length ? (
             <p className="text-muted mb-0">No materials uploaded yet by admin.</p>
           ) : (
-            <div className="table-responsive">
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Name</th>
-                    <th>Type</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {stats.latestUploads.map((upload) => (
-                    <tr key={upload.id}>
-                      <td>{upload.date}</td>
-                      <td>{upload.name}</td>
-                      <td>{FILE_CATEGORY_LABELS[upload.category]}</td>
+            <>
+              <div className="d-md-none">
+                {stats.latestUploads.map((upload) => (
+                  <div key={upload.id} className="spa-student-upload-card">
+                    <div className="fw-semibold">{upload.name}</div>
+                    <div className="small text-muted mt-1">
+                      {upload.date} · {FILE_CATEGORY_LABELS[upload.category]}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="table-responsive d-none d-md-block">
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Name</th>
+                      <th>Type</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {stats.latestUploads.map((upload) => (
+                      <tr key={upload.id}>
+                        <td>{upload.date}</td>
+                        <td>{upload.name}</td>
+                        <td>{FILE_CATEGORY_LABELS[upload.category]}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </div>
       </div>

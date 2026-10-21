@@ -1,0 +1,166 @@
+/* Student panel — mobile app–style layout (bottom nav, safe areas, touch-friendly) */
+
+@media only screen and (max-width: 47.9375rem) {
+  #main-wrapper.spa-panel-student .spa-student-bottom-nav {
+    display: flex;
+  }
+
+  #main-wrapper.spa-panel-student .content-body {
+    padding-bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  #main-wrapper.spa-panel-student .footer,
+  #main-wrapper.spa-panel-student .footer.footer-outer {
+    display: none !important;
+  }
+
+  #main-wrapper.spa-panel-student .spa-breadcrumb-panel,
+  #main-wrapper.spa-panel-student .spa-breadcrumb-separator {
+    display: none;
+  }
+
+  #main-wrapper.spa-panel-student .spa-page-titles {
+    margin-bottom: 0.65rem;
+    padding-bottom: 0.35rem;
+  }
+
+  #main-wrapper.spa-panel-student .spa-breadcrumb-page {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--bs-body-color, #1a1a2e);
+  }
+
+  #main-wrapper.spa-panel-student .card {
+    border-radius: 0.85rem;
+    box-shadow: 0 0.125rem 0.65rem rgba(8, 26, 20, 0.06);
+  }
+
+  #main-wrapper.spa-panel-student .spa-student-stat-grid > [class*="col-"] {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+
+  #main-wrapper.spa-panel-student .spa-student-stat-grid .card-body {
+    padding: 0.85rem 0.75rem;
+  }
+
+  #main-wrapper.spa-panel-student .spa-student-stat-grid .card-body h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0;
+  }
+
+  #main-wrapper.spa-panel-student .spa-student-stat-grid .card-body h6 {
+    font-size: 0.7rem;
+    line-height: 1.25;
+    margin-bottom: 0.35rem;
+  }
+
+  #main-wrapper.spa-panel-student .spa-student-upload-card {
+    border: 1px solid rgba(20, 107, 74, 0.12);
+    border-radius: 0.75rem;
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.65rem;
+    background: #fff;
+  }
+
+  #main-wrapper.spa-panel-student .spa-student-upload-card:last-child {
+    margin-bottom: 0;
+  }
+
+  #main-wrapper.spa-panel-student .daywise-upload-calendar .react-datepicker {
+    width: 100%;
+  }
+
+  #main-wrapper.spa-panel-student .daywise-upload-calendar .react-datepicker__month-container {
+    width: 100%;
+    float: none;
+  }
+
+  #main-wrapper.spa-panel-student .spa-performance-detail .spa-performance-section-card {
+    min-height: 0;
+  }
+}
+
+@media only screen and (max-width: 23.4375rem) {
+  #main-wrapper.spa-panel-student .spa-student-stat-grid > [class*="col-"] {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+.spa-student-bottom-nav {
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1002;
+  align-items: stretch;
+  justify-content: space-around;
+  gap: 0.15rem;
+  padding: 0.35rem 0.5rem calc(0.45rem + env(safe-area-inset-bottom, 0px));
+  background: rgba(255, 255, 255, 0.94);
+  border-top: 1px solid rgba(10, 46, 34, 0.1);
+  box-shadow: 0 -0.25rem 1.25rem rgba(6, 26, 20, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.spa-student-bottom-nav-item {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  padding: 0.35rem 0.2rem;
+  border: none;
+  background: transparent;
+  color: #5a6b65;
+  text-decoration: none !important;
+  border-radius: 0.65rem;
+  transition: background 0.15s ease, color 0.15s ease;
+  cursor: pointer;
+  font: inherit;
+}
+
+.spa-student-bottom-nav-item.is-active {
+  color: #0a5c3e;
+  background: rgba(62, 207, 142, 0.12);
+}
+
+.spa-student-bottom-nav-icon {
+  display: grid;
+  place-items: center;
+  line-height: 1;
+}
+
+.spa-student-bottom-nav-icon .material-symbols-outlined {
+  font-size: 1.35rem;
+}
+
+.spa-student-bottom-nav-label {
+  font-size: 0.625rem;
+  font-weight: 600;
+  line-height: 1.1;
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-theme-version="dark"] .spa-student-bottom-nav {
+  background: rgba(18, 28, 36, 0.96);
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme-version="dark"] .spa-student-bottom-nav-item {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+[data-theme-version="dark"] .spa-student-bottom-nav-item.is-active {
+  color: #6ee7b7;
+  background: rgba(62, 207, 142, 0.15);
+}
