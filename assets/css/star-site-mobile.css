@@ -594,3 +594,132 @@ html {
     overflow-x: auto;
   }
 }
+
+/* -------------------------------------------------------------------------- */
+/* Global mobile/tablet typography (all public pages, ≤991px)                 */
+/* -------------------------------------------------------------------------- */
+@media (max-width: 991px) {
+  body.star-site {
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  body.star-site p,
+  body.star-site li,
+  body.star-site .spa-section-text,
+  body.star-site .react-breadcrumbs .breadcrumbs-subtitle,
+  body.star-site .star-card p,
+  body.star-site .star-detail-card p {
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  body.star-site h1,
+  body.star-site .breadcrumbs-title {
+    font-size: clamp(1.35rem, 6vw, 1.75rem) !important;
+    line-height: 1.2;
+  }
+
+  body.star-site h2,
+  body.star-site .spa-section-title,
+  body.star-site .react__title__section h2,
+  body.star-site .react__title__section .react__tittle,
+  body.star-site .react__title__section-all h2,
+  body.star-site .react__title__section2 h2 {
+    font-size: clamp(1.15rem, 5vw, 1.45rem) !important;
+    line-height: 1.25;
+  }
+
+  body.star-site h3,
+  body.star-site .star-contact-info-item h3,
+  body.star-site .star-card h3 {
+    font-size: 1rem !important;
+    line-height: 1.3;
+  }
+
+  body.star-site h4,
+  body.star-site h5,
+  body.star-site h6 {
+    font-size: 0.9375rem !important;
+    line-height: 1.35;
+  }
+
+  body.star-site .star-contact-form-panel h2 {
+    font-size: clamp(1.15rem, 5.5vw, 1.4rem) !important;
+    margin-bottom: 1.25rem !important;
+  }
+
+  body.star-site .star-materials-page .text-center h1.mb---15 {
+    font-size: clamp(1.35rem, 6vw, 1.75rem) !important;
+  }
+
+  body.star-site .star-form label,
+  body.star-site .star-contact-form-panel label,
+  body.star-site .star-register label {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.35;
+    margin-bottom: 6px;
+  }
+
+  body.star-site .star-form input,
+  body.star-site .star-form textarea,
+  body.star-site .star-form select,
+  body.star-site .star-contact-form-panel .star-form input,
+  body.star-site .star-contact-form-panel .star-form textarea,
+  body.star-site input[type="text"],
+  body.star-site input[type="email"],
+  body.star-site input[type="tel"],
+  body.star-site input[type="number"],
+  body.star-site textarea,
+  body.star-site select {
+    font-size: 16px;
+    line-height: 1.35;
+    min-height: 42px;
+    padding: 8px 12px;
+  }
+
+  body.star-site .star-form textarea,
+  body.star-site .star-contact-form-panel .star-form textarea {
+    min-height: 120px;
+  }
+
+  body.star-site .react-btn,
+  body.star-site .react-btn-border,
+  body.star-site .spa-main-hero__actions a {
+    font-size: 14px;
+    line-height: 1.3;
+  }
+
+  body.star-site .star-contact-detail-line {
+    font-size: 13px;
+    white-space: normal;
+  }
+
+  body.star-site .si-landing-page .spa-main-hero__title,
+  body.star-site .exact-home-page .spa-main-hero__title {
+    font-size: clamp(1.35rem, 6.5vw, 1.85rem) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body.star-site {
+    font-size: 13px;
+  }
+
+  body.star-site p,
+  body.star-site li,
+  body.star-site .spa-section-text {
+    font-size: 13px;
+  }
+
+  body.star-site h2,
+  body.star-site .spa-section-title,
+  body.star-site .react__title__section h2 {
+    font-size: clamp(1.05rem, 5.5vw, 1.3rem) !important;
+  }
+
+  body.star-site .react-breadcrumbs .breadcrumbs-title {
+    font-size: clamp(1.2rem, 6.5vw, 1.55rem) !important;
+  }
+}

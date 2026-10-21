@@ -549,3 +549,220 @@
     padding: 0.35rem 0.5rem !important;
   }
 }
+
+/* =============================================================================
+   Viewport mobile typography — always on (not tied to data-spa-mobile)
+   Catches Bootstrap fs-*, display-*, and brand classes that stay desktop-sized
+============================================================================= */
+
+@media only screen and (max-width: 63.9375rem) {
+  html:has(#main-wrapper[class*="spa-panel-"]) {
+    font-size: 93.75%;
+  }
+}
+
+@media only screen and (max-width: 47.9375rem) {
+  html:has(#main-wrapper[class*="spa-panel-"]) {
+    font-size: 87.5%;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .content-body,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content {
+    font-size: 0.875rem;
+    line-height: 1.45;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content p,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content li,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .card-text,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .modal-body {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .form-label,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content label:not(.btn):not(.form-check-label),
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content legend {
+    font-size: 0.75rem !important;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 0.3rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .form-check-label {
+    font-size: 0.75rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content h1,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .h1 {
+    font-size: 1.25rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content h2,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .h2 {
+    font-size: 1.125rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content h3,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .h3,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content h4,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .h4,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .card-title,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content h4.card-title {
+    font-size: 0.9375rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content h5,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .h5 {
+    font-size: 0.875rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content h6,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .h6 {
+    font-size: 0.8125rem !important;
+  }
+
+  body:has(#main-wrapper[class*="spa-panel-"]) .modal-title {
+    font-size: 0.9375rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-page-breadcrumb {
+    font-size: 0.75rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .text-muted,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content small,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .small,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .form-text,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .invalid-feedback {
+    font-size: 0.6875rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .btn:not(.btn-sm) {
+    font-size: 0.8125rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .btn-lg {
+    font-size: 0.875rem !important;
+    padding: 0.45rem 0.75rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .fs-1,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .fs-2,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .fs-3 {
+    font-size: 1.125rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .fs-4,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .fs-5 {
+    font-size: 0.9375rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .fs-6 {
+    font-size: 0.8125rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content [class*="fs-"]:not(.fs-1):not(.fs-2):not(.fs-3):not(.fs-4):not(.fs-5):not(.fs-6) {
+    font-size: 0.8125rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .display-1,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .display-2,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .display-3,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .display-4,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .display-5,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .display-6 {
+    font-size: 1.25rem !important;
+    line-height: 1.25 !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .widget-stat .media .media-body h3,
+  #main-wrapper[class*="spa-panel-"] .widget-stat .media .media-body .h3,
+  #main-wrapper[class*="spa-panel-"] .widget-stat .media .media-body h4,
+  #main-wrapper[class*="spa-panel-"] .widget-stat .media .media-body .h4 {
+    font-size: 1.125rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .widget-stat .media .media-body p {
+    font-size: 0.75rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-performance-intro,
+  #main-wrapper[class*="spa-panel-"] .spa-performance-card-label {
+    font-size: 0.8125rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-performance-card-value {
+    font-size: 1.25rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-performance-card-subtext {
+    font-size: 0.75rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .physical-record-academy {
+    font-size: 1rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .physical-record-title {
+    font-size: 0.9375rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .physical-record-subtitle {
+    font-size: 0.6875rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-subject-multiselect-btn {
+    font-size: 0.8125rem !important;
+    min-height: 2.125rem !important;
+    padding: 0.35rem 0.65rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-subject-dropdown-item {
+    font-size: 0.8125rem !important;
+    padding: 0.4rem 0.65rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-messenger-contact-title,
+  #main-wrapper[class*="spa-panel-"] .spa-messenger-thread-title {
+    font-size: 0.875rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-messenger-contact-subtitle,
+  #main-wrapper[class*="spa-panel-"] .spa-messenger-thread-subtitle {
+    font-size: 0.6875rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .table th,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .table td {
+    font-size: 0.6875rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .badge {
+    font-size: 0.625rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .alert {
+    font-size: 0.8125rem !important;
+    padding: 0.55rem 0.75rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .dropdown-item {
+    font-size: 0.8125rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .input-group-text {
+    font-size: 0.75rem !important;
+    padding: 0.35rem 0.55rem !important;
+  }
+}
+
+@media only screen and (max-width: 30rem) {
+  html:has(#main-wrapper[class*="spa-panel-"]) {
+    font-size: 81.25%;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-performance-card-value {
+    font-size: 1.1rem !important;
+  }
+}
