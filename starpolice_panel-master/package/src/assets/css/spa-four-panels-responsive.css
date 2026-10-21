@@ -249,19 +249,19 @@
     max-width: 100% !important;
     width: 100% !important;
     font-size: 16px;
-    min-height: 2.125rem;
+    min-height: 2.5rem;
     padding: 0.4rem 0.65rem;
   }
 
   #main-wrapper[class*="spa-panel-"] .spa-messenger-search .form-control {
     font-size: 16px;
-    min-height: 2.125rem;
+    min-height: 2.5rem;
     padding: 0.4rem 0.65rem 0.4rem 2.1rem;
   }
 
   #main-wrapper[class*="spa-panel-"] .spa-onboarding-search .form-control {
     font-size: 16px;
-    min-height: 2.125rem;
+    min-height: 2.5rem;
     padding: 0.4rem 0.65rem;
   }
 }
@@ -319,7 +319,7 @@
   #main-wrapper[class*="spa-panel-"] .react-datepicker__input-container input,
   #main-wrapper[class*="spa-panel-"] .react-datepicker__input-container .form-control {
     font-size: 16px !important;
-    min-height: 2.125rem !important;
+    min-height: 2.5rem !important;
     padding: 0.4rem 0.65rem !important;
     width: 100% !important;
   }
@@ -369,7 +369,7 @@
   #main-wrapper[class*="spa-panel-"] .spa-interaction-history-controls .form-control,
   #main-wrapper[class*="spa-panel-"] .spa-messenger-audience .spa-interaction-filter-select-input {
     font-size: 16px !important;
-    min-height: 2.125rem !important;
+    min-height: 2.5rem !important;
     padding: 0.4rem 0.55rem !important;
   }
 
@@ -377,7 +377,7 @@
   body:has(#main-wrapper[class*="spa-panel-"]) .modal .form-control,
   body:has(#main-wrapper[class*="spa-panel-"]) .modal .form-select {
     font-size: 16px !important;
-    min-height: 2.125rem !important;
+    min-height: 2.5rem !important;
     padding: 0.4rem 0.65rem !important;
   }
 }
