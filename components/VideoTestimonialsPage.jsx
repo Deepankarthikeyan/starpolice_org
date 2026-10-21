@@ -170,7 +170,6 @@ export default function VideoTestimonialsPage() {
           </div>
 
           <div className="star-vt-cinema" {...pauseProps}>
-            <div className="star-vt-cinema__glow" aria-hidden="true" />
             <div className="star-vt-cinema__stage">
               <button
                 type="button"
