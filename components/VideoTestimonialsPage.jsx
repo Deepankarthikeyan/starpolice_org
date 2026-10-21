@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { videoTestimonials } from "../lib/star-content";
 import { AUTO_SLIDER_INTERVAL_MS, useAutoSliderPause } from "../lib/useAutoSlider";
-
-const COLLAGE_VARIANTS = 8;
 
 function youtubeThumbnail(videoId) {
   return `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
@@ -119,7 +117,13 @@ export default function VideoTestimonialsPage() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const { isPaused, pauseProps } = useAutoSliderPause();
+  const filmstripRef = useRef(null);
   const total = videoTestimonials.length;
+  const activeItem = videoTestimonials[activeIndex];
+
+  const goTo = (index) => {
+    setActiveIndex((index + total) % total);
+  };
 
   const openLightbox = (index) => {
     setActiveIndex(index);
@@ -128,10 +132,6 @@ export default function VideoTestimonialsPage() {
 
   const closeLightbox = () => {
     setLightboxIndex(null);
-  };
-
-  const goTo = (nextIndex) => {
-    setActiveIndex(nextIndex);
   };
 
   useEffect(() => {
@@ -146,6 +146,16 @@ export default function VideoTestimonialsPage() {
     return () => window.clearInterval(timer);
   }, [isPaused, lightboxIndex, total]);
 
+  useEffect(() => {
+    const strip = filmstripRef.current;
+    if (!strip) {
+      return;
+    }
+
+    const thumb = strip.querySelector(".star-vt-filmstrip__item.is-active");
+    thumb?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  }, [activeIndex]);
+
   const lightboxItem = lightboxIndex !== null ? videoTestimonials[lightboxIndex] : null;
 
   return (
@@ -155,74 +165,72 @@ export default function VideoTestimonialsPage() {
           <div className="star-vt-intro text-center">
             <h2 className="spa-section-title">Hear from our achievers</h2>
             <p className="spa-section-text">
-              Watch featured stories below or browse the full collage of student videos.
+              Use the arrows to browse stories. Tap any frame to watch in the video player.
             </p>
           </div>
 
-          <div className="star-vt-hero" {...pauseProps}>
-            <div className="star-vt-hero__stage">
-              {videoTestimonials.map((item, index) => (
-                <button
-                  type="button"
-                  key={item.id}
-                  className={`star-vt-hero__slide${index === activeIndex ? " is-active" : ""}`}
-                  aria-hidden={index !== activeIndex}
-                  onClick={() => openLightbox(index)}
-                >
-                  <img src={youtubeThumbnail(item.id)} alt="" loading="lazy" />
-                  <span className="star-vt-hero__play material-symbols-outlined" aria-hidden="true">
-                    play_circle
-                  </span>
-                  <span className="star-vt-hero__badge">Story {index + 1}</span>
-                </button>
-              ))}
-            </div>
-
-            <div className="star-vt-hero__controls">
+          <div className="star-vt-cinema" {...pauseProps}>
+            <div className="star-vt-cinema__glow" aria-hidden="true" />
+            <div className="star-vt-cinema__stage">
               <button
                 type="button"
-                className="star-vt-hero__arrow"
+                className="star-vt-cinema__arrow star-vt-cinema__arrow--prev"
                 aria-label="Previous story"
-                onClick={() => goTo((activeIndex - 1 + total) % total)}
+                onClick={() => goTo(activeIndex - 1)}
               >
                 ‹
               </button>
-              <span className="star-vt-hero__counter" aria-live="polite">
-                {activeIndex + 1} / {total}
-              </span>
+
+              <div className="star-vt-cinema__viewport">
+                <div className="star-vt-cinema__frame">
+                  <button
+                    type="button"
+                    className="star-vt-cinema__poster"
+                    aria-label={`Play ${activeItem.title}`}
+                    onClick={() => openLightbox(activeIndex)}
+                  >
+                    <img
+                      src={youtubeThumbnail(activeItem.id)}
+                      alt=""
+                      className="star-vt-cinema__image"
+                    />
+                    <span className="star-vt-cinema__shine" aria-hidden="true" />
+                    <span className="star-vt-cinema__play material-symbols-outlined" aria-hidden="true">
+                      play_circle
+                    </span>
+                    <span className="star-vt-cinema__badge">
+                      Story {activeIndex + 1} / {total}
+                    </span>
+                  </button>
+                </div>
+                <p className="star-vt-cinema__title">{activeItem.title}</p>
+              </div>
+
               <button
                 type="button"
-                className="star-vt-hero__arrow"
+                className="star-vt-cinema__arrow star-vt-cinema__arrow--next"
                 aria-label="Next story"
-                onClick={() => goTo((activeIndex + 1) % total)}
+                onClick={() => goTo(activeIndex + 1)}
               >
                 ›
               </button>
             </div>
-          </div>
 
-          <div className="star-vt-collage-head text-center">
-            <h3>All video testimonials</h3>
-          </div>
-
-          <div className="star-vt-collage">
-            {videoTestimonials.map((item, index) => (
-              <button
-                type="button"
-                key={`collage-${item.id}`}
-                className={`star-vt-collage__cell star-vt-collage__cell--${(index % COLLAGE_VARIANTS) + 1}${
-                  index === activeIndex ? " is-active" : ""
-                }`}
-                onClick={() => openLightbox(index)}
-              >
-                <img src={youtubeThumbnail(item.id)} alt="" loading="lazy" />
-                <span className="star-vt-collage__shade" aria-hidden="true" />
-                <span className="star-vt-collage__play material-symbols-outlined" aria-hidden="true">
-                  play_circle
-                </span>
-                <span className="star-vt-collage__label">{item.title}</span>
-              </button>
-            ))}
+            <div className="star-vt-filmstrip" ref={filmstripRef} role="tablist" aria-label="All video stories">
+              {videoTestimonials.map((item, index) => (
+                <button
+                  type="button"
+                  key={item.id}
+                  role="tab"
+                  aria-selected={index === activeIndex}
+                  className={`star-vt-filmstrip__item${index === activeIndex ? " is-active" : ""}`}
+                  onClick={() => goTo(index)}
+                >
+                  <img src={youtubeThumbnail(item.id)} alt="" loading="lazy" />
+                  <span className="star-vt-filmstrip__num">{index + 1}</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </section>
