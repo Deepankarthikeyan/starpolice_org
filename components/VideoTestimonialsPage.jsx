@@ -6,7 +6,7 @@ import { AUTO_SLIDER_INTERVAL_MS, useAutoSliderPause } from "../lib/useAutoSlide
 const SLIDE_TRANSITIONS = ["fade", "slide-left", "slide-up", "zoom"];
 
 function youtubeThumbnail(videoId) {
-  return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+  return `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
 }
 
 function youtubeEmbedUrl(videoId, autoplay = false) {
