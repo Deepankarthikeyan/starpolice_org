@@ -10469,6 +10469,12 @@ body.star-site .spa-gallery-lightbox__caption p {
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.06);
   margin-bottom: 56px;
   padding: 24px 20px 28px;
+  transition: box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+.star-vt-featured:hover {
+  border-color: rgba(227, 27, 35, 0.25);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.09);
 }
 
 .star-vt-featured__header {
@@ -10522,14 +10528,21 @@ body.star-site .spa-gallery-lightbox__caption p {
   font-size: 28px;
   height: 48px;
   line-height: 1;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   width: 48px;
 }
 
 .star-vt-featured__arrow:hover {
   background: #e31b23;
+  border-color: #e31b23;
+  box-shadow: 0 4px 14px rgba(227, 27, 35, 0.35);
   color: #ffffff;
-  transform: scale(1.04);
+  transform: scale(1.06);
 }
 
 .star-vt-featured__frame {
@@ -10543,7 +10556,20 @@ body.star-site .spa-gallery-lightbox__caption p {
   overflow: hidden;
   padding: 0;
   position: relative;
+  transition:
+    box-shadow 0.4s ease,
+    transform 0.4s ease;
   width: min(92vw, 480px);
+}
+
+.star-vt-featured__frame:hover {
+  box-shadow: 0 14px 32px rgba(227, 27, 35, 0.22);
+  transform: translateY(-4px);
+}
+
+.star-vt-featured__frame:active {
+  transform: translateY(-1px);
+  transition-duration: 0.15s;
 }
 
 .star-vt-featured__media {
@@ -10554,7 +10580,12 @@ body.star-site .spa-gallery-lightbox__caption p {
   object-fit: cover;
   object-position: center center;
   position: absolute;
+  transition: transform 0.5s ease;
   width: 100%;
+}
+
+.star-vt-featured__frame:hover .star-vt-featured__media {
+  transform: scale(1.07);
 }
 
 .star-vt-featured__play {
@@ -10571,6 +10602,12 @@ body.star-site .spa-gallery-lightbox__caption p {
 .star-vt-featured__play .material-symbols-outlined {
   font-size: 2.75rem;
   filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.65));
+  transition: color 0.35s ease, transform 0.35s ease;
+}
+
+.star-vt-featured__frame:hover .star-vt-featured__play .material-symbols-outlined {
+  color: #ffffff;
+  transform: scale(1.12);
 }
 
 .star-vt-featured__hint {
@@ -10601,8 +10638,18 @@ body.star-site .spa-gallery-lightbox__caption p {
   cursor: pointer;
   height: 8px;
   padding: 0;
-  transition: width 0.25s ease, background 0.25s ease;
+  transition:
+    width 0.3s ease,
+    background 0.3s ease,
+    opacity 0.3s ease,
+    transform 0.3s ease;
   width: 8px;
+}
+
+.star-vt-featured__dots button:hover {
+  background: #e31b23;
+  opacity: 0.85;
+  transform: scaleY(1.25);
 }
 
 .star-vt-featured__dots button.is-active {
@@ -10641,6 +10688,11 @@ body.star-site .star-vt-gallery__text {
   display: flex;
   flex-direction: column;
   text-align: center;
+  transition: transform 0.35s ease;
+}
+
+.star-vt-gallery__card:hover {
+  transform: translateY(-2px);
 }
 
 .star-vt-gallery__photo {
@@ -10653,7 +10705,20 @@ body.star-site .star-vt-gallery__text {
   overflow: hidden;
   padding: 0;
   position: relative;
+  transition:
+    box-shadow 0.4s ease,
+    transform 0.4s ease;
   width: 100%;
+}
+
+.star-vt-gallery__photo:hover {
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.16);
+  transform: translateY(-5px) scale(1.02);
+}
+
+.star-vt-gallery__photo:active {
+  transform: translateY(-2px) scale(1);
+  transition-duration: 0.15s;
 }
 
 .star-vt-gallery__media {
@@ -10664,12 +10729,17 @@ body.star-site .star-vt-gallery__text {
   object-fit: cover;
   object-position: center center;
   position: absolute;
+  transition: transform 0.5s ease;
   width: 100%;
+}
+
+.star-vt-gallery__photo:hover .star-vt-gallery__media {
+  transform: scale(1.08);
 }
 
 .star-vt-gallery__play {
   align-items: center;
-  background: none;
+  background: rgba(0, 0, 0, 0.15);
   color: #f7c948;
   display: flex;
   inset: 0;
@@ -10677,16 +10747,32 @@ body.star-site .star-vt-gallery__text {
   opacity: 0;
   pointer-events: none;
   position: absolute;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.35s ease, background 0.35s ease;
 }
 
 .star-vt-gallery__card:hover .star-vt-gallery__play,
 .star-vt-gallery__photo:focus-visible .star-vt-gallery__play {
+  background: rgba(0, 0, 0, 0.25);
   opacity: 1;
 }
 
 .star-vt-gallery__play .material-symbols-outlined {
   font-size: 2.5rem;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+  transition: transform 0.35s ease, color 0.35s ease;
+}
+
+.star-vt-gallery__photo:hover .star-vt-gallery__play .material-symbols-outlined {
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
+.star-vt-gallery__label strong {
+  transition: color 0.3s ease;
+}
+
+.star-vt-gallery__card:hover .star-vt-gallery__label strong {
+  color: #e31b23;
 }
 
 .star-vt-gallery__label {
@@ -10810,7 +10896,19 @@ body.star-site .star-vt-lightbox__caption p {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s ease;
   width: 52px;
+}
+
+.star-vt-lightbox__nav:hover {
+  background: #e31b23;
+  border-color: #e31b23;
+  color: #ffffff;
+  transform: translateY(-50%) scale(1.06);
 }
 
 .star-vt-lightbox__nav--prev {
@@ -10852,5 +10950,30 @@ body.star-site .star-vt-lightbox__caption p {
 
   .star-vt-featured__row {
     gap: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .star-vt-featured,
+  .star-vt-featured__arrow,
+  .star-vt-featured__frame,
+  .star-vt-featured__media,
+  .star-vt-featured__play .material-symbols-outlined,
+  .star-vt-featured__dots button,
+  .star-vt-gallery__card,
+  .star-vt-gallery__photo,
+  .star-vt-gallery__media,
+  .star-vt-gallery__play,
+  .star-vt-gallery__play .material-symbols-outlined,
+  .star-vt-gallery__label strong,
+  .star-vt-lightbox__nav {
+    transition: none;
+  }
+
+  .star-vt-featured__frame:hover,
+  .star-vt-featured__frame:hover .star-vt-featured__media,
+  .star-vt-gallery__photo:hover,
+  .star-vt-gallery__photo:hover .star-vt-gallery__media {
+    transform: none;
   }
 }
