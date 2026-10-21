@@ -5,8 +5,8 @@ import { AUTO_SLIDER_INTERVAL_MS, useAutoSliderPause } from "../lib/useAutoSlide
 
 const SLIDE_TRANSITIONS = ["fade", "slide-left", "slide-up", "zoom"];
 
-function youtubeThumbnail(videoId) {
-  return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+function youtubeThumbnail(videoId, quality = "hqdefault") {
+  return `https://img.youtube.com/vi/${videoId}/${quality}.jpg`;
 }
 
 function youtubeEmbedUrl(videoId, autoplay = false) {
@@ -21,6 +21,10 @@ function youtubeEmbedUrl(videoId, autoplay = false) {
   }
 
   return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
+}
+
+function videoAt(items, index, delta) {
+  return items[(index + delta + items.length) % items.length];
 }
 
 function VideoLightbox({ videoId, title, index, total, onClose, onPrevious, onNext }) {
@@ -116,8 +120,55 @@ function VideoLightbox({ videoId, title, index, total, onClose, onPrevious, onNe
   );
 }
 
-function FeaturedSlide({ item, index, isActive, transition, onPlay }) {
+function VideoThumb({ videoId, className, alt = "" }) {
+  return (
+    <img
+      src={youtubeThumbnail(videoId)}
+      alt={alt}
+      className={className}
+      loading="lazy"
+      onError={(event) => {
+        const target = event.currentTarget;
+        if (!target.dataset.fallback) {
+          target.dataset.fallback = "1";
+          target.src = youtubeThumbnail(videoId, "mqdefault");
+        }
+      }}
+    />
+  );
+}
+
+function VideoMosaicWall({ items, onPlay }) {
+  const slots = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+
+  return (
+    <div className="star-vt-mosaic" aria-hidden="true">
+      {slots.map((offset, slotIndex) => {
+        const item = items[offset % items.length];
+        const index = offset % items.length;
+        return (
+          <button
+            type="button"
+            key={`${item.id}-${slotIndex}`}
+            className={`star-vt-mosaic__cell star-vt-mosaic__cell--${(slotIndex % 6) + 1}`}
+            onClick={() => onPlay(index)}
+            tabIndex={-1}
+            aria-hidden="true"
+          >
+            <VideoThumb videoId={item.id} className="star-vt-mosaic__img" />
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function FeaturedSlide({ items, item, index, isActive, transition, onPlay }) {
   const layoutClass = `star-vt-slide--${item.layout}`;
+  const prev = videoAt(items, index, -1);
+  const next = videoAt(items, index, 1);
+  const prev2 = videoAt(items, index, -2);
+  const next2 = videoAt(items, index, 2);
 
   return (
     <article
@@ -125,22 +176,41 @@ function FeaturedSlide({ item, index, isActive, transition, onPlay }) {
       aria-hidden={!isActive}
     >
       <div className="star-vt-slide__glow" aria-hidden="true" />
-      <button type="button" className="star-vt-slide__main" onClick={() => onPlay(index)}>
-        <img src={youtubeThumbnail(item.id)} alt="" className="star-vt-slide__thumb" />
-        <span className="star-vt-slide__play" aria-hidden="true">
-          <span className="material-symbols-outlined">play_circle</span>
-        </span>
-        <span className="star-vt-slide__badge">Story {index + 1}</span>
-      </button>
-      <div className="star-vt-slide__photos" aria-hidden="true">
-        <img src={item.accentImage} alt="" className="star-vt-slide__photo star-vt-slide__photo--a" />
-        <img src={item.collageImage} alt="" className="star-vt-slide__photo star-vt-slide__photo--b" />
-        <img src="/assets/images/testimonial/coma.png" alt="" className="star-vt-slide__quote-deco" />
+      <div className="star-vt-slide__visual">
+        <button type="button" className="star-vt-slide__main" onClick={() => onPlay(index)}>
+          <VideoThumb videoId={item.id} className="star-vt-slide__thumb" alt={item.title} />
+          <span className="star-vt-slide__play" aria-hidden="true">
+            <span className="material-symbols-outlined">play_circle</span>
+          </span>
+          <span className="star-vt-slide__badge">Story {index + 1}</span>
+        </button>
+        <div className="star-vt-slide__photos" aria-hidden="true">
+          <VideoThumb videoId={prev.id} className="star-vt-slide__photo star-vt-slide__photo--a" />
+          <VideoThumb videoId={next.id} className="star-vt-slide__photo star-vt-slide__photo--b" />
+          <VideoThumb videoId={prev2.id} className="star-vt-slide__photo star-vt-slide__photo--c" />
+        </div>
+        {item.layout === "spotlight" && (
+          <div className="star-vt-slide__orbit" aria-hidden="true">
+            <VideoThumb videoId={next2.id} className="star-vt-slide__orbit-thumb star-vt-slide__orbit-thumb--1" />
+            <VideoThumb videoId={prev.id} className="star-vt-slide__orbit-thumb star-vt-slide__orbit-thumb--2" />
+            <VideoThumb videoId={next.id} className="star-vt-slide__orbit-thumb star-vt-slide__orbit-thumb--3" />
+            <VideoThumb videoId={prev2.id} className="star-vt-slide__orbit-thumb star-vt-slide__orbit-thumb--4" />
+          </div>
+        )}
+        {item.layout === "reel" && (
+          <div className="star-vt-slide__reel" aria-hidden="true">
+            {[prev2, prev, next].map((reelItem) => (
+              <div key={reelItem.id} className="star-vt-slide__reel-frame">
+                <VideoThumb videoId={reelItem.id} className="star-vt-slide__reel-thumb" />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       <div className="star-vt-slide__copy">
         <span className="star-vt-slide__eyebrow">Student voice</span>
         <h2>{item.title}</h2>
-        <p>Tap to watch this short testimonial on YouTube.</p>
+        <p>Short video testimonial from our YouTube channel — tap play to watch.</p>
         <span className="star-vt-slide__cta">
           <span className="material-symbols-outlined" aria-hidden="true">videocam</span>
           Play video
@@ -191,21 +261,24 @@ export default function VideoTestimonialsPage() {
 
   return (
     <>
-    <section className="star-vt-page pt---80 pb---120">
+      <section className="star-vt-page pt---80 pb---120">
         <div className="container">
           <div className="star-vt-intro text-center">
             <h2 className="spa-section-title">Testimonials</h2>
             <p className="spa-section-text">
-              Watch real student and parent video testimonials from Star Police Academy — TNUSRB SI and Police
-              Constable coaching success stories.
+              Every frame below is from your real student video testimonials on YouTube — swipe the featured
+              story, browse the film strip, or open any tile to watch.
             </p>
           </div>
+
+          <VideoMosaicWall items={videoTestimonials} onPlay={openLightbox} />
 
           <div className="star-vt-showcase" {...pauseProps}>
             <div className="star-vt-showcase__stage">
               {videoTestimonials.map((item, index) => (
                 <FeaturedSlide
                   key={item.id}
+                  items={videoTestimonials}
                   item={item}
                   index={index}
                   isActive={index === activeIndex}
@@ -249,19 +322,41 @@ export default function VideoTestimonialsPage() {
             </div>
           </div>
 
+          <div className="star-vt-filmstrip-wrap">
+            <p className="star-vt-filmstrip-label">Video reel</p>
+            <div className="star-vt-filmstrip" role="list">
+              {videoTestimonials.map((item, index) => (
+                <button
+                  type="button"
+                  key={`strip-${item.id}`}
+                  className={`star-vt-filmstrip__frame${index === activeIndex ? " is-current" : ""}`}
+                  onClick={() => {
+                    goTo(index, "fade");
+                    openLightbox(index);
+                  }}
+                  role="listitem"
+                  aria-label={`Play ${item.title}`}
+                >
+                  <VideoThumb videoId={item.id} className="star-vt-filmstrip__thumb" alt={item.title} />
+                  <span className="star-vt-filmstrip__num">{index + 1}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="star-vt-grid-head">
             <h3>All testimonials</h3>
-            <p>Click any video to play it in the popup player.</p>
+            <p>Tap any short to play — thumbnails are pulled from your YouTube videos only.</p>
           </div>
-          <div className="star-vt-grid">
+          <div className="star-vt-grid star-vt-grid--bento">
             {videoTestimonials.map((item, index) => (
               <button
                 type="button"
                 key={item.id}
-                className={`star-vt-grid__card star-vt-grid__card--${(index % 5) + 1}`}
+                className={`star-vt-grid__card star-vt-grid__card--${(index % 6) + 1}`}
                 onClick={() => openLightbox(index)}
               >
-                <img src={youtubeThumbnail(item.id)} alt={item.title} loading="lazy" />
+                <VideoThumb videoId={item.id} alt={item.title} className="star-vt-grid__thumb" />
                 <span className="star-vt-grid__overlay">
                   <span className="material-symbols-outlined" aria-hidden="true">play_circle</span>
                   <strong>{item.title}</strong>
