@@ -181,27 +181,24 @@ export default function VideoTestimonialsPage() {
               </button>
 
               <div className="star-vt-cinema__viewport">
-                <div className="star-vt-cinema__frame">
-                  <button
-                    type="button"
-                    className="star-vt-cinema__poster"
-                    aria-label={`Play ${activeItem.title}`}
-                    onClick={() => openLightbox(activeIndex)}
-                  >
-                    <img
-                      src={youtubeThumbnail(activeItem.id)}
-                      alt=""
-                      className="star-vt-cinema__image"
-                    />
-                    <span className="star-vt-cinema__shine" aria-hidden="true" />
-                    <span className="star-vt-cinema__play material-symbols-outlined" aria-hidden="true">
-                      play_circle
-                    </span>
-                    <span className="star-vt-cinema__badge">
-                      Story {activeIndex + 1} / {total}
-                    </span>
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  className="star-vt-cinema__poster"
+                  aria-label={`Play ${activeItem.title}`}
+                  onClick={() => openLightbox(activeIndex)}
+                >
+                  <img
+                    src={youtubeThumbnail(activeItem.id)}
+                    alt=""
+                    className="star-vt-cinema__image"
+                  />
+                  <span className="star-vt-cinema__play material-symbols-outlined" aria-hidden="true">
+                    play_circle
+                  </span>
+                  <span className="star-vt-cinema__badge">
+                    Story {activeIndex + 1} / {total}
+                  </span>
+                </button>
                 <p className="star-vt-cinema__title">{activeItem.title}</p>
               </div>
 
