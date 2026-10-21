@@ -47,7 +47,7 @@ const AdminDashboard = () => {
         </div>
         <div className="row spa-dashboard-stat-grid g-2 g-md-3">
           <div className="col-6 col-xl-3">
-            <div className="card">
+            <div className="card spa-stat-metric-card">
               <div className="card-body">
                 <h6 className="text-muted">My Uploads</h6>
                 <h2>{(staffStats?.uploadCount ?? 0) + (staffStats?.questionCount ?? 0)}</h2>
@@ -55,7 +55,7 @@ const AdminDashboard = () => {
             </div>
           </div>
           <div className="col-6 col-xl-3">
-            <div className="card">
+            <div className="card spa-stat-metric-card">
               <div className="card-body">
                 <h6 className="text-muted">Classes Attended</h6>
                 <h2>{staffStats?.classesAttended ?? 0}</h2>
@@ -64,7 +64,7 @@ const AdminDashboard = () => {
             </div>
           </div>
           <div className="col-6 col-xl-3">
-            <div className="card">
+            <div className="card spa-stat-metric-card">
               <div className="card-body">
                 <h6 className="text-muted">Class Attendance %</h6>
                 <h2>{formatPercent(staffStats?.classAttendancePercent)}</h2>
@@ -72,7 +72,7 @@ const AdminDashboard = () => {
             </div>
           </div>
           <div className="col-6 col-xl-3">
-            <div className="card">
+            <div className="card spa-stat-metric-card">
               <div className="card-body">
                 <h6 className="text-muted">Attendance Marked</h6>
                 <h2>{staffStats?.attendanceMarked ?? 0}</h2>
@@ -136,7 +136,7 @@ const AdminDashboard = () => {
       <PageTitle motherMenu={getPanelMotherMenu(auth?.panel)} activeMenu="Dashboard" pageContent="" />
       <div className="row spa-dashboard-stat-grid g-2 g-md-3">
         <div className="col-6 col-xl-3">
-          <div className="card">
+          <div className="card spa-stat-metric-card">
             <div className="card-body">
               <h6 className="text-muted">Total Uploads</h6>
               <h2>{stats?.totalUploads ?? 0}</h2>
@@ -144,7 +144,7 @@ const AdminDashboard = () => {
           </div>
         </div>
         <div className="col-6 col-xl-3">
-          <div className="card">
+          <div className="card spa-stat-metric-card">
             <div className="card-body">
               <h6 className="text-muted">Active Days</h6>
               <h2>{stats?.activeDays ?? 0}</h2>
@@ -152,7 +152,7 @@ const AdminDashboard = () => {
           </div>
         </div>
         <div className="col-6 col-xl-3">
-          <div className="card">
+          <div className="card spa-stat-metric-card">
             <div className="card-body">
               <h6 className="text-muted">Student Messages</h6>
               <h2>{stats?.studentMessages ?? 0}</h2>
@@ -160,7 +160,7 @@ const AdminDashboard = () => {
           </div>
         </div>
         <div className="col-6 col-xl-3">
-          <div className="card">
+          <div className="card spa-stat-metric-card">
             <div className="card-body">
               <h6 className="text-muted">Admin Replies</h6>
               <h2>{stats?.adminReplies ?? 0}</h2>

@@ -31,7 +31,7 @@ const StudentDashboard = () => {
       <PageTitle motherMenu="Student Panel" activeMenu="Dashboard" pageContent="" />
       <div className="row spa-student-stat-grid g-2 g-md-3">
         <div className="col-6 col-xl-3">
-          <div className="card">
+          <div className="card spa-stat-metric-card">
             <div className="card-body">
               <h6 className="text-muted">Available Materials</h6>
               <h2>{stats?.materialCount ?? 0}</h2>
@@ -39,7 +39,7 @@ const StudentDashboard = () => {
           </div>
         </div>
         <div className="col-6 col-xl-3">
-          <div className="card">
+          <div className="card spa-stat-metric-card">
             <div className="card-body">
               <h6 className="text-muted">Study Days</h6>
               <h2>{stats?.studyDays ?? 0}</h2>
@@ -47,7 +47,7 @@ const StudentDashboard = () => {
           </div>
         </div>
         <div className="col-6 col-xl-3">
-          <div className="card">
+          <div className="card spa-stat-metric-card">
             <div className="card-body">
               <h6 className="text-muted">Admin Messages</h6>
               <h2>{stats?.adminMessages ?? 0}</h2>
@@ -55,7 +55,7 @@ const StudentDashboard = () => {
           </div>
         </div>
         <div className="col-6 col-xl-3">
-          <div className="card">
+          <div className="card spa-stat-metric-card">
             <div className="card-body">
               <h6 className="text-muted">Overall Physical Performance</h6>
               <span className={`badge ${overallPerformanceBadgeClass(performance?.overallPerformance || "")}`}>

@@ -7,7 +7,16 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/panel/favicon-32.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/panel/favicon-180.png" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
+  <script>
+    (function () {
+      var w = window.innerWidth || document.documentElement.clientWidth;
+      if (w <= 1023) {
+        document.documentElement.setAttribute("data-spa-mobile", "1");
+        document.body.setAttribute("data-sidebar-style", "overlay");
+      }
+    })();
+  </script>
   <meta name="theme-color" content="#146b4a" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />

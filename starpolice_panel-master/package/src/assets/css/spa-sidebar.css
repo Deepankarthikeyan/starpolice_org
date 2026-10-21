@@ -631,6 +631,22 @@ body[data-sidebar-style="overlay"] #main-wrapper:has(.spa-sidebar) .header {
     padding-left: 1rem;
     padding-right: 1rem;
   }
+
+  #main-wrapper[class*="spa-panel-"]:has(.spa-sidebar) .content-body,
+  #main-wrapper[class*="spa-panel-"]:has(.spa-sidebar).menu-toggle .content-body {
+    margin-left: 0 !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"]:has(.spa-sidebar) .header,
+  #main-wrapper[class*="spa-panel-"]:has(.spa-sidebar).menu-toggle .header {
+    left: 0 !important;
+    width: 100% !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"]:has(.spa-sidebar) .footer,
+  #main-wrapper[class*="spa-panel-"]:has(.spa-sidebar) .footer.footer-outer {
+    padding-left: 0 !important;
+  }
 }
 
 @media only screen and (max-width: 87.5rem) {

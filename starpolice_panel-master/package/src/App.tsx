@@ -78,8 +78,10 @@ function App() {
 
   useEffect(() => {
     function resizeHandler() {
-      const nextStyle = window.innerWidth <= 1023 ? "overlay" : "full";
+      const isMobile = window.innerWidth <= 1023;
+      const nextStyle = isMobile ? "overlay" : "full";
       const prevStyle = document.body.getAttribute("data-sidebar-style");
+      document.documentElement.toggleAttribute("data-spa-mobile", isMobile);
       document.body.setAttribute("data-sidebar-style", nextStyle);
       if (nextStyle === "overlay" && prevStyle !== "overlay") {
         setOpenMenuToggle(false);

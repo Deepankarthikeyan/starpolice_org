@@ -209,12 +209,75 @@
   font-size: 1.05rem;
 }
 
-/* Dashboard stat cards — 2×2 grid on tablet/phone (two rows of two) */
+/* Dashboard stat cards — 2×2 square grid on tablet/phone */
 @media only screen and (max-width: 63.9375rem) {
+  #main-wrapper[class*="spa-panel-"] .spa-dashboard-stat-grid,
+  #main-wrapper[class*="spa-panel-"] .spa-student-stat-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+    --bs-gutter-x: 0;
+    --bs-gutter-y: 0;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
   #main-wrapper[class*="spa-panel-"] .spa-dashboard-stat-grid > [class*="col-"],
   #main-wrapper[class*="spa-panel-"] .spa-student-stat-grid > [class*="col-"] {
-    flex: 0 0 50% !important;
-    max-width: 50% !important;
+    flex: none !important;
+    width: 100% !important;
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-stat-metric-card {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-stat-metric-card .card-body {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 0;
+    padding: 0.5rem 0.4rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-stat-metric-card .card-body h6 {
+    font-size: 0.58rem;
+    line-height: 1.15;
+    margin-bottom: 0.2rem;
+    font-weight: 600;
+    word-break: break-word;
+    hyphens: auto;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-stat-metric-card .card-body h2 {
+    font-size: clamp(1rem, 5.5vw, 1.25rem);
+    margin-bottom: 0;
+    line-height: 1.1;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-stat-metric-card .card-body small {
+    font-size: 0.58rem;
+    line-height: 1.15;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-stat-metric-card .badge {
+    font-size: 0.62rem;
+    padding: 0.25rem 0.4rem;
+    max-width: 100%;
+    white-space: normal;
+    line-height: 1.2;
   }
 }
 
@@ -366,11 +429,14 @@
     font-size: 0.875rem;
   }
 
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content .row:not(.spa-dashboard-stat-grid):not(.spa-student-stat-grid) > [class*="col-md-"],
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content .row:not(.spa-dashboard-stat-grid):not(.spa-student-stat-grid) > [class*="col-lg-"],
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content .row:not(.spa-dashboard-stat-grid):not(.spa-student-stat-grid) > [class*="col-xl-"]:not([class*="col-6"]) {
-    flex: 0 0 100%;
-    max-width: 100%;
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .row:not(.spa-dashboard-stat-grid):not(.spa-student-stat-grid) > [class*="col-"] {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .spa-leads-filters .row > [class*="col-"] {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
   }
 
   #main-wrapper[class*="spa-panel-"] .spa-panel-content .text-muted,
@@ -549,5 +615,66 @@
 @media only screen and (max-width: 47.9375rem) {
   #main-wrapper.spa-panel-student .spa-panel-content {
     padding-bottom: 0.5rem;
+  }
+}
+
+/* True mobile viewport — full-width content (no desktop sidebar offset) */
+@media only screen and (max-width: 63.9375rem) {
+  html[data-spa-mobile],
+  html[data-spa-mobile] body {
+    width: 100%;
+    overflow-x: clip;
+  }
+
+  html[data-spa-mobile] #main-wrapper[class*="spa-panel-"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: clip;
+  }
+
+  html[data-spa-mobile] #main-wrapper[class*="spa-panel-"] .content-body,
+  html[data-spa-mobile] #main-wrapper[class*="spa-panel-"]:has(.spa-sidebar) .content-body,
+  html[data-spa-mobile] #main-wrapper[class*="spa-panel-"]:has(.spa-sidebar).menu-toggle .content-body,
+  html[data-spa-mobile] [data-sidebar-style="full"] #main-wrapper[class*="spa-panel-"]:has(.spa-sidebar) .content-body,
+  html[data-spa-mobile] [data-sidebar-style="mini"] #main-wrapper[class*="spa-panel-"]:has(.spa-sidebar) .content-body,
+  html[data-spa-mobile] [data-sidebar-style="full"] #main-wrapper[class*="spa-panel-"]:has(.spa-sidebar).menu-toggle .content-body,
+  html[data-spa-mobile] [data-sidebar-style="mini"] #main-wrapper[class*="spa-panel-"]:has(.spa-sidebar).menu-toggle .content-body {
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  html[data-spa-mobile] #main-wrapper[class*="spa-panel-"] .header,
+  html[data-spa-mobile] #main-wrapper[class*="spa-panel-"]:has(.spa-sidebar) .header,
+  html[data-spa-mobile] [data-sidebar-style="full"] #main-wrapper[class*="spa-panel-"]:has(.spa-sidebar) .header,
+  html[data-spa-mobile] [data-sidebar-style="mini"] #main-wrapper[class*="spa-panel-"]:has(.spa-sidebar) .header {
+    left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  html[data-spa-mobile] #main-wrapper[class*="spa-panel-"] .footer,
+  html[data-spa-mobile] #main-wrapper[class*="spa-panel-"] .footer.footer-outer {
+    padding-left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  html[data-spa-mobile] #main-wrapper[class*="spa-panel-"] .content-body .container-fluid,
+  html[data-spa-mobile] #main-wrapper[class*="spa-panel-"] .spa-panel-content {
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  html[data-spa-mobile] #main-wrapper[class*="spa-panel-"] .content-body .container-fluid {
+    padding-top: 1rem !important;
+    padding-left: 0.85rem !important;
+    padding-right: 0.85rem !important;
+  }
+
+  html[data-spa-mobile] #main-wrapper[class*="spa-panel-"] .card {
+    max-width: 100%;
   }
 }
