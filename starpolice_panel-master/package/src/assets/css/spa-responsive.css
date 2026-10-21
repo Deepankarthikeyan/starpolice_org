@@ -268,13 +268,6 @@ iframe {
     left: calc(0.75rem + env(safe-area-inset-left, 0px)) !important;
   }
 
-  /* Header — keep notifications + profile only */
-  .header-right .dz-theme-mode,
-  .header-right .dz-fullscreen,
-  .header-right .bell-link {
-    display: none !important;
-  }
-
   .header-right .navbar-nav,
   .header-right {
     gap: 0;

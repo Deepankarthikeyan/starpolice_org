@@ -140,7 +140,7 @@ const Header = ({ onNote }: propType) => {
                   : finalName.join(" ")}
               </div>
             </div>
-            <ul className="navbar-nav header-right">
+            <ul className="navbar-nav header-right spa-header-actions">
               <li className="nav-item dropdown notification_dropdown">
                 <Link
                   to={"#"}

@@ -1,5 +1,82 @@
 /* Star Police Academy — mobile layout for all panel pages (admin / staff / student) */
 
+/* Top header — same actions as desktop on mobile (theme, fullscreen, notes, alerts, profile) */
+@media only screen and (max-width: 47.9375rem) {
+  #main-wrapper[class*="spa-panel-"] .spa-header .navbar-collapse {
+    display: flex !important;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.35rem;
+    min-width: 0;
+    width: 100%;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-header .header-left {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-header .spa-header-actions {
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 52vw;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-header .spa-header-actions::-webkit-scrollbar {
+    display: none;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-header .spa-header-actions > .nav-item,
+  #main-wrapper[class*="spa-panel-"] .spa-header .spa-header-actions > li {
+    flex-shrink: 0;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-header .spa-header-actions .nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.25rem;
+    min-height: 2.25rem;
+    padding: 0.35rem !important;
+    margin-right: 0 !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-header .spa-header-actions .nav-link svg {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-header .header-profile2 img {
+    width: 2rem;
+    height: 2rem;
+    margin-left: 0;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-header .header-profile2 .nav-link {
+    min-width: 2.25rem;
+    padding: 0.25rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-header .notification_dropdown .badge {
+    font-size: 0.625rem;
+    min-width: 1rem;
+    height: 1rem;
+    line-height: 1rem;
+    padding: 0 0.2rem;
+  }
+}
+
 /* Profile — slides in from the right (same idea as the left nav sidebar) */
 .spa-profile-backdrop {
   position: fixed;
