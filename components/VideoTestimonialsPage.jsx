@@ -188,43 +188,41 @@ export default function VideoTestimonialsPage() {
               <span className="star-vt-featured__role">{active.title}</span>
             </div>
 
-            <div className="star-vt-featured__stage">
-              <div className="star-vt-featured__stage-row">
-                <button
-                  type="button"
-                  className="star-vt-featured__arrow star-vt-featured__arrow--prev"
-                  aria-label="Previous testimonial"
-                  onClick={showPrevious}
-                >
-                  ‹
-                </button>
+            <div className="star-vt-featured__row">
+              <button
+                type="button"
+                className="star-vt-featured__arrow star-vt-featured__arrow--prev"
+                aria-label="Previous testimonial"
+                onClick={showPrevious}
+              >
+                ‹
+              </button>
 
-                <button
-                  type="button"
-                  className="star-vt-featured__frame"
-                  onClick={() => openLightbox(activeIndex)}
-                  aria-label={`Play ${active.title}`}
-                >
-                  <VideoThumb videoId={active.id} className="star-vt-featured__thumb" alt={active.title} />
-                  <span className="star-vt-featured__play" aria-hidden="true">
-                    <span className="material-symbols-outlined">play_circle</span>
-                  </span>
-                </button>
+              <button
+                type="button"
+                className="star-vt-featured__frame"
+                onClick={() => openLightbox(activeIndex)}
+                aria-label={`Play ${active.title}`}
+              >
+                <VideoThumb videoId={active.id} className="star-vt-featured__thumb" alt={active.title} />
+                <span className="star-vt-featured__play" aria-hidden="true">
+                  <span className="material-symbols-outlined">play_circle</span>
+                </span>
+              </button>
 
-                <button
-                  type="button"
-                  className="star-vt-featured__arrow star-vt-featured__arrow--next"
-                  aria-label="Next testimonial"
-                  onClick={showNext}
-                >
-                  ›
-                </button>
-              </div>
-
-              <p className="star-vt-featured__hint">
-                Story <strong>{activeIndex + 1}</strong> of <strong>{total}</strong> — tap play to watch full screen
-              </p>
+              <button
+                type="button"
+                className="star-vt-featured__arrow star-vt-featured__arrow--next"
+                aria-label="Next testimonial"
+                onClick={showNext}
+              >
+                ›
+              </button>
             </div>
+
+            <p className="star-vt-featured__hint">
+              Story <strong>{activeIndex + 1}</strong> of <strong>{total}</strong> — tap play to watch full screen
+            </p>
 
             <div className="star-vt-featured__dots" role="tablist" aria-label="Choose featured testimonial">
               {videoTestimonials.map((item, index) => (
