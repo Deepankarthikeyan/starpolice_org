@@ -40,7 +40,7 @@ const SideBar = ({ basePath = "/admin", panel = "admin" }: SideBarProps) => {
 
     function handleLayoutChange() {
       const style = document.body.getAttribute("data-sidebar-style");
-      if (lastStyle === "overlay" && (style === "full" || style === "mini")) {
+      if (style === "overlay" || (lastStyle === "overlay" && (style === "full" || style === "mini"))) {
         setOpenMenuToggle(false);
       }
       lastStyle = style;
@@ -62,7 +62,8 @@ const SideBar = ({ basePath = "/admin", panel = "admin" }: SideBarProps) => {
 
   useEffect(() => {
     const updateSidebarStyle = () => {
-      setSidebarStyle(document.body.getAttribute("data-sidebar-style") || "full");
+      const style = document.body.getAttribute("data-sidebar-style") || "full";
+      setSidebarStyle(style);
     };
     window.addEventListener("resize", updateSidebarStyle);
     updateSidebarStyle();
@@ -122,16 +123,27 @@ const SideBar = ({ basePath = "/admin", panel = "admin" }: SideBarProps) => {
         <div className="spa-sidebar-inner">
           <div className="spa-sidebar-header">
             <span className="spa-sidebar-panel">{panelLabel(panel)}</span>
-            <button
-              type="button"
-              className="spa-sidebar-collapse"
-              aria-label="Toggle sidebar"
-              onClick={() => setOpenMenuToggle(!openMenuToggle)}
-            >
-              <i className="material-symbols-outlined">
-                {openMenuToggle ? "chevron_right" : "chevron_left"}
-              </i>
-            </button>
+            {isOverlay ? (
+              <button
+                type="button"
+                className="spa-sidebar-mobile-close"
+                aria-label="Close navigation menu"
+                onClick={() => setOpenMenuToggle(false)}
+              >
+                <i className="material-symbols-outlined">close</i>
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="spa-sidebar-collapse"
+                aria-label="Toggle sidebar"
+                onClick={() => setOpenMenuToggle(!openMenuToggle)}
+              >
+                <i className="material-symbols-outlined">
+                  {openMenuToggle ? "chevron_right" : "chevron_left"}
+                </i>
+              </button>
+            )}
           </div>
 
           <div className="spa-sidebar-meta">

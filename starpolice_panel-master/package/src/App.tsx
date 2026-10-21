@@ -63,7 +63,7 @@ function Preloader() {
 }
 
 function App() {
-  const { auth, setAuth } = useContext(ThemeContext);
+  const { auth, setAuth, setOpenMenuToggle } = useContext(ThemeContext);
 
   useEffect(() => {
     validateStoredSession().then((user) => {
@@ -78,10 +78,11 @@ function App() {
 
   useEffect(() => {
     function resizeHandler() {
-      if (window.innerWidth <= 1023) {
-        document.body.setAttribute("data-sidebar-style", "overlay");
-      } else {
-        document.body.setAttribute("data-sidebar-style", "full");
+      const nextStyle = window.innerWidth <= 1023 ? "overlay" : "full";
+      const prevStyle = document.body.getAttribute("data-sidebar-style");
+      document.body.setAttribute("data-sidebar-style", nextStyle);
+      if (nextStyle === "overlay" && prevStyle !== "overlay") {
+        setOpenMenuToggle(false);
       }
     }
 
@@ -92,7 +93,7 @@ function App() {
       window.removeEventListener("resize", resizeHandler);
       window.removeEventListener("orientationchange", resizeHandler);
     };
-  }, []);
+  }, [setOpenMenuToggle]);
 
   const setPanelAuth = (user: AuthUser) => setAuth(user);
 

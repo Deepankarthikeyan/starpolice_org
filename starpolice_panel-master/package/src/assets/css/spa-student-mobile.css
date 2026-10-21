@@ -1,7 +1,7 @@
 /* Student panel — mobile app–style layout (bottom nav, safe areas, touch-friendly) */
 
 @media only screen and (max-width: 47.9375rem) {
-  #main-wrapper.spa-panel-student .spa-student-bottom-nav {
+  #main-wrapper.spa-panel-student:not(.menu-toggle) .spa-student-bottom-nav {
     display: flex;
   }
 

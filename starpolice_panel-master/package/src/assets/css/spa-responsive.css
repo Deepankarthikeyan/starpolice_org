@@ -142,6 +142,22 @@ iframe {
     transform: translateX(0);
   }
 
+  [data-sidebar-style="overlay"] #main-wrapper:has(.spa-sidebar) .header,
+  [data-sidebar-style="overlay"] #main-wrapper:has(.spa-sidebar).menu-toggle .header {
+    left: 0 !important;
+    width: 100% !important;
+    padding-left: 0 !important;
+  }
+
+  [data-sidebar-style="overlay"] #main-wrapper:has(.spa-sidebar) .content-body,
+  [data-sidebar-style="overlay"] #main-wrapper:has(.spa-sidebar).menu-toggle .content-body {
+    margin-left: 0 !important;
+  }
+
+  #main-wrapper.spa-panel-student.menu-toggle .spa-student-bottom-nav {
+    display: none !important;
+  }
+
   .spa-auth-page .min-vh-100 {
     min-height: 100dvh;
   }

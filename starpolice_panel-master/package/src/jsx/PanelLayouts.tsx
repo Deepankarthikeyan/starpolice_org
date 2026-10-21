@@ -13,7 +13,10 @@ export function AdminLayout() {
   }
 
   return (
-    <div id="main-wrapper" className={`show ${openMenuToggle ? "menu-toggle" : ""}`}>
+    <div
+      id="main-wrapper"
+      className={`show spa-panel-admin ${openMenuToggle ? "menu-toggle" : ""}`}
+    >
       <Nav basePath="/admin" panel="admin" />
       <div className="content-body spa-content-body">
         <div className="container-fluid">
@@ -33,7 +36,10 @@ export function StaffLayout() {
   }
 
   return (
-    <div id="main-wrapper" className={`show ${openMenuToggle ? "menu-toggle" : ""}`}>
+    <div
+      id="main-wrapper"
+      className={`show spa-panel-staff ${openMenuToggle ? "menu-toggle" : ""}`}
+    >
       <Nav basePath="/staff" panel="staff" />
       <div className="content-body spa-content-body">
         <div className="container-fluid">
