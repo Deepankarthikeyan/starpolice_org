@@ -92,18 +92,12 @@ export default function VideoTestimonialsPage() {
                     alt=""
                     className="star-vt-spotlight__thumb"
                   />
+                  <span className="star-vt-spotlight__index">{activeIndex + 1}</span>
                   <span className="star-vt-spotlight__play" aria-hidden="true">
                     <span className="material-symbols-outlined">play_circle</span>
                   </span>
                 </button>
               )}
-
-              <div className="star-vt-spotlight__meta">
-                <span className="star-vt-spotlight__quote" aria-hidden="true">“</span>
-                <span className="star-vt-spotlight__badge">Story {activeIndex + 1} of {total}</span>
-                <h2>{activeItem.title}</h2>
-                <p>Real feedback from Star Police Academy students and families.</p>
-              </div>
             </div>
           </div>
 

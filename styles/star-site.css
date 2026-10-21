@@ -10471,8 +10471,9 @@ body.star-site .spa-gallery-lightbox__caption p {
 
 .star-vt-spotlight__shell {
   margin: 0 auto;
-  max-width: 920px;
+  max-width: min(360px, 100%);
   position: relative;
+  width: 100%;
 }
 
 .star-vt-spotlight__accent {
@@ -10495,7 +10496,7 @@ body.star-site .spa-gallery-lightbox__caption p {
 
 .star-vt-spotlight__poster,
 .star-vt-spotlight__player {
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 9 / 16;
   border: 0;
   display: block;
   margin: 0;
@@ -10560,52 +10561,17 @@ body.star-site .spa-gallery-lightbox__caption p {
   z-index: 3;
 }
 
-.star-vt-spotlight__meta {
-  background: linear-gradient(180deg, transparent 0%, rgba(15, 34, 57, 0.92) 100%);
-  bottom: 0;
-  color: #ffffff;
-  left: 0;
-  padding: 48px 22px 22px;
-  pointer-events: none;
-  position: absolute;
-  right: 0;
-  z-index: 2;
-}
-
-.star-vt-spotlight__quote {
-  color: #f7c948;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(2.5rem, 6vw, 3.5rem);
-  line-height: 1;
-  opacity: 0.9;
-  position: absolute;
-  right: 20px;
-  top: -8px;
-}
-
-.star-vt-spotlight__badge {
-  background: linear-gradient(135deg, #cc0000, #990000);
+.star-vt-spotlight__index {
+  background: rgba(15, 34, 57, 0.82);
   border-radius: 999px;
-  display: inline-block;
+  color: #ffffff;
   font-size: 11px;
   font-weight: 800;
-  letter-spacing: 0.08em;
-  margin-bottom: 10px;
-  padding: 6px 12px;
-  text-transform: uppercase;
-}
-
-.star-vt-spotlight__meta h2 {
-  color: #ffffff;
-  font-size: clamp(1.2rem, 2.5vw, 1.65rem);
-  margin: 0 0 6px;
-}
-
-body.star-site .star-vt-spotlight__meta p {
-  color: rgba(255, 255, 255, 0.88);
-  font-size: 14px;
-  margin: 0;
-  max-width: 520px;
+  left: 12px;
+  padding: 4px 10px;
+  position: absolute;
+  top: 12px;
+  z-index: 2;
 }
 
 .star-vt-spotlight__nav {
@@ -10731,8 +10697,8 @@ body.star-site .star-vt-strip-head p {
 /* legacy vt slideshow/grid/lightbox removed — spotlight + strip only */
 
 @media (max-width: 575px) {
-  .star-vt-spotlight__meta {
-    padding: 36px 14px 14px;
+  .star-vt-spotlight__shell {
+    max-width: min(300px, 88vw);
   }
 
   .star-vt-strip__item {
