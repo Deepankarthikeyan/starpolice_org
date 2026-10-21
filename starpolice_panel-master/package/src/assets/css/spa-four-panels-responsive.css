@@ -166,9 +166,9 @@
   #main-wrapper[class*="spa-panel-"] .spa-panel-content form > .btn:not(.btn-sm),
   #main-wrapper[class*="spa-panel-"] .spa-panel-content .btn-primary:not(.btn-sm),
   #main-wrapper[class*="spa-panel-"] .spa-panel-content .btn-outline-primary:not(.btn-sm) {
-    min-height: 2.75rem;
-    padding-top: 0.45rem;
-    padding-bottom: 0.45rem;
+    min-height: 2.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
   }
 
   #main-wrapper[class*="spa-panel-"] .spa-student-bottom-nav .spa-student-bottom-nav-link {
@@ -188,8 +188,8 @@
     max-width: 100% !important;
     width: 100% !important;
     flex: 1 1 100% !important;
-    min-height: 2.125rem;
-    padding: 0.35rem 0.55rem;
+    min-height: 2.5rem;
+    padding: 0.5rem 0.75rem;
     gap: 0.4rem;
     border-radius: 0.5rem;
   }
@@ -225,8 +225,8 @@
   }
 
   #main-wrapper[class*="spa-panel-"] .spa-performance-sort-trigger {
-    min-height: 2.125rem;
-    padding: 0.35rem 0.55rem;
+    min-height: 2.5rem;
+    padding: 0.5rem 0.75rem;
     gap: 0.45rem;
     border-radius: 0.5rem;
   }
@@ -283,8 +283,8 @@
   #main-wrapper[class*="spa-panel-"] input[type="text"]:not(.spa-performance-search-input) {
     font-size: 16px !important;
     line-height: 1.35 !important;
-    min-height: 2.125rem !important;
-    padding: 0.4rem 0.65rem !important;
+    min-height: 2.5rem !important;
+    padding: 0.5rem 0.75rem !important;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
@@ -293,16 +293,16 @@
   #main-wrapper[class*="spa-panel-"] .spa-panel-content .form-control-sm,
   #main-wrapper[class*="spa-panel-"] .spa-panel-content select.form-control-sm {
     font-size: 13px !important;
-    min-height: 1.95rem !important;
-    padding: 0.3rem 0.5rem !important;
+    min-height: 2.25rem !important;
+    padding: 0.4rem 0.65rem !important;
   }
 
   #main-wrapper[class*="spa-panel-"] .spa-leads-filters .form-control,
   #main-wrapper[class*="spa-panel-"] .spa-leads-filters .form-select,
   #main-wrapper[class*="spa-panel-"] .spa-leads-filters input[type="date"] {
     font-size: 16px !important;
-    min-height: 2.125rem !important;
-    padding: 0.4rem 0.55rem !important;
+    min-height: 2.5rem !important;
+    padding: 0.5rem 0.75rem !important;
   }
 
   #main-wrapper[class*="spa-panel-"] .spa-leads-filters .spa-list-filter-label {

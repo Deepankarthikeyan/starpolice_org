@@ -24,7 +24,21 @@
     --spa-m-field: 1rem;
     --spa-m-field-h: 2.5rem;
     --spa-m-btn: 0.875rem;
+    --spa-m-btn-h: 2.5rem;
+    --spa-m-btn-sm-h: 2.25rem;
     --spa-m-table: 0.8125rem;
+  }
+}
+
+/* Tablet: same field + button scale as phone (only inside panels) */
+@media only screen and (max-width: 63.9375rem) {
+  #main-wrapper[class*="spa-panel-"] .spa-performance-search-field {
+    min-height: var(--spa-m-field-h) !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-performance-sort-trigger {
+    min-height: var(--spa-m-field-h) !important;
   }
 }
 
@@ -107,17 +121,57 @@
     font-size: var(--spa-m-caption) !important;
   }
 
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content .btn {
-    font-size: var(--spa-m-btn);
-    line-height: 1.35;
+  /* —— Buttons: same visual size as inputs (2.5rem, 14px text) —— */
+  #main-wrapper[class*="spa-panel-"] .btn:not(.btn-sm):not(.btn-link):not(.btn-close):not(.nav-link):not(.page-link):not(.spa-sidebar-link):not(.spa-student-bottom-nav-link):not(.spa-password-toggle):not(.spa-messenger-back):not(.dropdown-item),
+  #main-wrapper[class*="spa-panel-"] button.btn:not(.btn-sm):not(.btn-link):not(.btn-close),
+  #main-wrapper[class*="spa-panel-"] a.btn:not(.btn-sm):not(.btn-link),
+  body:has(#main-wrapper[class*="spa-panel-"]) .modal .btn:not(.btn-sm):not(.btn-link):not(.btn-close),
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .input-group > .btn,
+  #main-wrapper[class*="spa-panel-"] .spa-interaction-send,
+  #main-wrapper[class*="spa-panel-"] .spa-messenger-compose .btn,
+  #main-wrapper[class*="spa-panel-"] .fc .fc-button {
+    font-size: var(--spa-m-btn) !important;
+    line-height: 1.35 !important;
+    min-height: var(--spa-m-btn-h) !important;
+    padding: 0.5rem 0.85rem !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
   }
 
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content .btn-sm {
-    font-size: var(--spa-m-caption);
+  #main-wrapper[class*="spa-panel-"] .btn-sm,
+  #main-wrapper[class*="spa-panel-"] .input-group > .btn-sm,
+  body:has(#main-wrapper[class*="spa-panel-"]) .modal .btn-sm,
+  #main-wrapper[class*="spa-panel-"] .table .btn-sm {
+    font-size: var(--spa-m-caption) !important;
+    min-height: var(--spa-m-btn-sm-h) !important;
+    padding: 0.4rem 0.65rem !important;
+    line-height: 1.35 !important;
   }
 
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content .btn-lg {
+  #main-wrapper[class*="spa-panel-"] .btn-lg {
     font-size: var(--spa-m-body) !important;
+    min-height: var(--spa-m-btn-h) !important;
+    padding: 0.5rem 0.85rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .pagination .page-link {
+    font-size: var(--spa-m-btn) !important;
+    min-height: var(--spa-m-btn-h) !important;
+    min-width: var(--spa-m-btn-h) !important;
+    padding: 0.45rem 0.65rem !important;
+    line-height: 1.35 !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-subject-multiselect-btn,
+  #main-wrapper[class*="spa-panel-"] .dropdown-toggle.btn {
+    font-size: var(--spa-m-field) !important;
+    min-height: var(--spa-m-field-h) !important;
+    padding: 0.5rem 0.75rem !important;
   }
 
   #main-wrapper[class*="spa-panel-"] .spa-panel-content .table th,
@@ -137,10 +191,14 @@
   }
 
   #main-wrapper[class*="spa-panel-"] .spa-panel-content .input-group-text {
-    font-size: var(--spa-m-label);
+    font-size: var(--spa-m-label) !important;
+    min-height: var(--spa-m-field-h) !important;
+    padding: 0.5rem 0.65rem !important;
+    display: inline-flex;
+    align-items: center;
   }
 
-  /* One size for all text inputs, selects, dates (iOS-friendly 16px) */
+  /* —— Inputs: one height + font (16px) everywhere —— */
   #main-wrapper[class*="spa-panel-"] .spa-panel-content .form-control,
   #main-wrapper[class*="spa-panel-"] .spa-panel-content .form-select,
   #main-wrapper[class*="spa-panel-"] .spa-panel-content textarea.form-control,
@@ -148,6 +206,7 @@
   #main-wrapper[class*="spa-panel-"] .spa-panel-content .spa-interaction-filter-select-input,
   #main-wrapper[class*="spa-panel-"] input.form-control,
   #main-wrapper[class*="spa-panel-"] select.form-control,
+  #main-wrapper[class*="spa-panel-"] select.form-select,
   #main-wrapper[class*="spa-panel-"] input[type="date"],
   #main-wrapper[class*="spa-panel-"] input[type="datetime-local"],
   #main-wrapper[class*="spa-panel-"] input[type="time"],
@@ -155,34 +214,67 @@
   #main-wrapper[class*="spa-panel-"] input[type="email"],
   #main-wrapper[class*="spa-panel-"] input[type="tel"],
   #main-wrapper[class*="spa-panel-"] input[type="number"],
+  #main-wrapper[class*="spa-panel-"] input[type="password"],
+  #main-wrapper[class*="spa-panel-"] input[type="url"],
+  #main-wrapper[class*="spa-panel-"] input[type="month"],
+  #main-wrapper[class*="spa-panel-"] input[type="week"],
+  #main-wrapper[class*="spa-panel-"] input[type="file"],
   #main-wrapper[class*="spa-panel-"] input[type="text"]:not(.spa-performance-search-input),
+  #main-wrapper[class*="spa-panel-"] .react-datepicker-wrapper input,
   #main-wrapper[class*="spa-panel-"] .react-datepicker__input-container input,
   #main-wrapper[class*="spa-panel-"] .react-datepicker__input-container .form-control,
   #main-wrapper[class*="spa-panel-"] .spa-performance-search-input,
   #main-wrapper[class*="spa-panel-"] .spa-toolbar-search,
   #main-wrapper[class*="spa-panel-"] .spa-messenger-search .form-control,
   #main-wrapper[class*="spa-panel-"] .spa-onboarding-search .form-control,
+  #main-wrapper[class*="spa-panel-"] .spa-leads-filters .form-control,
+  #main-wrapper[class*="spa-panel-"] .spa-leads-filters .form-select,
+  #main-wrapper[class*="spa-panel-"] .spa-leads-filters input[type="date"],
+  #main-wrapper[class*="spa-panel-"] .spa-interaction-history-controls .form-control,
+  #main-wrapper[class*="spa-panel-"] .spa-interaction-history-controls input[type="date"],
+  #main-wrapper[class*="spa-panel-"] .spa-messenger-audience .spa-interaction-filter-select-input,
   body:has(#main-wrapper[class*="spa-panel-"]) .modal .form-control,
   body:has(#main-wrapper[class*="spa-panel-"]) .modal .form-select,
   body:has(#main-wrapper[class*="spa-panel-"]) .modal textarea.form-control,
-  body:has(#main-wrapper[class*="spa-panel-"]) .modal input[type="date"] {
+  body:has(#main-wrapper[class*="spa-panel-"]) .modal input[type="date"],
+  body:has(#main-wrapper[class*="spa-panel-"]) .modal input[type="text"],
+  body:has(#main-wrapper[class*="spa-panel-"]) .modal input[type="email"],
+  body:has(#main-wrapper[class*="spa-panel-"]) .modal input[type="tel"],
+  body:has(#main-wrapper[class*="spa-panel-"]) .modal input[type="password"] {
     font-size: var(--spa-m-field) !important;
     line-height: 1.35 !important;
     min-height: var(--spa-m-field-h) !important;
     padding: 0.5rem 0.75rem !important;
     box-sizing: border-box;
+    border-radius: 0.375rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content textarea.form-control,
+  #main-wrapper[class*="spa-panel-"] textarea.form-control,
+  body:has(#main-wrapper[class*="spa-panel-"]) .modal textarea.form-control {
+    min-height: 5.5rem !important;
+    padding-top: 0.55rem !important;
+    padding-bottom: 0.55rem !important;
   }
 
   #main-wrapper[class*="spa-panel-"] .spa-panel-content .form-control-sm,
-  #main-wrapper[class*="spa-panel-"] .spa-panel-content .form-select-sm {
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .form-select-sm,
+  #main-wrapper[class*="spa-panel-"] select.form-control-sm {
     font-size: var(--spa-m-body-sm) !important;
-    min-height: 2.25rem !important;
+    min-height: var(--spa-m-btn-sm-h) !important;
     padding: 0.4rem 0.65rem !important;
   }
 
   #main-wrapper[class*="spa-panel-"] .spa-performance-search-field {
-    min-height: var(--spa-m-field-h);
-    padding: 0.45rem 0.65rem;
+    min-height: var(--spa-m-field-h) !important;
+    padding: 0.5rem 0.75rem !important;
+    align-items: center;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-performance-search-input {
+    font-size: var(--spa-m-field) !important;
+    min-height: auto !important;
+    padding: 0 !important;
   }
 
   #main-wrapper[class*="spa-panel-"] .spa-performance-search-input::placeholder {
@@ -348,5 +440,46 @@
     flex: 1 1 auto;
     text-align: right !important;
     min-width: 0;
+  }
+}
+
+/* Login / auth screens (outside main-wrapper) — match panel field + button scale */
+@media only screen and (max-width: 63.9375rem) {
+  .spa-auth-page {
+    --spa-m-field: 1rem;
+    --spa-m-field-h: 2.5rem;
+    --spa-m-btn: 0.875rem;
+    --spa-m-btn-h: 2.5rem;
+  }
+
+  .spa-auth-page .spa-auth-input,
+  .spa-auth-page .form-control,
+  .spa-auth-page .form-select,
+  .spa-auth-page input[type="email"],
+  .spa-auth-page input[type="password"],
+  .spa-auth-page input[type="text"] {
+    font-size: var(--spa-m-field) !important;
+    min-height: var(--spa-m-field-h) !important;
+    padding: 0.5rem 0.75rem !important;
+    line-height: 1.35 !important;
+    box-sizing: border-box;
+  }
+
+  .spa-auth-page .spa-auth-btn,
+  .spa-auth-page .btn-primary,
+  .spa-auth-page button[type="submit"].btn {
+    font-size: var(--spa-m-btn) !important;
+    min-height: var(--spa-m-btn-h) !important;
+    padding: 0.5rem 0.85rem !important;
+    line-height: 1.35 !important;
+    width: 100%;
+  }
+
+  .spa-auth-page .spa-auth-form-inner h2 {
+    font-size: 1.25rem;
+  }
+
+  .spa-auth-page .spa-auth-subtitle {
+    font-size: 0.875rem;
   }
 }
