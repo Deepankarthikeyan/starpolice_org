@@ -10464,10 +10464,10 @@ body.star-site .spa-gallery-lightbox__caption p {
 }
 
 .star-vt-slide {
-  align-items: center;
+  align-items: stretch;
   display: grid;
-  gap: 28px;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: 20px;
+  grid-template-columns: 1fr;
   inset: 0;
   opacity: 0;
   pointer-events: none;
@@ -10608,7 +10608,6 @@ body.star-site .spa-gallery-lightbox__caption p {
   background: #ffffff;
   border-radius: 20px;
   box-shadow: 0 18px 40px rgba(15, 34, 57, 0.1);
-  grid-column: 1 / -1;
   padding: 22px 24px 26px;
   position: relative;
   z-index: 2;
@@ -10790,6 +10789,7 @@ body.star-site .star-vt-grid-head p {
   padding: 14px;
   position: absolute;
   text-align: left;
+  z-index: 1;
 }
 
 .star-vt-grid__overlay .material-symbols-outlined {
@@ -10907,14 +10907,6 @@ body.star-site .star-vt-lightbox__caption p {
 }
 
 @media (max-width: 991px) {
-  .star-vt-slide {
-    grid-template-columns: 1fr;
-  }
-
-  .star-vt-slide__photos {
-    min-height: 170px;
-  }
-
   .star-vt-lightbox__nav--prev {
     left: 8px;
   }

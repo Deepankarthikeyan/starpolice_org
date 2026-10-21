@@ -137,11 +137,6 @@ function FeaturedSlide({ item, index, isActive, transition, onPlay }) {
         </span>
         <span className="star-vt-slide__badge">Story {index + 1}</span>
       </button>
-      <div className="star-vt-slide__photos" aria-hidden="true">
-        <img src={item.accentImage} alt="" className="star-vt-slide__photo star-vt-slide__photo--a" />
-        <img src={item.collageImage} alt="" className="star-vt-slide__photo star-vt-slide__photo--b" />
-        <img src="/assets/images/testimonial/coma.png" alt="" className="star-vt-slide__quote-deco" />
-      </div>
       <div className="star-vt-slide__copy">
         <span className="star-vt-slide__eyebrow">Student voice</span>
         <h2>{item.title}</h2>
