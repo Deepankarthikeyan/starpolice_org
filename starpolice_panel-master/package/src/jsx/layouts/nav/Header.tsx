@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useCallback, type MouseEvent } from "react";
+import { Fragment, useState, useEffect, useContext, useCallback, type MouseEvent } from "react";
 
 import { Link } from "react-router-dom";
 /// Scroll
@@ -9,7 +9,7 @@ import { notify } from "../../starPolice/toast";
 import { usePolling } from "../../starPolice/usePolling";
 import type { AppNotification } from "../../starPolice/types";
 
-import ProfileDropdown from "./ProfileDropdown";
+import ProfileSlideDrawer from "./ProfileSlideDrawer";
 
 /// Image
 import profile from "../../../assets/images/user.jpg";
@@ -123,15 +123,8 @@ const Header = ({ onNote }: propType) => {
     ? filterName.filter((f) => f !== "editor")
     : filterName;
   return (
+    <Fragment>
     <div className={`header spa-header ${headerFix ? "sticky" : ""}`}>
-      {profileOpen && (
-        <button
-          type="button"
-          className="spa-profile-backdrop"
-          aria-label="Close profile menu"
-          onClick={() => setProfileOpen(false)}
-        />
-      )}
       <div className="header-content">
         <nav className="navbar navbar-expand">
           <div className="collapse navbar-collapse justify-content-between">
@@ -355,39 +348,26 @@ const Header = ({ onNote }: propType) => {
                 </Dropdown.Menu>
               </Dropdown>
 
-              <li className="nav-item ">
-                <Dropdown
-                  className="dropdown header-profile2"
-                  show={profileOpen}
-                  onToggle={(next) => setProfileOpen(!!next)}
-                  autoClose="outside"
+              <li className="nav-item header-profile2">
+                <button
+                  type="button"
+                  className="nav-link i-false c-pointer ms-0 border-0 bg-transparent p-0"
+                  aria-label="Open profile menu"
+                  aria-expanded={profileOpen}
+                  onClick={() => setProfileOpen((open) => !open)}
                 >
-                  <Dropdown.Toggle
-                    variant=""
-                    as="a"
-                    className="nav-link i-false c-pointer ms-0"
-                  >
-                    <div className="header-info2 d-flex align-items-center">
-                      <img src={profile} alt={auth?.name ?? "Profile"} />
-                    </div>
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu
-                    align="end"
-                    className="mt-1 dropdown-menu dropdown-menu-end p-0 border-0 spa-profile-menu"
-                    popperConfig={{
-                      strategy: "fixed",
-                      modifiers: [{ name: "applyStyles", enabled: false }],
-                    }}
-                  >
-                    <ProfileDropdown onClose={() => setProfileOpen(false)} />
-                  </Dropdown.Menu>
-                </Dropdown>
+                  <div className="header-info2 d-flex align-items-center">
+                    <img src={profile} alt={auth?.name ?? "Profile"} />
+                  </div>
+                </button>
               </li>
             </ul>
           </div>
         </nav>
       </div>
     </div>
+    <ProfileSlideDrawer open={profileOpen} onClose={() => setProfileOpen(false)} />
+    </Fragment>
   );
 };
 

@@ -1,37 +1,44 @@
 /* Star Police Academy — mobile layout for all panel pages (admin / staff / student) */
 
-/* Profile drawer — same sidebar-style slide on all screen sizes */
-.header-profile2 .spa-profile-menu.dropdown-menu {
-  position: fixed !important;
-  top: 0 !important;
-  right: 0 !important;
-  left: auto !important;
-  bottom: 0 !important;
-  width: var(--spa-width, 17.5rem) !important;
-  max-width: min(var(--spa-width, 17.5rem), 100vw) !important;
-  min-width: 0 !important;
-  height: 100dvh !important;
-  max-height: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: none !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  box-shadow: -0.25rem 0 1.5rem rgba(8, 16, 32, 0.12);
-  transform: translateX(105%);
+/* Profile — slides in from the right (same idea as the left nav sidebar) */
+.spa-profile-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1006;
+  border: none;
+  margin: 0;
+  padding: 0;
+  background: rgba(8, 16, 32, 0.45);
+  cursor: pointer;
+}
+
+.spa-profile-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: var(--spa-width, 17.5rem);
+  max-width: min(var(--spa-width, 17.5rem), 100vw);
+  height: 100dvh;
+  z-index: 1007;
+  transform: translateX(100%);
   transition: transform 0.28s ease;
+  box-shadow: -0.25rem 0 1.5rem rgba(8, 16, 32, 0.15);
+  background: var(--bs-body-bg, #fff);
   overflow: hidden;
-  display: flex !important;
+  display: flex;
   flex-direction: column;
-  z-index: 1007 !important;
-  inset: 0 0 0 auto !important;
+  pointer-events: none;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  box-sizing: border-box;
 }
 
-.header-profile2 .spa-profile-menu.dropdown-menu.show {
+.spa-profile-drawer.is-open {
   transform: translateX(0);
+  pointer-events: auto;
 }
 
-.header-profile2 .spa-profile-menu .spa-profile-dropdown {
+.spa-profile-drawer .spa-profile-dropdown {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
@@ -40,21 +47,17 @@
   border: none;
   border-radius: 0;
   box-shadow: none;
-  background: var(--bs-body-bg, #fff);
+  background: transparent;
 }
 
-.spa-profile-dropdown .card-body {
+.spa-profile-drawer .spa-profile-dropdown .card-body {
   flex: 1 1 auto;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-.spa-profile-dropdown .card-footer {
+.spa-profile-drawer .spa-profile-dropdown .card-footer {
   flex-shrink: 0;
-}
-
-.spa-profile-backdrop {
-  z-index: 1006;
 }
 
 /* Dashboard stat cards — 2 per row on phones (2 rows for 4 metrics) */
