@@ -10533,7 +10533,7 @@ body.star-site .spa-gallery-lightbox__caption p {
 }
 
 .star-vt-featured__frame {
-  aspect-ratio: 9 / 16;
+  aspect-ratio: 16 / 9;
   background: transparent;
   border: 0;
   border-radius: 10px;
@@ -10543,7 +10543,7 @@ body.star-site .spa-gallery-lightbox__caption p {
   overflow: hidden;
   padding: 0;
   position: relative;
-  width: min(56vw, 220px);
+  width: min(92vw, 480px);
 }
 
 .star-vt-featured__media {
