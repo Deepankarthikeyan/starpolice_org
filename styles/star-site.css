@@ -10512,21 +10512,27 @@ body.star-site .spa-gallery-lightbox__caption p {
 }
 
 .star-vt-slide__main {
+  aspect-ratio: 16 / 9;
   background: #0f2239;
   border: 0;
   border-radius: 22px;
   box-shadow: 0 24px 50px rgba(15, 34, 57, 0.22);
   cursor: pointer;
+  display: grid;
   overflow: hidden;
   padding: 0;
+  place-items: center;
   position: relative;
+  width: 100%;
   z-index: 1;
 }
 
 .star-vt-slide__thumb {
   display: block;
-  height: auto;
-  object-fit: cover;
+  height: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
   width: 100%;
 }
 
@@ -10722,25 +10728,30 @@ body.star-site .star-vt-grid-head p {
 .star-vt-grid {
   display: grid;
   gap: 20px;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 }
 
 .star-vt-grid__card {
-  background: #ffffff;
+  aspect-ratio: 16 / 9;
+  background: #0f2239;
   border: 0;
   border-radius: 16px;
   box-shadow: 0 12px 28px rgba(15, 34, 57, 0.1);
   cursor: pointer;
+  display: grid;
   overflow: hidden;
   padding: 0;
+  place-items: center;
   position: relative;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .star-vt-grid__card img {
-  aspect-ratio: 9 / 16;
   display: block;
-  object-fit: cover;
+  height: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
   width: 100%;
 }
 
@@ -10830,7 +10841,7 @@ body.star-site .star-vt-grid-head p {
 }
 
 .star-vt-lightbox__player {
-  aspect-ratio: 9 / 16;
+  aspect-ratio: 16 / 9;
   background: #000000;
   position: relative;
   width: 100%;

@@ -126,7 +126,12 @@ function FeaturedSlide({ item, index, isActive, transition, onPlay }) {
     >
       <div className="star-vt-slide__glow" aria-hidden="true" />
       <button type="button" className="star-vt-slide__main" onClick={() => onPlay(index)}>
-        <img src={youtubeThumbnail(item.id)} alt="" className="star-vt-slide__thumb" />
+        <img
+          src={youtubeThumbnail(item.id)}
+          alt=""
+          className="star-vt-slide__thumb"
+          loading="lazy"
+        />
         <span className="star-vt-slide__play" aria-hidden="true">
           <span className="material-symbols-outlined">play_circle</span>
         </span>
@@ -260,7 +265,12 @@ export default function VideoTestimonialsPage() {
                 className={`star-vt-grid__card star-vt-grid__card--${(index % 5) + 1}`}
                 onClick={() => openLightbox(index)}
               >
-                <img src={youtubeThumbnail(item.id)} alt={item.title} loading="lazy" />
+                <img
+                  src={youtubeThumbnail(item.id)}
+                  alt={item.title}
+                  className="star-vt-grid__thumb"
+                  loading="lazy"
+                />
                 <span className="star-vt-grid__overlay">
                   <span className="material-symbols-outlined" aria-hidden="true">play_circle</span>
                   <strong>{item.title}</strong>
