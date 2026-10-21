@@ -142,7 +142,7 @@ function VideoMosaicWall({ items, onPlay }) {
   const slots = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
   return (
-    <div className="star-vt-mosaic" aria-hidden="true">
+    <div className="star-vt-mosaic">
       {slots.map((offset, slotIndex) => {
         const item = items[offset % items.length];
         const index = offset % items.length;
@@ -152,8 +152,7 @@ function VideoMosaicWall({ items, onPlay }) {
             key={`${item.id}-${slotIndex}`}
             className={`star-vt-mosaic__cell star-vt-mosaic__cell--${(slotIndex % 6) + 1}`}
             onClick={() => onPlay(index)}
-            tabIndex={-1}
-            aria-hidden="true"
+            aria-label={`Play ${item.title}`}
           >
             <VideoThumb videoId={item.id} className="star-vt-mosaic__img" />
           </button>
