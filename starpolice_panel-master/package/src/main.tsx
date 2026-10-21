@@ -9,6 +9,7 @@ import "./assets/css/star-police-brand.css";
 import "./assets/css/spa-sidebar.css";
 import "./assets/css/spa-responsive.css";
 import "./assets/css/spa-student-mobile.css";
+import "./assets/css/spa-panel-mobile.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-toastify/dist/ReactToastify.css";
 

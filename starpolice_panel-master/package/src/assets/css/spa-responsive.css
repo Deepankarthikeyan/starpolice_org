@@ -301,28 +301,6 @@ iframe {
     transform: none !important;
   }
 
-  .header-profile2 .spa-profile-menu.dropdown-menu {
-    position: fixed !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    top: auto !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: none !important;
-    margin: 0 !important;
-    transform: none !important;
-    border-radius: 1rem 1rem 0 0 !important;
-    max-height: min(88dvh, 32rem);
-    overflow: auto;
-    z-index: 1007 !important;
-    box-shadow: 0 -0.5rem 2rem rgba(8, 16, 32, 0.15);
-  }
-
-  .header-profile2 .spa-profile-menu .spa-profile-dropdown {
-    border-radius: 1rem 1rem 0 0;
-  }
-
   .spa-header-notifications {
     height: auto;
     max-height: min(50dvh, 20rem);

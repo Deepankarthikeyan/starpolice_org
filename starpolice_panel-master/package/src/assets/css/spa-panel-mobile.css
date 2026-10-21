@@ -1,0 +1,142 @@
+/* Star Police Academy — mobile layout for all panel pages (admin / staff / student) */
+
+@media only screen and (max-width: 63.9375rem) {
+  /* Profile — desktop-like card, slides in from the right */
+  .header-profile2 .spa-profile-menu.dropdown-menu {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    left: auto !important;
+    bottom: 0 !important;
+    width: 20rem !important;
+    max-width: min(20rem, 100vw) !important;
+    min-width: 0 !important;
+    height: 100dvh !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: -0.25rem 0 1.5rem rgba(8, 16, 32, 0.12);
+    transform: translateX(105%);
+    transition: transform 0.28s ease;
+    overflow: hidden;
+    display: flex !important;
+    flex-direction: column;
+    z-index: 1007 !important;
+  }
+
+  .header-profile2 .spa-profile-menu.dropdown-menu.show {
+    transform: translateX(0);
+  }
+
+  .header-profile2 .spa-profile-menu .spa-profile-dropdown {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: 100%;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: var(--bs-body-bg, #fff);
+  }
+
+  .spa-profile-dropdown .card-body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .spa-profile-dropdown .card-footer {
+    flex-shrink: 0;
+  }
+}
+
+@media only screen and (max-width: 47.9375rem) {
+  #main-wrapper[class*="spa-panel-"] .content-body .row > [class*="col-xl-"],
+  #main-wrapper[class*="spa-panel-"] .content-body .row > [class*="col-lg-"] {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .card-header .d-flex,
+  #main-wrapper[class*="spa-panel-"] .card-header .btn-toolbar,
+  #main-wrapper[class*="spa-panel-"] .spa-inbox-header,
+  #main-wrapper[class*="spa-panel-"] .spa-performance-header-controls,
+  #main-wrapper[class*="spa-panel-"] .spa-messenger-thread-controls-row,
+  #main-wrapper[class*="spa-panel-"] .spa-interaction-history-controls {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .card-header .d-flex > *,
+  #main-wrapper[class*="spa-panel-"] .spa-performance-header-controls > *,
+  #main-wrapper[class*="spa-panel-"] .spa-performance-sort-picker,
+  #main-wrapper[class*="spa-panel-"] .spa-performance-search-field,
+  #main-wrapper[class*="spa-panel-"] .spa-toolbar-search,
+  #main-wrapper[class*="spa-panel-"] .spa-leads-filters .col,
+  #main-wrapper[class*="spa-panel-"] .spa-leads-filters .col-auto {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .btn-group,
+  #main-wrapper[class*="spa-panel-"] .btn-group-vertical {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .btn-group > .btn,
+  #main-wrapper[class*="spa-panel-"] .btn-group-vertical > .btn {
+    flex: 1 1 auto;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .physical-record-card .row > [class*="col-"] {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-performance-detail .row.g-3 > [class*="col-"] {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-performance-detail .card-header small {
+    display: block;
+    margin-top: 0.35rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .upload-preview-actions,
+  #main-wrapper[class*="spa-panel-"] .spa-user-actions {
+    width: 100%;
+    justify-content: flex-start !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .nav-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .nav-tabs .nav-link {
+    white-space: nowrap;
+    font-size: 0.8125rem;
+  }
+}
+
+@media only screen and (max-width: 35.9375rem) {
+  #main-wrapper[class*="spa-panel-"] .row.spa-student-stat-grid > .col-6,
+  #main-wrapper[class*="spa-panel-"] .content-body .row > .col-6.col-xl-3 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}

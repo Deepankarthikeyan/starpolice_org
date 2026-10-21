@@ -39,6 +39,16 @@ const Header = ({ onNote }: propType) => {
 
   usePolling(loadNotifications, 30000, Boolean(auth?.token));
 
+  useEffect(() => {
+    if (!profileOpen) {
+      return undefined;
+    }
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [profileOpen]);
+
   const notificationIconClass = (type: AppNotification["type"]) => {
     if (type === "message") return "media-info";
     if (type === "upload") return "media-success";
