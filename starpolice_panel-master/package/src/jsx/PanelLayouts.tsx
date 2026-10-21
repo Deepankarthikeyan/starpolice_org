@@ -12,10 +12,12 @@ export function AdminLayout() {
     return <Navigate to="/admin/login" replace />;
   }
 
+  const isSuperadmin = auth.role === "superadmin";
+
   return (
     <div
       id="main-wrapper"
-      className={`show spa-panel-admin ${openMenuToggle ? "menu-toggle" : ""}`}
+      className={`show spa-panel-admin${isSuperadmin ? " spa-panel-superadmin" : ""} ${openMenuToggle ? "menu-toggle" : ""}`}
     >
       <Nav basePath="/admin" panel="admin" />
       <div className="content-body spa-content-body">

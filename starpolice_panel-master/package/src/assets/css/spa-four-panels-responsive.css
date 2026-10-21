@@ -1,0 +1,185 @@
+/* =============================================================================
+   Star Police — four panels: admin, superadmin, staff, student
+   Desktop (≥1025px): unchanged — rules scoped to max-width media queries only.
+   Breakpoints:
+     320–480px   max-width: 30rem
+     481–767px   max-width: 47.9375rem
+     768–1024px  max-width: 63.9375rem
+============================================================================= */
+
+/* Tablet: stack typical two-column page sections */
+@media only screen and (min-width: 48rem) and (max-width: 63.9375rem) {
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .row:not(.spa-dashboard-stat-grid):not(.spa-student-stat-grid) > [class*="col-md-"],
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .row:not(.spa-dashboard-stat-grid):not(.spa-student-stat-grid) > [class*="col-lg-"],
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .row:not(.spa-dashboard-stat-grid):not(.spa-student-stat-grid) > [class*="col-xl-"] {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-user-management-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Phones + small tablets: forms, lists, touch */
+@media only screen and (max-width: 47.9375rem) {
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content form .row > [class*="col-"],
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .card-body form .row > [class*="col-"],
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .modal-body .row > [class*="col-"] {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .form-label,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content label.form-label {
+    display: block;
+    width: 100%;
+    margin-bottom: 0.35rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .input-group,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .input-group > * {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .invalid-feedback,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .form-text {
+    display: block;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .table-responsive {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 0.5rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .table {
+    margin-bottom: 0;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .physical-record-table,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .spa-performance-overview-table,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .spa-leads-table,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .spa-onboarding-table,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .attendance-table {
+    min-width: 28rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .pagination {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .page-link {
+    min-width: 2.25rem;
+    text-align: center;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .badge {
+    max-width: 100%;
+    white-space: normal;
+    line-height: 1.25;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .d-flex.gap-2,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .d-flex.gap-3 {
+    flex-wrap: wrap;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content img,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content video,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .upload-preview-image {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .apexcharts-canvas,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .apexcharts-svg {
+    max-width: 100%;
+  }
+}
+
+/* Modals (rendered on body) — all four panels */
+@media only screen and (max-width: 47.9375rem) {
+  body:has(#main-wrapper[class*="spa-panel-"]) .modal-dialog {
+    margin: 0.5rem auto;
+    max-width: calc(100vw - 1rem);
+    width: calc(100vw - 1rem);
+  }
+
+  body:has(#main-wrapper[class*="spa-panel-"]) .modal-content {
+    max-height: calc(100dvh - 1rem);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  body:has(#main-wrapper[class*="spa-panel-"]) .modal-body {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  body:has(#main-wrapper[class*="spa-panel-"]) .modal-footer {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  body:has(#main-wrapper[class*="spa-panel-"]) .modal-footer .btn {
+    flex: 1 1 auto;
+    min-width: min(100%, 8rem);
+  }
+}
+
+/* Small phones 320–480px */
+@media only screen and (max-width: 30rem) {
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-page-breadcrumb {
+    font-size: 0.75rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content h4.card-title,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content h5 {
+    font-size: 0.95rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .card-body {
+    padding: 0.75rem;
+  }
+}
+
+/* Touch-friendly controls (tablet and below) */
+@media only screen and (max-width: 63.9375rem) {
+  #main-wrapper[class*="spa-panel-"] .spa-sidebar-link {
+    min-height: 2.75rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .card-header .btn:not(.btn-sm),
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .modal-footer .btn,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content form > .btn:not(.btn-sm),
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .btn-primary:not(.btn-sm),
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .btn-outline-primary:not(.btn-sm) {
+    min-height: 2.75rem;
+    padding-top: 0.45rem;
+    padding-bottom: 0.45rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-student-bottom-nav .spa-student-bottom-nav-link {
+    min-height: 2.75rem;
+  }
+}
+
+/* Superadmin uses admin layout — same mobile rules via spa-panel-admin + spa-panel-superadmin */

@@ -2889,3 +2889,29 @@ html {
     max-height: min(34rem, calc(100dvh - 12rem));
   }
 }
+
+/* Four panels — mobile overflow fixes (desktop unchanged) */
+@media only screen and (max-width: 47.9375rem) {
+  #main-wrapper[class*="spa-panel-"] .spa-messenger-sidebar.is-group-only {
+    min-width: 0;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-performance-search-field {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-onboarding-name,
+  #main-wrapper[class*="spa-panel-"] .spa-onboarding-email {
+    min-width: 0;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-user-management-card {
+    max-height: none;
+    min-height: 0;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .physical-record-info-grid {
+    grid-template-columns: 1fr;
+  }
+}
