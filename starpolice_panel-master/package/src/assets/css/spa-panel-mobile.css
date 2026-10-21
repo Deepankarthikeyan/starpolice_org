@@ -1,5 +1,43 @@
 /* Star Police Academy — mobile layout for all panel pages (admin / staff / student) */
 
+/* style.css hides .dz-theme-mode / .dz-fullscreen below 1200px — restore in panels */
+@media only screen and (max-width: 74.9375rem) {
+  #main-wrapper[class*="spa-panel-"] .spa-header .spa-header-actions .dz-theme-mode,
+  #main-wrapper[class*="spa-panel-"] .spa-header .spa-header-actions .dz-fullscreen {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-header .dz-theme-mode #icon-light-1 {
+    display: none !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-header .dz-theme-mode #icon-dark-1 {
+    display: inline-block !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-header .dz-theme-mode.active #icon-light-1 {
+    display: inline-block !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-header .dz-theme-mode.active #icon-dark-1 {
+    display: none !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-header .dz-fullscreen #icon-minimize-1 {
+    display: none !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-header .dz-fullscreen.active #icon-minimize-1 {
+    display: inline-block !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-header .dz-fullscreen.active #icon-full-1 {
+    display: none !important;
+  }
+}
+
 /* Top header — same actions as desktop on mobile (theme, fullscreen, notes, alerts, profile) */
 @media only screen and (max-width: 47.9375rem) {
   #main-wrapper[class*="spa-panel-"] .spa-header .navbar-collapse {
@@ -20,17 +58,18 @@
   #main-wrapper[class*="spa-panel-"] .spa-header .spa-header-actions {
     flex: 0 1 auto;
     min-width: 0;
-    max-width: 52vw;
+    max-width: 58vw;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
+    gap: 0.4rem;
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     margin: 0;
-    padding: 0;
+    padding: 0 0.15rem;
   }
 
   #main-wrapper[class*="spa-panel-"] .spa-header .spa-header-actions::-webkit-scrollbar {
@@ -42,13 +81,17 @@
     flex-shrink: 0;
   }
 
+  #main-wrapper[class*="spa-panel-"] .spa-header .spa-header-actions .nav-item {
+    margin-right: 0.15rem;
+  }
+
   #main-wrapper[class*="spa-panel-"] .spa-header .spa-header-actions .nav-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 2.25rem;
-    min-height: 2.25rem;
-    padding: 0.35rem !important;
+    min-width: 2.35rem;
+    min-height: 2.35rem;
+    padding: 0.4rem !important;
     margin-right: 0 !important;
   }
 
@@ -93,8 +136,9 @@
   position: fixed;
   top: 0;
   right: 0;
-  width: var(--spa-width, 17.5rem);
-  max-width: min(var(--spa-width, 17.5rem), 100vw);
+  width: 17.5rem;
+  max-width: min(17.5rem, 92vw);
+  min-height: 100dvh;
   height: 100dvh;
   z-index: 1007;
   transform: translateX(100%);
@@ -120,11 +164,18 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
+  width: 100%;
+  max-width: 100%;
   height: 100%;
+  margin: 0;
   border: none;
   border-radius: 0;
   box-shadow: none;
-  background: transparent;
+  background: var(--bs-body-bg, #fff);
+}
+
+.spa-profile-drawer .spa-profile-dropdown .card-header {
+  flex-shrink: 0;
 }
 
 .spa-profile-drawer .spa-profile-dropdown .card-body {
@@ -135,6 +186,22 @@
 
 .spa-profile-drawer .spa-profile-dropdown .card-footer {
   flex-shrink: 0;
+}
+
+.spa-profile-drawer .spa-profile-avatar {
+  width: 3rem !important;
+  height: 3rem !important;
+  max-width: 3rem !important;
+  max-height: 3rem !important;
+  min-width: 3rem;
+  min-height: 3rem;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  flex-shrink: 0;
+}
+
+.spa-profile-drawer .spa-profile-dropdown h4 {
+  font-size: 1.05rem;
 }
 
 /* Dashboard stat cards — 2 per row on phones (2 rows for 4 metrics) */

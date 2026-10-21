@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import ProfileDropdown from "./ProfileDropdown";
 
 interface ProfileSlideDrawerProps {
@@ -6,7 +7,11 @@ interface ProfileSlideDrawerProps {
 }
 
 const ProfileSlideDrawer = ({ open, onClose }: ProfileSlideDrawerProps) => {
-  return (
+  if (typeof document === "undefined") {
+    return null;
+  }
+
+  return createPortal(
     <>
       {open && (
         <button
@@ -23,7 +28,8 @@ const ProfileSlideDrawer = ({ open, onClose }: ProfileSlideDrawerProps) => {
       >
         <ProfileDropdown onClose={onClose} />
       </aside>
-    </>
+    </>,
+    document.body
   );
 };
 
