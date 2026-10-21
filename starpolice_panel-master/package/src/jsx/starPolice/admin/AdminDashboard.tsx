@@ -45,7 +45,7 @@ const AdminDashboard = () => {
           <p className="text-muted mb-0">Your performance summary based on classes, uploads, and attendance activity.</p>
           <Link to="/staff/my-performance" className="btn btn-sm btn-outline-primary">View full performance</Link>
         </div>
-        <div className="row">
+        <div className="row spa-dashboard-stat-grid g-2 g-md-3">
           <div className="col-6 col-xl-3">
             <div className="card">
               <div className="card-body">
@@ -134,7 +134,7 @@ const AdminDashboard = () => {
   return (
     <>
       <PageTitle motherMenu={getPanelMotherMenu(auth?.panel)} activeMenu="Dashboard" pageContent="" />
-      <div className="row">
+      <div className="row spa-dashboard-stat-grid g-2 g-md-3">
         <div className="col-6 col-xl-3">
           <div className="card">
             <div className="card-body">

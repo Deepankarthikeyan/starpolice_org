@@ -374,6 +374,10 @@ const Header = ({ onNote }: propType) => {
                   <Dropdown.Menu
                     align="end"
                     className="mt-1 dropdown-menu dropdown-menu-end p-0 border-0 spa-profile-menu"
+                    popperConfig={{
+                      strategy: "fixed",
+                      modifiers: [{ name: "applyStyles", enabled: false }],
+                    }}
                   >
                     <ProfileDropdown onClose={() => setProfileOpen(false)} />
                   </Dropdown.Menu>
