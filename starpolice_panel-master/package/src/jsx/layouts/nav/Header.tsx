@@ -28,6 +28,7 @@ const Header = ({ onNote }: propType) => {
   const { auth } = useContext(ThemeContext);
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [profileOpen, setProfileOpen] = useState(false);
 
   const loadNotifications = useCallback(async () => {
     if (!auth?.token) return;
@@ -113,6 +114,14 @@ const Header = ({ onNote }: propType) => {
     : filterName;
   return (
     <div className={`header spa-header ${headerFix ? "sticky" : ""}`}>
+      {profileOpen && (
+        <button
+          type="button"
+          className="spa-profile-backdrop"
+          aria-label="Close profile menu"
+          onClick={() => setProfileOpen(false)}
+        />
+      )}
       <div className="header-content">
         <nav className="navbar navbar-expand">
           <div className="collapse navbar-collapse justify-content-between">
@@ -262,6 +271,7 @@ const Header = ({ onNote }: propType) => {
               <Dropdown
                 as="li"
                 className="nav-item bell-icon blink notification_dropdown"
+                autoClose="outside"
               >
                 <Dropdown.Toggle
                   className="nav-link i-false c-pointer"
@@ -336,7 +346,12 @@ const Header = ({ onNote }: propType) => {
               </Dropdown>
 
               <li className="nav-item ">
-                <Dropdown className="dropdown header-profile2">
+                <Dropdown
+                  className="dropdown header-profile2"
+                  show={profileOpen}
+                  onToggle={(next) => setProfileOpen(!!next)}
+                  autoClose="outside"
+                >
                   <Dropdown.Toggle
                     variant=""
                     as="a"
@@ -348,9 +363,9 @@ const Header = ({ onNote }: propType) => {
                   </Dropdown.Toggle>
                   <Dropdown.Menu
                     align="end"
-                    className="mt-1 dropdown-menu dropdown-menu-end p-0 border-0"
+                    className="mt-1 dropdown-menu dropdown-menu-end p-0 border-0 spa-profile-menu"
                   >
-                    <ProfileDropdown />
+                    <ProfileDropdown onClose={() => setProfileOpen(false)} />
                   </Dropdown.Menu>
                 </Dropdown>
               </li>

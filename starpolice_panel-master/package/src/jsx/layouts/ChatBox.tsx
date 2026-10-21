@@ -21,10 +21,27 @@ const ChatBox: React.FC<ChatBoxProps> = ({ onClick, toggle }) => {
     { href: "#chat", name: "Chat" },
   ];
 
+  const isOpen = toggle === "chatbox";
+
   return (
-    <div className={`chatbox ${toggle === "chatbox" ? "active" : ""}`}>
-      <div className="chatbox-close" onClick={onClick}></div>
-      <div className="custom-tab-1">
+    <div className={`chatbox ${isOpen ? "active" : ""}`}>
+      <div className="chatbox-close" onClick={onClick} aria-hidden="true" />
+      {isOpen && (
+        <button
+          type="button"
+          className="spa-chatbox-backdrop"
+          aria-label="Close notes panel"
+          onClick={onClick}
+        />
+      )}
+      <div className="spa-chatbox-shell">
+        <div className="spa-chatbox-topbar">
+          <span className="spa-chatbox-topbar-title">Notes &amp; alerts</span>
+          <button type="button" className="spa-chatbox-close-btn" aria-label="Close" onClick={onClick}>
+            <i className="material-symbols-outlined">close</i>
+          </button>
+        </div>
+        <div className="custom-tab-1">
         <ul className="nav nav-tabs">
           {dataToggle.map((data, i) => (
             <li className="nav-item" key={i}>
@@ -45,6 +62,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ onClick, toggle }) => {
           <Chat toggle={toggle} toggleTab={toggleTab} toggleChatBox={toggle === "chatbox"} />
           <Notes toggle={toggle} toggleTab={toggleTab} toggleChatBox={toggle === "chatbox"} />
           <Alerts toggle={toggle} toggleTab={toggleTab} toggleChatBox={toggle === "chatbox"} />
+        </div>
         </div>
       </div>
     </div>

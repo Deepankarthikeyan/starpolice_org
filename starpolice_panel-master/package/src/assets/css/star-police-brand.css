@@ -1274,6 +1274,35 @@ html {
   flex-shrink: 0;
 }
 
+.spa-profile-close {
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid rgba(18, 61, 115, 0.12);
+  border-radius: 0.5rem;
+  background: #f4f7fb;
+  color: #123d73;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  padding: 0;
+}
+
+.spa-profile-close .material-symbols-outlined {
+  font-size: 1.25rem;
+}
+
+.spa-profile-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1006;
+  border: none;
+  margin: 0;
+  padding: 0;
+  background: rgba(8, 16, 32, 0.45);
+  cursor: pointer;
+}
+
 .spa-profile-dropdown .spa-profile-menu-item {
   display: flex;
   align-items: center;

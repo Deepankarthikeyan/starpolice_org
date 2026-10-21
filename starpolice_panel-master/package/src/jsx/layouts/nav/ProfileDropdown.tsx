@@ -54,7 +54,11 @@ const InboxIcon = () => (
   </svg>
 );
 
-const ProfileDropdown = () => {
+interface ProfileDropdownProps {
+  onClose?: () => void;
+}
+
+const ProfileDropdown = ({ onClose }: ProfileDropdownProps) => {
   const { auth } = useContext(ThemeContext);
   const basePath =
     auth?.panel === "student" ? "/student" : auth?.panel === "staff" ? "/staff" : "/admin";
@@ -71,18 +75,31 @@ const ProfileDropdown = () => {
 
   return (
     <div className="card mb-0 spa-profile-dropdown">
-      <div className="card-header p-3 border-0">
-        <div className="d-flex align-items-center gap-3">
+      <div className="card-header p-3 border-0 d-flex align-items-start justify-content-between gap-2">
+        <div className="d-flex align-items-center gap-3 flex-grow-1 min-w-0">
           <img src={profile} className="spa-profile-avatar" alt="" />
           <div className="min-w-0">
             <h4 className="mb-0 text-truncate">{auth?.name ?? "User"}</h4>
             <span className="text-muted">{auth ? formatRole(auth.role) : ""}</span>
           </div>
         </div>
+        <button
+          type="button"
+          className="spa-profile-close"
+          aria-label="Close profile menu"
+          onClick={() => onClose?.()}
+        >
+          <i className="material-symbols-outlined">close</i>
+        </button>
       </div>
       <div className="card-body p-2">
         {menuItems.map((item) => (
-          <Link key={item.label} to={item.to} className="dropdown-item ai-icon spa-profile-menu-item">
+          <Link
+            key={item.label}
+            to={item.to}
+            className="dropdown-item ai-icon spa-profile-menu-item"
+            onClick={() => onClose?.()}
+          >
             {item.icon}
             <span>{item.label}</span>
           </Link>
