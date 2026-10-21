@@ -194,9 +194,10 @@ export default function VideoTestimonialsPage() {
     <section className="star-vt-page pt---80 pb---120">
         <div className="container">
           <div className="star-vt-intro text-center">
-            <h2 className="spa-section-title">Hear from our achievers</h2>
+            <h2 className="spa-section-title">Testimonials</h2>
             <p className="spa-section-text">
-              Swipe through student stories, campus moments, and short video testimonials from Star Police Academy.
+              Watch real student and parent video testimonials from Star Police Academy — TNUSRB SI and Police
+              Constable coaching success stories.
             </p>
           </div>
 
@@ -249,8 +250,8 @@ export default function VideoTestimonialsPage() {
           </div>
 
           <div className="star-vt-grid-head">
-            <h3>All video testimonials</h3>
-            <p>Click any card to open the video in a popup player.</p>
+            <h3>All testimonials</h3>
+            <p>Click any video to play it in the popup player.</p>
           </div>
           <div className="star-vt-grid">
             {videoTestimonials.map((item, index) => (
