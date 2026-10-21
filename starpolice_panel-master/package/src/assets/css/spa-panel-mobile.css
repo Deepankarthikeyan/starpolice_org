@@ -60,43 +60,37 @@
   }
 
   #main-wrapper[class*="spa-panel-"] .spa-header .spa-header-actions {
-    flex: 0 1 auto;
+    flex: 0 0 auto;
     min-width: 0;
-    max-width: 58vw;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
-    gap: 0.4rem;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
+    justify-content: flex-end;
+    gap: 0.55rem;
+    overflow: visible;
     margin: 0;
-    padding: 0 0.15rem;
+    padding: 0;
   }
 
-  #main-wrapper[class*="spa-panel-"] .spa-header .spa-header-actions::-webkit-scrollbar {
-    display: none;
-  }
-
-  #main-wrapper[class*="spa-panel-"] .spa-header .spa-header-actions > .nav-item,
   #main-wrapper[class*="spa-panel-"] .spa-header .spa-header-actions > li {
-    flex-shrink: 0;
+    flex: 0 0 auto;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
-  #main-wrapper[class*="spa-panel-"] .spa-header .spa-header-actions .nav-item {
-    margin-right: 0.15rem;
-  }
-
-  #main-wrapper[class*="spa-panel-"] .spa-header .spa-header-actions .nav-link {
-    display: inline-flex;
+  #main-wrapper[class*="spa-panel-"] .spa-header .spa-header-actions .notification_dropdown .nav-link,
+  #main-wrapper[class*="spa-panel-"] .spa-header .spa-header-actions .nav-link,
+  #main-wrapper[class*="spa-panel-"] .spa-header .spa-header-actions .header-profile2 button.nav-link {
+    display: inline-flex !important;
     align-items: center;
     justify-content: center;
-    min-width: 2.35rem;
-    min-height: 2.35rem;
-    padding: 0.4rem !important;
-    margin-right: 0 !important;
+    width: 2.5rem;
+    height: 2.5rem;
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
   #main-wrapper[class*="spa-panel-"] .spa-header .spa-header-actions .nav-link svg {
@@ -105,22 +99,20 @@
   }
 
   #main-wrapper[class*="spa-panel-"] .spa-header .header-profile2 img {
-    width: 2rem;
-    height: 2rem;
-    margin-left: 0;
+    width: 1.85rem;
+    height: 1.85rem;
+    margin: 0;
+    object-fit: cover;
   }
 
-  #main-wrapper[class*="spa-panel-"] .spa-header .header-profile2 .nav-link {
-    min-width: 2.25rem;
-    padding: 0.25rem !important;
-  }
-
-  #main-wrapper[class*="spa-panel-"] .spa-header .notification_dropdown .badge {
+  #main-wrapper[class*="spa-panel-"] .spa-header .spa-header-actions .notification_dropdown .nav-link .badge {
     font-size: 0.625rem;
     min-width: 1rem;
     height: 1rem;
     line-height: 1rem;
     padding: 0 0.2rem;
+    right: 0;
+    top: 0;
   }
 }
 
