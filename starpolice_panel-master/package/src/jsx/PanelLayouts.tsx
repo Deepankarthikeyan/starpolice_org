@@ -19,7 +19,7 @@ export function AdminLayout() {
     >
       <Nav basePath="/admin" panel="admin" />
       <div className="content-body spa-content-body">
-        <div className="container-fluid">
+        <div className="container-fluid spa-panel-content">
           <Outlet />
         </div>
       </div>
@@ -42,7 +42,7 @@ export function StaffLayout() {
     >
       <Nav basePath="/staff" panel="staff" />
       <div className="content-body spa-content-body">
-        <div className="container-fluid">
+        <div className="container-fluid spa-panel-content">
           <Outlet />
         </div>
       </div>
@@ -65,7 +65,7 @@ export function StudentLayout() {
     >
       <Nav basePath="/student" panel="student" />
       <div className="content-body spa-content-body">
-        <div className="container-fluid">
+        <div className="container-fluid spa-panel-content">
           <Outlet />
         </div>
       </div>
