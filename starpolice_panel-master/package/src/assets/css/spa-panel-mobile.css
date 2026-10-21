@@ -38,8 +38,12 @@
   }
 }
 
-/* Top header — same actions as desktop on mobile (theme, fullscreen, notes, alerts, profile) */
+/* Top header — mobile: hide fullscreen (next to theme); keep theme, notes, alerts, profile */
 @media only screen and (max-width: 47.9375rem) {
+  #main-wrapper[class*="spa-panel-"] .spa-header .spa-header-actions .dz-fullscreen {
+    display: none !important;
+  }
+
   #main-wrapper[class*="spa-panel-"] .spa-header .navbar-collapse {
     display: flex !important;
     flex-wrap: nowrap;
