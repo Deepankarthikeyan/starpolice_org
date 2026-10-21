@@ -55,6 +55,15 @@ iframe {
   min-height: 2.75rem;
 }
 
+@media only screen and (max-width: 47.9375rem) {
+  #main-wrapper[class*="spa-panel-"] .spa-leads-filters .spa-list-filter-field .form-control,
+  #main-wrapper[class*="spa-panel-"] .spa-leads-filters .spa-list-filter-field .form-select {
+    min-height: 2.125rem;
+    font-size: 16px;
+    padding: 0.4rem 0.55rem;
+  }
+}
+
 .spa-content-body {
   min-height: 100dvh;
   box-sizing: border-box;

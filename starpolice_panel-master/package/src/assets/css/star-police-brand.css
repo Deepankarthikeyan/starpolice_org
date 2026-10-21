@@ -2661,9 +2661,10 @@ html {
 }
 
 @media (max-width: 767.98px) {
-  .spa-performance-search-field {
-    min-width: 100%;
+  #main-wrapper[class*="spa-panel-"] .spa-performance-search-field {
+    min-width: 0;
     max-width: 100%;
+    width: 100%;
   }
 }
 .spa-performance-filter-bar {

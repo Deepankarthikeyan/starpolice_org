@@ -332,3 +332,220 @@
 }
 
 /* Superadmin uses admin layout — same mobile rules via spa-panel-admin + spa-panel-superadmin */
+
+/* ------------------------------------------------------------------ */
+/* Search, text, date & select fields — compact mobile (all four panels) */
+/* Viewport-based (no data-spa-mobile required) so fields always resize   */
+/* ------------------------------------------------------------------ */
+@media only screen and (max-width: 63.9375rem) {
+  #main-wrapper[class*="spa-panel-"] .spa-performance-search-field {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    flex: 1 1 100% !important;
+    min-height: 2.125rem;
+    padding: 0.35rem 0.55rem;
+    gap: 0.4rem;
+    border-radius: 0.5rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-performance-search-icon {
+    width: 1.45rem;
+    height: 1.45rem;
+    font-size: 0.65rem;
+    border-radius: 0.4rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-performance-search-input {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-performance-search-input::placeholder {
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-performance-search-clear {
+    width: 1.35rem;
+    height: 1.35rem;
+    font-size: 0.75rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-performance-sort-picker {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-performance-sort-trigger {
+    min-height: 2.125rem;
+    padding: 0.35rem 0.55rem;
+    gap: 0.45rem;
+    border-radius: 0.5rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-performance-sort-trigger-icon {
+    width: 1.45rem;
+    height: 1.45rem;
+    font-size: 0.7rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-performance-sort-trigger-label {
+    font-size: 0.6rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-performance-sort-trigger-value {
+    font-size: 0.75rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-toolbar-search {
+    max-width: 100% !important;
+    width: 100% !important;
+    font-size: 16px;
+    min-height: 2.125rem;
+    padding: 0.4rem 0.65rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-messenger-search .form-control {
+    font-size: 16px;
+    min-height: 2.125rem;
+    padding: 0.4rem 0.65rem 0.4rem 2.1rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-onboarding-search .form-control {
+    font-size: 16px;
+    min-height: 2.125rem;
+    padding: 0.4rem 0.65rem;
+  }
+}
+
+@media only screen and (max-width: 47.9375rem) {
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .form-control,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .form-select,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content textarea.form-control,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .spa-interaction-filter-select-input,
+  #main-wrapper[class*="spa-panel-"] input.form-control,
+  #main-wrapper[class*="spa-panel-"] select.form-control,
+  #main-wrapper[class*="spa-panel-"] input[type="date"],
+  #main-wrapper[class*="spa-panel-"] input[type="datetime-local"],
+  #main-wrapper[class*="spa-panel-"] input[type="time"],
+  #main-wrapper[class*="spa-panel-"] input[type="search"],
+  #main-wrapper[class*="spa-panel-"] input[type="email"],
+  #main-wrapper[class*="spa-panel-"] input[type="tel"],
+  #main-wrapper[class*="spa-panel-"] input[type="number"],
+  #main-wrapper[class*="spa-panel-"] input[type="text"]:not(.spa-performance-search-input) {
+    font-size: 16px !important;
+    line-height: 1.35 !important;
+    min-height: 2.125rem !important;
+    padding: 0.4rem 0.65rem !important;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .form-control-sm,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content select.form-control-sm {
+    font-size: 13px !important;
+    min-height: 1.95rem !important;
+    padding: 0.3rem 0.5rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-leads-filters .form-control,
+  #main-wrapper[class*="spa-panel-"] .spa-leads-filters .form-select,
+  #main-wrapper[class*="spa-panel-"] .spa-leads-filters input[type="date"] {
+    font-size: 16px !important;
+    min-height: 2.125rem !important;
+    padding: 0.4rem 0.55rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-leads-filters .spa-list-filter-label {
+    font-size: 0.65rem;
+    margin-bottom: 0.25rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .react-datepicker-wrapper,
+  #main-wrapper[class*="spa-panel-"] .react-datepicker__input-container {
+    width: 100% !important;
+    display: block !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .react-datepicker__input-container input,
+  #main-wrapper[class*="spa-panel-"] .react-datepicker__input-container .form-control {
+    font-size: 16px !important;
+    min-height: 2.125rem !important;
+    padding: 0.4rem 0.65rem !important;
+    width: 100% !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .react-datepicker {
+    font-size: 0.75rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .react-datepicker__month-container {
+    width: 100% !important;
+    float: none !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .react-datepicker__current-month {
+    font-size: 0.85rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .react-datepicker__day-name,
+  #main-wrapper[class*="spa-panel-"] .react-datepicker__day {
+    width: 1.85rem !important;
+    line-height: 1.85rem !important;
+    height: 1.85rem !important;
+    font-size: 0.7rem !important;
+    margin: 0.1rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .daywise-upload-calendar .react-datepicker {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .daywise-upload-calendar .react-datepicker__current-month {
+    font-size: 0.85rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .daywise-upload-calendar .react-datepicker__day-name,
+  #main-wrapper[class*="spa-panel-"] .daywise-upload-calendar .react-datepicker__day {
+    width: 1.75rem !important;
+    height: 1.75rem !important;
+    line-height: 1.75rem !important;
+    font-size: 0.68rem !important;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-interaction-history-controls input[type="date"],
+  #main-wrapper[class*="spa-panel-"] .spa-interaction-history-controls .form-control,
+  #main-wrapper[class*="spa-panel-"] .spa-messenger-audience .spa-interaction-filter-select-input {
+    font-size: 16px !important;
+    min-height: 2.125rem !important;
+    padding: 0.4rem 0.55rem !important;
+  }
+
+  body:has(#main-wrapper[class*="spa-panel-"]) .modal input[type="date"],
+  body:has(#main-wrapper[class*="spa-panel-"]) .modal .form-control,
+  body:has(#main-wrapper[class*="spa-panel-"]) .modal .form-select {
+    font-size: 16px !important;
+    min-height: 2.125rem !important;
+    padding: 0.4rem 0.65rem !important;
+  }
+}
+
+@media only screen and (max-width: 30rem) {
+  #main-wrapper[class*="spa-panel-"] .spa-performance-search-field {
+    min-height: 2rem;
+    padding: 0.3rem 0.45rem;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content .form-control,
+  #main-wrapper[class*="spa-panel-"] .spa-panel-content input[type="date"] {
+    min-height: 2rem !important;
+    padding: 0.35rem 0.5rem !important;
+  }
+}
