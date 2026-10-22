@@ -3,9 +3,8 @@ import { createPortal } from "react-dom";
 import { videoTestimonials } from "../lib/star-content";
 import { AUTO_SLIDER_INTERVAL_MS, useAutoSliderPause } from "../lib/useAutoSlider";
 
-const MOSAIC_VISIBLE = 11;
-const MOSAIC_OFFSET_Y = [16, -12, 8, -18, 10, -8, 14, -10, 6, -14, 12];
-const MOSAIC_SCALE = [0.9, 1.06, 0.96, 1.08, 0.92, 1.02, 0.94, 1.05, 0.88, 1.04, 0.98];
+const MOSAIC_VISIBLE = 9;
+const MOSAIC_OFFSET_Y = [22, -16, 10, -24, 14, -10, 20, -14, 8];
 
 function youtubeEmbedUrl(videoId, autoplay = false) {
   const params = new URLSearchParams({
@@ -40,7 +39,7 @@ function visibleMosaicIndices(activeIndex, total, count = MOSAIC_VISIBLE) {
   return indices;
 }
 
-function VideoThumb({ videoId, variant, alt = "", loading }) {
+function MosaicThumb({ videoId, alt = "", loading, isActive }) {
   const [src, setSrc] = useState(() => mqThumbnailUrl(videoId));
 
   useEffect(() => {
@@ -65,21 +64,36 @@ function VideoThumb({ videoId, variant, alt = "", loading }) {
   };
 
   return (
-    <span
-      className={`star-vt-thumb-frame star-vt-thumb-frame--${variant}`}
-      style={src ? { backgroundImage: `url("${src}")` } : undefined}
-    >
-      <img
-        className="star-vt-thumb-img"
-        src={src}
-        alt={alt}
-        loading={loading}
-        decoding="async"
-        draggable={false}
-        onLoad={promoteToHd}
-        onError={() => setSrc(mqThumbnailUrl(videoId))}
-      />
-    </span>
+    <img
+      className={`star-vt-mosaic-img${isActive ? " is-active" : ""}`}
+      src={src}
+      alt={alt}
+      loading={loading}
+      decoding="async"
+      draggable={false}
+      onLoad={promoteToHd}
+      onError={() => setSrc(mqThumbnailUrl(videoId))}
+    />
+  );
+}
+
+function StripThumb({ videoId, alt = "", loading, isActive }) {
+  const [src, setSrc] = useState(() => mqThumbnailUrl(videoId));
+
+  useEffect(() => {
+    setSrc(mqThumbnailUrl(videoId));
+  }, [videoId]);
+
+  return (
+    <img
+      className={`star-vt-strip-img${isActive ? " is-active" : ""}`}
+      src={src}
+      alt={alt}
+      loading={loading}
+      decoding="async"
+      draggable={false}
+      onError={() => setSrc(mqThumbnailUrl(videoId))}
+    />
   );
 }
 
@@ -219,66 +233,49 @@ export default function VideoTestimonialsPage() {
       <section className="star-vt-page pt---80 pb---120">
         <div className="container">
           <div className="star-vt-showcase" {...pauseProps}>
-            <div className="star-vt-showcase__mosaic-row">
-              <button
-                type="button"
-                className="star-vt-showcase__side-arrow star-vt-showcase__side-arrow--prev"
-                aria-label="Previous story"
-                onClick={() => goTo(activeIndex - 1)}
-              >
-                ‹
-              </button>
+            <div className="star-vt-showcase__mosaic">
+              <ul className="star-vt-mosaic-list" aria-label="Featured student video stories">
+                {mosaicIndices.map((itemIndex, position) => {
+                  const item = videoTestimonials[itemIndex];
+                  const isActive = itemIndex === activeIndex;
 
-              <div className="star-vt-showcase__mosaic">
-                <ul className="star-vt-mosaic-list" aria-label="Student video stories">
-                  {mosaicIndices.map((itemIndex, position) => {
-                    const item = videoTestimonials[itemIndex];
-                    const isActive = itemIndex === activeIndex;
-
-                    return (
-                      <li key={`${item.id}-${position}`}>
-                        <button
-                          type="button"
-                          className={`star-vt-mosaic-tile${isActive ? " is-active" : ""}`}
-                          style={{
-                            "--vt-mosaic-y": `${MOSAIC_OFFSET_Y[position % MOSAIC_OFFSET_Y.length]}px`,
-                            "--vt-mosaic-scale": MOSAIC_SCALE[position % MOSAIC_SCALE.length],
-                          }}
-                          aria-label={`Select ${item.title}`}
-                          aria-current={isActive ? "true" : undefined}
-                          onClick={() => setActiveIndex(itemIndex)}
-                        >
-                          <VideoThumb
-                            videoId={item.id}
-                            variant="mosaic"
-                            alt={item.title}
-                            loading={isActive ? undefined : "lazy"}
-                          />
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
-
-                <button
-                  type="button"
-                  className="star-vt-showcase__play"
-                  aria-label={`Play ${activeItem.title}`}
-                  onClick={() => openLightbox(activeIndex)}
-                >
-                  <span className="material-symbols-outlined" aria-hidden="true">
-                    play_arrow
-                  </span>
-                </button>
-              </div>
+                  return (
+                    <li
+                      key={`${item.id}-${position}`}
+                      className="star-vt-mosaic-list__item"
+                      style={{
+                        "--vt-mosaic-y": `${MOSAIC_OFFSET_Y[position % MOSAIC_OFFSET_Y.length]}px`,
+                        zIndex: isActive ? 4 : 1 + (position % 3),
+                      }}
+                    >
+                      <button
+                        type="button"
+                        className={`star-vt-mosaic-tile${isActive ? " is-active" : ""}`}
+                        aria-label={`Select ${item.title}`}
+                        aria-current={isActive ? "true" : undefined}
+                        onClick={() => setActiveIndex(itemIndex)}
+                      >
+                        <MosaicThumb
+                          videoId={item.id}
+                          alt={item.title}
+                          isActive={isActive}
+                          loading={isActive ? undefined : "lazy"}
+                        />
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
 
               <button
                 type="button"
-                className="star-vt-showcase__side-arrow star-vt-showcase__side-arrow--next"
-                aria-label="Next story"
-                onClick={() => goTo(activeIndex + 1)}
+                className="star-vt-showcase__play"
+                aria-label={`Play ${activeItem.title}`}
+                onClick={() => openLightbox(activeIndex)}
               >
-                ›
+                <span className="material-symbols-outlined" aria-hidden="true">
+                  play_arrow
+                </span>
               </button>
             </div>
 
@@ -288,16 +285,49 @@ export default function VideoTestimonialsPage() {
               </p>
               <h2 className="star-vt-showcase__title">Trusted achievers from Star Police Academy</h2>
               <p className="star-vt-showcase__text">
-                Hear real success stories from TNUSRB SI, PC, and police exam candidates who trained
-                with us. Tap a photo to focus a story, then play the video.
+                Real TNUSRB SI, PC, and police exam success stories. Choose a thumbnail below or
+                press play to watch the selected story.
               </p>
-              <button
-                type="button"
-                className="star-vt-showcase__cta"
-                onClick={() => openLightbox(activeIndex)}
-              >
-                Watch {activeItem.title}
-              </button>
+              <div className="star-vt-showcase__actions">
+                <button
+                  type="button"
+                  className="star-vt-showcase__cta"
+                  onClick={() => openLightbox(activeIndex)}
+                >
+                  Watch {activeItem.title}
+                </button>
+                <div className="star-vt-showcase__nav">
+                  <button type="button" aria-label="Previous story" onClick={() => goTo(activeIndex - 1)}>
+                    ‹
+                  </button>
+                  <button type="button" aria-label="Next story" onClick={() => goTo(activeIndex + 1)}>
+                    ›
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="star-vt-strip" aria-label="All video testimonials">
+              <ul className="star-vt-strip-list">
+                {videoTestimonials.map((item, index) => (
+                  <li key={item.id}>
+                    <button
+                      type="button"
+                      className={`star-vt-strip-tile${index === activeIndex ? " is-active" : ""}`}
+                      aria-label={`Play ${item.title}`}
+                      onClick={() => openLightbox(index)}
+                    >
+                      <StripThumb
+                        videoId={item.id}
+                        alt={item.title}
+                        isActive={index === activeIndex}
+                        loading="lazy"
+                      />
+                      <span className="star-vt-strip-tile__label">{item.title}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
