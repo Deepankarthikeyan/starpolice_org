@@ -13,6 +13,7 @@ import AirForceLandingPage from "./AirForceLandingPage";
 import RpfLandingPage from "./RpfLandingPage";
 import CapfLandingPage from "./CapfLandingPage";
 import VideoTestimonialsPage from "./VideoTestimonialsPage";
+import { VideoTestimonialsSpotlight } from "./VideoTestimonialUi";
 import {
   academy,
   contact,
@@ -1357,14 +1358,55 @@ function SpaSelectionProcessSection() {
   );
 }
 
+const PHYSICAL_GALLERY_AUTO_MS = 6500;
+
 function SpaPhysicalGallerySection() {
+  const [slideIndex, setSlideIndex] = useState(0);
+  const [slideDirection, setSlideDirection] = useState(1);
   const [previewIndex, setPreviewIndex] = useState(null);
   const [isMounted, setIsMounted] = useState(false);
+  const { isPaused, pauseProps } = useAutoSliderPause();
   const previewItem = previewIndex !== null ? physicalTrainingItems[previewIndex] : null;
+  const slideItem = physicalTrainingItems[slideIndex];
+  const slidePrev = physicalTrainingItems[(slideIndex - 1 + physicalTrainingItems.length) % physicalTrainingItems.length];
+  const slideNext = physicalTrainingItems[(slideIndex + 1) % physicalTrainingItems.length];
+  const slideEnterClass = slideDirection > 0 ? "from-next" : "from-prev";
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (isPaused || previewIndex !== null) {
+      return undefined;
+    }
+
+    const timer = window.setInterval(() => {
+      setSlideDirection(1);
+      setSlideIndex((current) => (current + 1) % physicalTrainingItems.length);
+    }, PHYSICAL_GALLERY_AUTO_MS);
+
+    return () => window.clearInterval(timer);
+  }, [isPaused, previewIndex]);
+
+  const goToSlide = (index) => {
+    const next = (index + physicalTrainingItems.length) % physicalTrainingItems.length;
+    if (next === slideIndex) {
+      return;
+    }
+    setSlideDirection(next > slideIndex ? 1 : -1);
+    setSlideIndex(next);
+  };
+
+  const showPreviousSlide = () => {
+    setSlideDirection(-1);
+    setSlideIndex((current) => (current - 1 + physicalTrainingItems.length) % physicalTrainingItems.length);
+  };
+
+  const showNextSlide = () => {
+    setSlideDirection(1);
+    setSlideIndex((current) => (current + 1) % physicalTrainingItems.length);
+  };
 
   useEffect(() => {
     if (previewIndex === null) {
@@ -1459,12 +1501,104 @@ function SpaPhysicalGallerySection() {
     : null;
 
   return (
-    <section className="spa-physical-gallery pt---100 pb---100">
+    <section className="spa-physical-gallery pt---100 pb---100" {...pauseProps}>
       <div className="container">
         <div className="spa-section-head text-center spa-physical-gallery__head">
           <h2 className="spa-section-title">Our gallery</h2>
           <p className="spa-physical-gallery__subtitle">Classroom Coaching &amp; Physical Training</p>
         </div>
+
+        <div className="spa-physical-gallery__showcase" aria-live="polite">
+          <div className="spa-physical-gallery__showcase-glow" aria-hidden="true" />
+          <p className="spa-physical-gallery__showcase-badge">
+            <span className="material-symbols-outlined" aria-hidden="true">school</span>
+            Campus spotlight
+          </p>
+          <div className="spa-physical-gallery__showcase-controls">
+            <button
+              type="button"
+              className="spa-physical-gallery__showcase-arrow"
+              aria-label="Previous gallery photo"
+              onClick={showPreviousSlide}
+            >
+              ‹
+            </button>
+            <div className="spa-physical-gallery__showcase-stage">
+              <button
+                type="button"
+                className="spa-physical-gallery__showcase-peek spa-physical-gallery__showcase-peek--prev"
+                aria-label={`Previous: ${slidePrev.title}`}
+                onClick={showPreviousSlide}
+              >
+                <img src={slidePrev.image} alt="" />
+              </button>
+              <article
+                key={slideIndex}
+                className={`spa-physical-gallery__showcase-slide spa-physical-gallery__showcase-slide--${slideEnterClass}`}
+              >
+                <button
+                  type="button"
+                  className="spa-physical-gallery__showcase-hit"
+                  aria-label={`View ${slideItem.title}`}
+                  onClick={() => setPreviewIndex(slideIndex)}
+                >
+                  <img src={slideItem.image} alt={slideItem.title} />
+                  <span className="spa-physical-gallery__showcase-overlay">
+                    <span className="material-symbols-outlined" aria-hidden="true">zoom_in</span>
+                    <strong>{slideItem.title}</strong>
+                  </span>
+                </button>
+              </article>
+              <button
+                type="button"
+                className="spa-physical-gallery__showcase-peek spa-physical-gallery__showcase-peek--next"
+                aria-label={`Next: ${slideNext.title}`}
+                onClick={showNextSlide}
+              >
+                <img src={slideNext.image} alt="" />
+              </button>
+            </div>
+            <button
+              type="button"
+              className="spa-physical-gallery__showcase-arrow"
+              aria-label="Next gallery photo"
+              onClick={showNextSlide}
+            >
+              ›
+            </button>
+          </div>
+          <div className="spa-physical-gallery__showcase-meta">
+            <p className="spa-physical-gallery__showcase-title">{slideItem.title}</p>
+            <p className="spa-physical-gallery__showcase-counter">
+              Photo <strong>{slideIndex + 1}</strong> of {physicalTrainingItems.length}
+            </p>
+            <div
+              className={`spa-physical-gallery__showcase-progress${isPaused || previewIndex !== null ? " is-paused" : ""}`}
+              aria-hidden="true"
+              key={slideIndex}
+              style={{ "--spa-gallery-ms": `${PHYSICAL_GALLERY_AUTO_MS}ms` }}
+            >
+              <span />
+            </div>
+          </div>
+          <div className="spa-physical-gallery__showcase-strip" role="tablist" aria-label="Gallery photos">
+            {physicalTrainingItems.map((item, index) => (
+              <button
+                key={item.title}
+                type="button"
+                role="tab"
+                aria-selected={index === slideIndex}
+                aria-label={`Show ${item.title}`}
+                className={index === slideIndex ? "is-active" : ""}
+                onClick={() => goToSlide(index)}
+              >
+                <img src={item.image} alt="" />
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <h3 className="spa-physical-gallery__all-head text-center">All campus photos</h3>
         <div className="spa-physical-gallery__grid">
           {physicalTrainingItems.map((item, index) => (
             <button
@@ -1534,9 +1668,25 @@ function SpaTestimonialsCardsSection() {
           <div className="row">
             <div className="col-md-12 text-center">
               <h2 className="react__tittle">Testimonials</h2>
+              <p className="spa-testimonials-cards__lead">
+                Student video stories and written reviews from our TNUSRB coaching family.
+              </p>
             </div>
           </div>
         </div>
+
+        <VideoTestimonialsSpotlight
+          className="spa-home-vt-spotlight"
+          badgeLabel="Video success stories"
+          cta={
+            <SiteLink href="/star-police-academy-testimonials" className="react-btn spa-home-vt-spotlight__link">
+              View all video testimonials
+            </SiteLink>
+          }
+        />
+
+        <h3 className="spa-testimonials-cards__written-head text-center">Written student reviews</h3>
+
         <div className="spa-testimonials-cards__slider" {...pauseProps}>
           <button
             type="button"
