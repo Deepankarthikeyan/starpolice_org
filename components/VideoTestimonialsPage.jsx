@@ -26,21 +26,27 @@ function maxresThumbnailUrl(videoId) {
 }
 
 function VideoThumb({ videoId, className, alt = "", loading }) {
-  const [src, setSrc] = useState(() => maxresThumbnailUrl(videoId));
+  const [src, setSrc] = useState(() => mqThumbnailUrl(videoId));
 
   useEffect(() => {
-    setSrc(maxresThumbnailUrl(videoId));
+    setSrc(mqThumbnailUrl(videoId));
   }, [videoId]);
 
-  const useMqFallback = () => {
-    setSrc(mqThumbnailUrl(videoId));
-  };
-
-  const handleLoad = (event) => {
+  const promoteToHd = (event) => {
     const image = event.currentTarget;
-    if (image.naturalWidth < 200 || image.naturalHeight < 200) {
-      useMqFallback();
+    if (image.dataset.hdChecked === "true") {
+      return;
     }
+    image.dataset.hdChecked = "true";
+
+    const hd = new Image();
+    hd.onload = () => {
+      if (hd.naturalWidth >= 200 && hd.naturalHeight >= 200) {
+        setSrc(maxresThumbnailUrl(videoId));
+      }
+    };
+    hd.onerror = () => {};
+    hd.src = maxresThumbnailUrl(videoId);
   };
 
   return (
@@ -51,8 +57,8 @@ function VideoThumb({ videoId, className, alt = "", loading }) {
       loading={loading}
       decoding="async"
       draggable={false}
-      onLoad={handleLoad}
-      onError={useMqFallback}
+      onLoad={promoteToHd}
+      onError={() => setSrc(mqThumbnailUrl(videoId))}
     />
   );
 }
