@@ -25,7 +25,7 @@ function maxresThumbnailUrl(videoId) {
   return `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
 }
 
-function VideoThumb({ videoId, className, alt = "", loading }) {
+function VideoThumb({ videoId, variant, alt = "", loading, children }) {
   const [src, setSrc] = useState(() => mqThumbnailUrl(videoId));
 
   useEffect(() => {
@@ -50,16 +50,22 @@ function VideoThumb({ videoId, className, alt = "", loading }) {
   };
 
   return (
-    <img
-      className={className}
-      src={src}
-      alt={alt}
-      loading={loading}
-      decoding="async"
-      draggable={false}
-      onLoad={promoteToHd}
-      onError={() => setSrc(mqThumbnailUrl(videoId))}
-    />
+    <span
+      className={`star-vt-thumb-frame star-vt-thumb-frame--${variant}`}
+      style={src ? { backgroundImage: `url("${src}")` } : undefined}
+    >
+      <img
+        className="star-vt-thumb-img"
+        src={src}
+        alt={alt}
+        loading={loading}
+        decoding="async"
+        draggable={false}
+        onLoad={promoteToHd}
+        onError={() => setSrc(mqThumbnailUrl(videoId))}
+      />
+      {children}
+    </span>
   );
 }
 
@@ -217,17 +223,16 @@ export default function VideoTestimonialsPage() {
                 aria-label={`Play ${activeItem.title}`}
                 onClick={() => openLightbox(activeIndex)}
               >
-                <span className="star-vt-thumb-frame star-vt-thumb-frame--hero">
-                  <VideoThumb
-                    key={activeItem.id}
-                    videoId={activeItem.id}
-                    className="star-vt-thumb-img"
-                    alt={activeItem.title}
-                  />
+                <VideoThumb
+                  key={activeItem.id}
+                  videoId={activeItem.id}
+                  variant="hero"
+                  alt={activeItem.title}
+                >
                   <span className="star-vt-feature__play material-symbols-outlined" aria-hidden="true">
                     play_circle
                   </span>
-                </span>
+                </VideoThumb>
               </button>
               <p className="star-vt-feature__label">
                 <span>{activeIndex + 1} / {total}</span>
@@ -257,17 +262,11 @@ export default function VideoTestimonialsPage() {
                   className={`star-vt-all-card${index === activeIndex ? " is-current" : ""}`}
                   onClick={() => openLightbox(index)}
                 >
-                  <span className="star-vt-thumb-frame star-vt-thumb-frame--card">
-                    <VideoThumb
-                      videoId={item.id}
-                      className="star-vt-thumb-img"
-                      alt={item.title}
-                      loading="lazy"
-                    />
+                  <VideoThumb videoId={item.id} variant="card" alt={item.title} loading="lazy">
                     <span className="star-vt-all-card__play material-symbols-outlined" aria-hidden="true">
                       play_circle
                     </span>
-                  </span>
+                  </VideoThumb>
                   <span className="star-vt-all-card__title">{item.title}</span>
                 </button>
               </li>

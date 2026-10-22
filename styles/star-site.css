@@ -10486,7 +10486,8 @@ body.star-site .spa-gallery-lightbox__caption p {
 }
 
 .star-vt-feature__hit {
-  background: transparent;
+  background-color: transparent;
+  background-size: auto;
   border: 0;
   cursor: pointer;
   display: inline-block;
@@ -10497,7 +10498,10 @@ body.star-site .spa-gallery-lightbox__caption p {
 }
 
 .star-vt-thumb-frame {
-  background: transparent;
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: inherit;
   border-radius: 12px;
   box-shadow: 0 16px 40px rgba(15, 34, 57, 0.12);
   display: inline-block;
@@ -10520,10 +10524,12 @@ body.star-site .spa-gallery-lightbox__caption p {
 }
 
 .star-vt-thumb-img {
+  border: 0;
   border-radius: 12px;
   display: block;
   height: auto;
   max-width: 100%;
+  opacity: 0;
   width: auto;
 }
 
@@ -10581,7 +10587,8 @@ body.star-site .spa-gallery-lightbox__caption p {
 
 .star-vt-all-card {
   align-items: center;
-  background: none;
+  background-color: transparent;
+  background-size: auto;
   border: 0;
   cursor: pointer;
   display: flex;
