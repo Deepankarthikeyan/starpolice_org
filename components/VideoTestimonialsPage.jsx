@@ -17,18 +17,17 @@ function youtubeEmbedUrl(videoId, autoplay = false) {
   return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
 }
 
-function TestimonialThumb({ videoId, className, alt = "", loading }) {
-  const [src, setSrc] = useState(`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`);
+function testimonialThumbnailUrl(videoId) {
+  return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+}
 
+function TestimonialThumb({ videoId, className, alt = "", loading }) {
   return (
     <img
       className={className}
-      src={src}
+      src={testimonialThumbnailUrl(videoId)}
       alt={alt}
       loading={loading}
-      onError={() => {
-        setSrc(`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`);
-      }}
     />
   );
 }
@@ -187,11 +186,13 @@ export default function VideoTestimonialsPage() {
                 aria-label={`Play ${activeItem.title}`}
                 onClick={() => openLightbox(activeIndex)}
               >
-                <TestimonialThumb
-                  videoId={activeItem.id}
-                  className="star-vt-feature__img"
-                  alt={activeItem.title}
-                />
+                <span className="star-vt-feature__media">
+                  <TestimonialThumb
+                    videoId={activeItem.id}
+                    className="star-vt-feature__img"
+                    alt={activeItem.title}
+                  />
+                </span>
                 <span className="star-vt-feature__play material-symbols-outlined" aria-hidden="true">
                   play_circle
                 </span>
@@ -204,7 +205,7 @@ export default function VideoTestimonialsPage() {
 
             <button
               type="button"
-              className="star-vt-feature__arrow"
+              className="star-vt-feature__arrow star-vt-feature__arrow--next"
               aria-label="Next story"
               onClick={() => goTo(activeIndex + 1)}
             >
@@ -224,14 +225,16 @@ export default function VideoTestimonialsPage() {
                   className={`star-vt-all-card${index === activeIndex ? " is-current" : ""}`}
                   onClick={() => openLightbox(index)}
                 >
-                  <TestimonialThumb
-                    videoId={item.id}
-                    className="star-vt-all-card__img"
-                    alt={item.title}
-                    loading="lazy"
-                  />
-                  <span className="star-vt-all-card__play material-symbols-outlined" aria-hidden="true">
-                    play_circle
+                  <span className="star-vt-all-card__media">
+                    <TestimonialThumb
+                      videoId={item.id}
+                      className="star-vt-all-card__img"
+                      alt={item.title}
+                      loading="lazy"
+                    />
+                    <span className="star-vt-all-card__play material-symbols-outlined" aria-hidden="true">
+                      play_circle
+                    </span>
                   </span>
                   <span className="star-vt-all-card__title">{item.title}</span>
                 </button>
