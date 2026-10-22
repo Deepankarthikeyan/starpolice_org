@@ -10495,7 +10495,7 @@ body.star-site .spa-testimonial-card__quote {
   gap: clamp(10px, 2vw, 20px);
   justify-content: center;
   margin: 0 auto 48px;
-  max-width: 900px;
+  max-width: min(560px, 100%);
 }
 
 .star-vt-feature__arrow {
@@ -10544,13 +10544,13 @@ body.star-site .spa-testimonial-card__quote {
 }
 
 .star-vt-thumb-frame--hero {
-  max-width: min(720px, 100%);
+  max-width: min(480px, 100%);
 }
 
 .star-vt-thumb-frame--card {
-  display: inline-block;
-  max-width: 100%;
-  width: auto;
+  display: block;
+  max-width: 280px;
+  width: 100%;
 }
 
 .star-vt-thumb-img {
@@ -10561,8 +10561,14 @@ body.star-site .spa-testimonial-card__quote {
   width: auto;
 }
 
+.star-vt-thumb-frame--hero .star-vt-thumb-img {
+  max-width: min(480px, 100%);
+}
+
 .star-vt-thumb-frame--card .star-vt-thumb-img {
   border-radius: 10px;
+  max-width: 100%;
+  width: 100%;
 }
 
 .star-vt-feature__play {
@@ -10607,7 +10613,8 @@ body.star-site .spa-testimonial-card__quote {
 .star-vt-all-grid {
   display: grid;
   gap: 22px;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 280px));
+  justify-content: center;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -10620,6 +10627,7 @@ body.star-site .spa-testimonial-card__quote {
   cursor: pointer;
   display: flex;
   flex-direction: column;
+  max-width: 280px;
   padding: 0;
   text-align: center;
   width: 100%;
