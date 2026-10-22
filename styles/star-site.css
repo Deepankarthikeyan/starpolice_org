@@ -10473,47 +10473,182 @@ body.star-site .spa-testimonial-card__quote {
   }
 }
 
-/* Video testimonial cards inside spa-testimonial-card */
-body.star-site .spa-testimonial-card--video .spa-testimonial-card__text {
-  font-size: 15px;
-  margin-bottom: 18px;
-}
-
-body.star-site .spa-testimonial-card__video-hit {
-  background: transparent;
-  border: 0;
-  border-radius: 14px;
-  cursor: pointer;
-  display: block;
-  margin: 0 0 16px;
-  overflow: hidden;
-  padding: 0;
+/* Video testimonials — unique landscape “film” layout (full 16:9 thumb, no contain crop) */
+.star-vt-film {
+  background:
+    linear-gradient(165deg, rgba(11, 78, 179, 0.06) 0%, transparent 42%),
+    linear-gradient(15deg, rgba(247, 201, 72, 0.1) 0%, transparent 38%),
+    #f4f7fb;
   position: relative;
-  width: 100%;
 }
 
-body.star-site .spa-testimonial-card__video-hit img {
-  border-radius: 14px;
+.star-vt-film__head {
+  margin-bottom: 36px;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.star-vt-film__eyebrow {
+  color: #0b4eb3;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  margin: 0 0 10px;
+  text-transform: uppercase;
+}
+
+.star-vt-film-img {
+  border-radius: 16px;
   display: block;
   height: auto;
+  max-width: 100%;
   width: 100%;
 }
 
-body.star-site .spa-testimonial-card__video-play {
+.star-vt-film-hero {
+  align-items: center;
+  display: flex;
+  gap: clamp(12px, 2vw, 20px);
+  justify-content: center;
+  margin: 0 auto 48px;
+  max-width: 1040px;
+}
+
+.star-vt-film-hero__arrow {
+  background: #ffffff;
+  border: 2px solid rgba(11, 78, 179, 0.2);
+  border-radius: 50%;
+  box-shadow: 0 10px 28px rgba(11, 78, 179, 0.12);
+  color: #0b4eb3;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-size: 1.75rem;
+  height: 48px;
+  line-height: 1;
+  width: 48px;
+}
+
+.star-vt-film-hero__stage {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+}
+
+.star-vt-film-hero__hit {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  display: inline-block;
+  line-height: 0;
+  max-width: 100%;
+  padding: 0;
+  position: relative;
+  width: auto;
+}
+
+.star-vt-film-img--hero {
+  box-shadow: 0 22px 50px rgba(15, 34, 57, 0.2);
+  max-width: min(920px, 100%);
+  width: min(920px, 100%);
+}
+
+.star-vt-film-hero__play {
   color: #ffffff;
-  font-size: 3.25rem;
+  font-size: clamp(3rem, 9vw, 4.25rem);
   left: 50%;
   pointer-events: none;
   position: absolute;
-  text-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   top: 50%;
   transform: translate(-50%, -50%);
 }
 
-body.star-site .spa-testimonials-cards__dots {
-  flex-wrap: wrap;
-  max-width: 100%;
-  row-gap: 10px;
+.star-vt-film-hero__meta {
+  color: #0f2239;
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 16px 0 0;
+}
+
+.star-vt-film-hero__meta span {
+  color: #0b4eb3;
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.star-vt-film-grid {
+  display: grid;
+  gap: 22px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.star-vt-film-card {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  display: block;
+  padding: 0;
+  text-align: left;
+  width: 100%;
+}
+
+.star-vt-film-card__frame {
+  display: block;
+  line-height: 0;
+  position: relative;
+  width: 100%;
+}
+
+.star-vt-film-card__frame .star-vt-film-img {
+  box-shadow: 0 14px 32px rgba(15, 34, 57, 0.14);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.star-vt-film-card:hover .star-vt-film-img,
+.star-vt-film-card.is-active .star-vt-film-img {
+  box-shadow: 0 18px 40px rgba(11, 78, 179, 0.22);
+  transform: translateY(-3px);
+}
+
+.star-vt-film-card.is-active .star-vt-film-img {
+  outline: 3px solid #f7c948;
+  outline-offset: 3px;
+}
+
+.star-vt-film-card__play {
+  color: #ffffff;
+  font-size: 2.75rem;
+  left: 50%;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  text-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.2s ease;
+}
+
+.star-vt-film-card:hover .star-vt-film-card__play,
+.star-vt-film-card.is-active .star-vt-film-card__play {
+  opacity: 1;
+}
+
+.star-vt-film-card__label {
+  color: #0f2239;
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  margin-top: 10px;
+  text-transform: uppercase;
 }
 
 .star-vt-lightbox {
@@ -10614,19 +10749,21 @@ body.star-site .spa-testimonials-cards__dots {
 }
 
 @media (max-width: 767px) {
-  .star-vt-mosaic-list {
-    justify-content: flex-start;
-    overflow-x: auto;
-    padding-bottom: 16px;
-    scrollbar-width: thin;
+  .star-vt-film-hero {
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
-  .star-vt-mosaic-img {
-    width: clamp(100px, 38vw, 140px);
+  .star-vt-film-hero__stage {
+    order: 1;
+    width: 100%;
   }
 
-  .star-vt-strip-list {
-    display: grid;
+  .star-vt-film-hero__arrow {
+    order: 2;
+  }
+
+  .star-vt-film-grid {
     grid-template-columns: 1fr;
   }
 

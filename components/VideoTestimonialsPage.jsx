@@ -21,7 +21,7 @@ function mqThumbnailUrl(videoId) {
   return `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`;
 }
 
-function VideoThumb({ videoId, alt = "", loading }) {
+function VideoThumb({ videoId, alt = "", loading, className = "" }) {
   const [src, setSrc] = useState(() => mqThumbnailUrl(videoId));
 
   useEffect(() => {
@@ -30,6 +30,7 @@ function VideoThumb({ videoId, alt = "", loading }) {
 
   return (
     <img
+      className={className}
       src={src}
       alt={alt}
       loading={loading}
@@ -133,49 +134,18 @@ function VideoLightbox({ videoId, title, index, total, onClose, onPrevious, onNe
 }
 
 export default function VideoTestimonialsPage() {
-  const [startIndex, setStartIndex] = useState(0);
-  const [visibleCount, setVisibleCount] = useState(2);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const { isPaused, pauseProps } = useAutoSliderPause();
   const total = videoTestimonials.length;
+  const activeItem = videoTestimonials[activeIndex];
 
-  useEffect(() => {
-    const updateVisibleCount = () => {
-      setVisibleCount(window.innerWidth <= 991 ? 1 : 2);
-    };
-
-    updateVisibleCount();
-    window.addEventListener("resize", updateVisibleCount);
-    return () => window.removeEventListener("resize", updateVisibleCount);
-  }, []);
-
-  useEffect(() => {
-    if (isPaused || lightboxIndex !== null) {
-      return undefined;
-    }
-
-    const timer = window.setInterval(() => {
-      setStartIndex((current) => (current + 1) % total);
-    }, AUTO_SLIDER_INTERVAL_MS);
-
-    return () => window.clearInterval(timer);
-  }, [isPaused, lightboxIndex, total]);
-
-  const visibleItems = Array.from({ length: visibleCount }, (_, index) => {
-    const itemIndex = (startIndex + index) % total;
-    return { ...videoTestimonials[itemIndex], itemIndex };
-  });
-
-  const showPrevious = () => {
-    setStartIndex((current) => (current + total - 1) % total);
-  };
-
-  const showNext = () => {
-    setStartIndex((current) => (current + 1) % total);
+  const goTo = (index) => {
+    setActiveIndex((index + total) % total);
   };
 
   const openLightbox = (index) => {
-    setStartIndex(index);
+    setActiveIndex(index);
     setLightboxIndex(index);
   };
 
@@ -183,95 +153,100 @@ export default function VideoTestimonialsPage() {
     setLightboxIndex(null);
   };
 
+  useEffect(() => {
+    if (isPaused || lightboxIndex !== null) {
+      return undefined;
+    }
+
+    const timer = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % total);
+    }, AUTO_SLIDER_INTERVAL_MS);
+
+    return () => window.clearInterval(timer);
+  }, [isPaused, lightboxIndex, total]);
+
   const lightboxItem = lightboxIndex !== null ? videoTestimonials[lightboxIndex] : null;
 
   return (
     <>
-      <section className="spa-testimonials-cards pt---110 pb---120">
+      <section className="star-vt-film pt---80 pb---120">
         <div className="container">
-          <div className="react__title__section-all pb---30">
-            <div className="row">
-              <div className="col-md-12 text-center">
-                <h2 className="react__tittle">Testimonials</h2>
-              </div>
-            </div>
-          </div>
+          <header className="star-vt-film__head text-center">
+            <p className="star-vt-film__eyebrow">Student success on video</p>
+            <h2 className="spa-section-title">Video testimonials</h2>
+            <p className="spa-section-text">
+              Wide landscape previews — full thumbnail, no crop. Tap any rectangle to play.
+            </p>
+          </header>
 
-          <div className="spa-testimonials-cards__slider" {...pauseProps}>
+          <div className="star-vt-film-hero" {...pauseProps}>
             <button
               type="button"
-              className="spa-testimonials-cards__arrow spa-testimonials-cards__arrow--prev"
-              aria-label="Previous video testimonial"
-              onClick={showPrevious}
+              className="star-vt-film-hero__arrow star-vt-film-hero__arrow--prev"
+              aria-label="Previous story"
+              onClick={() => goTo(activeIndex - 1)}
             >
               ‹
             </button>
 
-            <div className="spa-testimonials-cards__track">
-              {visibleItems.map((item) => (
-                <article className="spa-testimonial-card spa-testimonial-card--video" key={`${item.id}-${item.itemIndex}`}>
-                  <div className="spa-testimonial-card__top">
-                    <span className="spa-testimonial-card__quote" aria-hidden="true">“</span>
-                    <div className="testimonial__ratings">
-                      <em className="icon_star" />
-                      <em className="icon_star" />
-                      <em className="icon_star" />
-                      <em className="icon_star" />
-                      <em className="icon_star_alt" />
-                      <span>Student voice</span>
-                    </div>
-                  </div>
-
-                  <button
-                    type="button"
-                    className="spa-testimonial-card__video-hit"
-                    aria-label={`Play ${item.title}`}
-                    onClick={() => openLightbox(item.itemIndex)}
-                  >
-                    <VideoThumb videoId={item.id} alt={item.title} />
-                    <span className="spa-testimonial-card__video-play material-symbols-outlined" aria-hidden="true">
-                      play_circle
-                    </span>
-                  </button>
-
-                  <p className="spa-testimonial-card__text">
-                    Watch how this achiever shares their Star Police Academy journey and exam success.
-                  </p>
-
-                  <div className="spa-testimonial-card__author">
-                    <span className="spa-user-avatar spa-user-avatar--sm" aria-hidden="true">
-                      <span className="material-symbols-outlined">videocam</span>
-                    </span>
-                    <div className="spa-testimonial-card__author-meta">
-                      <strong>{item.title}</strong>
-                      <span>Video testimonial</span>
-                    </div>
-                  </div>
-                </article>
-              ))}
+            <div className="star-vt-film-hero__stage">
+              <button
+                type="button"
+                className="star-vt-film-hero__hit"
+                aria-label={`Play ${activeItem.title}`}
+                onClick={() => openLightbox(activeIndex)}
+              >
+                <VideoThumb
+                  key={activeItem.id}
+                  videoId={activeItem.id}
+                  alt={activeItem.title}
+                  className="star-vt-film-img star-vt-film-img--hero"
+                />
+                <span className="star-vt-film-hero__play material-symbols-outlined" aria-hidden="true">
+                  play_circle
+                </span>
+              </button>
+              <p className="star-vt-film-hero__meta">
+                <span>{activeIndex + 1} / {total}</span>
+                {activeItem.title}
+              </p>
             </div>
 
             <button
               type="button"
-              className="spa-testimonials-cards__arrow spa-testimonials-cards__arrow--next"
-              aria-label="Next video testimonial"
-              onClick={showNext}
+              className="star-vt-film-hero__arrow star-vt-film-hero__arrow--next"
+              aria-label="Next story"
+              onClick={() => goTo(activeIndex + 1)}
             >
               ›
             </button>
           </div>
 
-          <div className="spa-testimonials-cards__dots" aria-label="Video testimonial slides">
+          <ul className="star-vt-film-grid">
             {videoTestimonials.map((item, index) => (
-              <button
-                key={item.id}
-                type="button"
-                aria-label={`Show video ${index + 1}`}
-                className={index === startIndex ? "is-active" : ""}
-                onClick={() => setStartIndex(index)}
-              />
+              <li key={item.id}>
+                <button
+                  type="button"
+                  className={`star-vt-film-card${index === activeIndex ? " is-active" : ""}`}
+                  aria-label={`Play ${item.title}`}
+                  onClick={() => openLightbox(index)}
+                >
+                  <span className="star-vt-film-card__frame">
+                    <VideoThumb
+                      videoId={item.id}
+                      alt={item.title}
+                      className="star-vt-film-img"
+                      loading="lazy"
+                    />
+                    <span className="star-vt-film-card__play material-symbols-outlined" aria-hidden="true">
+                      play_circle
+                    </span>
+                  </span>
+                  <span className="star-vt-film-card__label">{item.title}</span>
+                </button>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
 
@@ -285,12 +260,12 @@ export default function VideoTestimonialsPage() {
           onPrevious={() => {
             const next = (lightboxIndex - 1 + total) % total;
             setLightboxIndex(next);
-            setStartIndex(next);
+            setActiveIndex(next);
           }}
           onNext={() => {
             const next = (lightboxIndex + 1) % total;
             setLightboxIndex(next);
-            setStartIndex(next);
+            setActiveIndex(next);
           }}
         />
       ) : null}
