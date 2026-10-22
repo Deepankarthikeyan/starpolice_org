@@ -21,33 +21,12 @@ function mqThumbnailUrl(videoId) {
   return `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`;
 }
 
-function maxresThumbnailUrl(videoId) {
-  return `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
-}
-
 function VideoThumb({ videoId, className, alt = "", loading }) {
   const [src, setSrc] = useState(() => mqThumbnailUrl(videoId));
 
   useEffect(() => {
     setSrc(mqThumbnailUrl(videoId));
   }, [videoId]);
-
-  const promoteToHd = (event) => {
-    const image = event.currentTarget;
-    if (image.dataset.hdChecked === "true") {
-      return;
-    }
-    image.dataset.hdChecked = "true";
-
-    const hd = new Image();
-    hd.onload = () => {
-      if (hd.naturalWidth >= 200 && hd.naturalHeight >= 200) {
-        setSrc(maxresThumbnailUrl(videoId));
-      }
-    };
-    hd.onerror = () => {};
-    hd.src = maxresThumbnailUrl(videoId);
-  };
 
   return (
     <img
@@ -57,7 +36,6 @@ function VideoThumb({ videoId, className, alt = "", loading }) {
       loading={loading}
       decoding="async"
       draggable={false}
-      onLoad={promoteToHd}
       onError={() => setSrc(mqThumbnailUrl(videoId))}
     />
   );
