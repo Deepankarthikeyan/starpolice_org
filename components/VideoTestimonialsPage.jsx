@@ -18,16 +18,16 @@ function youtubeEmbedUrl(videoId, autoplay = false) {
 }
 
 function testimonialThumbnailUrl(videoId) {
-  return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+  return `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
 }
 
-function TestimonialThumb({ videoId, className, alt = "", loading }) {
+function VideoThumbFrame({ videoId, className, alt }) {
   return (
-    <img
+    <span
       className={className}
-      src={testimonialThumbnailUrl(videoId)}
-      alt={alt}
-      loading={loading}
+      role="img"
+      aria-label={alt}
+      style={{ backgroundImage: `url("${testimonialThumbnailUrl(videoId)}")` }}
     />
   );
 }
@@ -186,13 +186,12 @@ export default function VideoTestimonialsPage() {
                 aria-label={`Play ${activeItem.title}`}
                 onClick={() => openLightbox(activeIndex)}
               >
-                <span className="star-vt-feature__media">
-                  <TestimonialThumb
-                    videoId={activeItem.id}
-                    className="star-vt-feature__img"
-                    alt={activeItem.title}
-                  />
-                </span>
+                <VideoThumbFrame
+                  key={activeItem.id}
+                  videoId={activeItem.id}
+                  className="star-vt-feature__media"
+                  alt={activeItem.title}
+                />
                 <span className="star-vt-feature__play material-symbols-outlined" aria-hidden="true">
                   play_circle
                 </span>
@@ -226,11 +225,10 @@ export default function VideoTestimonialsPage() {
                   onClick={() => openLightbox(index)}
                 >
                   <span className="star-vt-all-card__media">
-                    <TestimonialThumb
+                    <VideoThumbFrame
                       videoId={item.id}
-                      className="star-vt-all-card__img"
+                      className="star-vt-all-card__thumb"
                       alt={item.title}
-                      loading="lazy"
                     />
                     <span className="star-vt-all-card__play material-symbols-outlined" aria-hidden="true">
                       play_circle

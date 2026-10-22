@@ -10499,19 +10499,15 @@ body.star-site .spa-gallery-lightbox__caption p {
 
 .star-vt-feature__media {
   aspect-ratio: 16 / 9;
+  background-color: #0f2239;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   border-radius: 12px;
   box-shadow: 0 16px 40px rgba(15, 34, 57, 0.15);
   display: block;
   overflow: hidden;
   position: relative;
-  width: 100%;
-}
-
-.star-vt-feature__img {
-  display: block;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
   width: 100%;
 }
 
@@ -10524,6 +10520,7 @@ body.star-site .spa-gallery-lightbox__caption p {
   text-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
   top: 50%;
   transform: translate(-50%, -50%);
+  z-index: 2;
 }
 
 .star-vt-feature__label {
@@ -10583,11 +10580,15 @@ body.star-site .spa-gallery-lightbox__caption p {
   width: 100%;
 }
 
-.star-vt-all-card__img {
+.star-vt-all-card__thumb {
+  background-color: #0f2239;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   display: block;
   height: 100%;
-  object-fit: cover;
-  object-position: center;
+  inset: 0;
+  position: absolute;
   width: 100%;
 }
 
