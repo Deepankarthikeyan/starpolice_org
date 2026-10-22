@@ -16,16 +16,24 @@ function youtubeEmbedUrl(videoId, autoplay = false) {
   return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
 }
 
-function shortsThumbnailUrl(videoId) {
-  return `https://i.ytimg.com/vi/${videoId}/oardefault.jpg`;
-}
+const YT_THUMB_FALLBACK_ORDER = ["mqdefault", "hqdefault", "sddefault"];
 
-function mqThumbnailUrl(videoId) {
-  return `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`;
+function youtubeThumbUrl(videoId, variant) {
+  return `https://i.ytimg.com/vi/${videoId}/${variant}.jpg`;
 }
 
 function testimonialPosterSrc(item) {
-  return item.id ? shortsThumbnailUrl(item.id) : "";
+  return item.id ? youtubeThumbUrl(item.id, YT_THUMB_FALLBACK_ORDER[0]) : "";
+}
+
+function advanceTestimonialThumbOnError(image, videoId) {
+  const variants = YT_THUMB_FALLBACK_ORDER;
+  const currentVariant = variants.find((name) => image.src.includes(`/${name}.jpg`));
+  const nextIndex = currentVariant ? variants.indexOf(currentVariant) + 1 : 1;
+  const nextVariant = variants[nextIndex];
+  if (nextVariant) {
+    image.src = youtubeThumbUrl(videoId, nextVariant);
+  }
 }
 
 
@@ -176,21 +184,12 @@ function TestimonialCard({ item, index, isSectionVisible, onOpen }) {
               className="star-vt-premium-img"
               src={poster}
               alt={item.title}
-              loading="lazy"
+              loading={index < 4 ? "eager" : "lazy"}
+              fetchPriority={index < 4 ? "high" : undefined}
               decoding="async"
               draggable={false}
               onError={(event) => {
-                const image = event.currentTarget;
-                const fallbacks = testimonialThumbFallbacks(item.id);
-                const next = fallbacks.find((url) => !image.src.includes(url.split("/").pop()?.replace(".jpg", "") || ""));
-                if (next && image.src !== next) {
-                  image.src = next;
-                  return;
-                }
-                const mq = mqThumbnailUrl(item.id);
-                if (image.src !== mq) {
-                  image.src = mq;
-                }
+                advanceTestimonialThumbOnError(event.currentTarget, item.id);
               }}
             />
           ) : (
