@@ -175,7 +175,7 @@ export default function VideoTestimonialsPage() {
             <p className="star-vt-film__eyebrow">Student success on video</p>
             <h2 className="spa-section-title">Video testimonials</h2>
             <p className="spa-section-text">
-              Wide landscape previews — full thumbnail, no crop. Tap any rectangle to play.
+              Use the arrows or pick a story below. Each preview shows the full video thumbnail.
             </p>
           </header>
 
