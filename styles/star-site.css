@@ -10486,28 +10486,41 @@ body.star-site .spa-gallery-lightbox__caption p {
 }
 
 .star-vt-feature__hit {
-  background: none;
+  background: transparent;
   border: 0;
   cursor: pointer;
   display: block;
   margin: 0 auto;
   max-width: 720px;
   padding: 0;
+  width: 100%;
+}
+
+.star-vt-thumb-frame {
+  background: #f7f9fc;
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(15, 34, 57, 0.12);
+  display: block;
+  overflow: hidden;
   position: relative;
   width: 100%;
 }
 
-.star-vt-feature__media {
+.star-vt-thumb-frame--hero {
   aspect-ratio: 16 / 9;
-  background-color: #0f2239;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  border-radius: 12px;
-  box-shadow: 0 16px 40px rgba(15, 34, 57, 0.15);
+}
+
+.star-vt-thumb-frame--card {
+  aspect-ratio: 16 / 9;
+}
+
+.star-vt-thumb-img {
   display: block;
-  overflow: hidden;
-  position: relative;
+  height: 100%;
+  inset: 0;
+  object-fit: contain;
+  object-position: center;
+  position: absolute;
   width: 100%;
 }
 
