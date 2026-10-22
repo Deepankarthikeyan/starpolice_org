@@ -1,9 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { videoTestimonials } from "../lib/star-content";
-import { useAutoSliderPause } from "../lib/useAutoSlider";
-
-const SHOWCASE_AUTO_MS = 7000;
 
 function youtubeEmbedUrl(videoId, autoplay = false) {
   const params = new URLSearchParams({
@@ -31,14 +28,6 @@ function testimonialPosterSrc(item) {
   return item.id ? shortsThumbnailUrl(item.id) : "";
 }
 
-function thumbOnError(item, event) {
-  const image = event.currentTarget;
-  if (image.dataset.thumbFallback === "mq") {
-    return;
-  }
-  image.dataset.thumbFallback = "mq";
-  image.src = mqThumbnailUrl(item.id);
-}
 
 function useInViewOnce(threshold = 0.12) {
   const ref = useRef(null);
@@ -166,123 +155,13 @@ function VideoLightbox({ videoId, title, index, total, onClose, onPrevious, onNe
   );
 }
 
-function TestimonialThumb({ item, className, loading }) {
+function TestimonialCard({ item, index, isSectionVisible, onOpen }) {
   const poster = testimonialPosterSrc(item);
-  if (!poster) {
-    return <span className="star-vt-premium-placeholder">Video URL pending</span>;
-  }
-
-  return (
-    <img
-      className={className}
-      src={poster}
-      alt={item.title}
-      loading={loading}
-      decoding="async"
-      draggable={false}
-      onError={(event) => thumbOnError(item, event)}
-    />
-  );
-}
-
-function TestimonialShowcase({
-  activeIndex,
-  direction,
-  total,
-  onPrev,
-  onNext,
-  onSelect,
-  onPlay,
-  isPaused,
-}) {
-  const activeItem = videoTestimonials[activeIndex];
-  const enterClass = direction > 0 ? "from-next" : "from-prev";
-
-  return (
-    <div className="star-vt-showcase">
-      <div className="star-vt-showcase__glow" aria-hidden="true" />
-      <div className="star-vt-showcase__controls">
-        <button
-          type="button"
-          className="star-vt-showcase__arrow star-vt-showcase__arrow--prev"
-          aria-label="Previous story"
-          onClick={onPrev}
-        >
-          ‹
-        </button>
-
-        <div className="star-vt-showcase__viewport">
-          <article
-            key={activeIndex}
-            className={`star-vt-showcase__slide star-vt-showcase__slide--${enterClass}`}
-          >
-            <button
-              type="button"
-              className="star-vt-premium-hit"
-              aria-label={`Watch student testimonial: ${activeItem.title}`}
-              onClick={() => onPlay(activeIndex)}
-            >
-              <span className="star-vt-premium-visual">
-                <TestimonialThumb
-                  item={activeItem}
-                  className="star-vt-premium-img star-vt-premium-img--showcase"
-                />
-                <span className="star-vt-premium-play star-vt-premium-play--showcase" aria-hidden="true">
-                  <span className="star-vt-premium-play__ring" />
-                  <span className="star-vt-premium-play__icon material-symbols-outlined">play_arrow</span>
-                </span>
-              </span>
-            </button>
-          </article>
-        </div>
-
-        <button
-          type="button"
-          className="star-vt-showcase__arrow star-vt-showcase__arrow--next"
-          aria-label="Next story"
-          onClick={onNext}
-        >
-          ›
-        </button>
-      </div>
-
-      <div className="star-vt-showcase__meta">
-        <p className="star-vt-showcase__title">{activeItem.title}</p>
-        <p className="star-vt-showcase__counter">
-          Story <strong>{activeIndex + 1}</strong> of {total}
-        </p>
-        <div
-          className={`star-vt-showcase__progress${isPaused ? " is-paused" : ""}`}
-          aria-hidden="true"
-          key={activeIndex}
-        >
-          <span />
-        </div>
-      </div>
-
-      <div className="star-vt-showcase__dots" role="tablist" aria-label="Featured stories">
-        {videoTestimonials.map((item, index) => (
-          <button
-            key={item.id}
-            type="button"
-            role="tab"
-            aria-selected={index === activeIndex}
-            aria-label={`Show ${item.title}`}
-            className={index === activeIndex ? "is-active" : ""}
-            onClick={() => onSelect(index)}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function TestimonialCard({ item, index, isSectionVisible, isCurrent, onOpen }) {
   const staggerMs = Math.min(index * 55, 660);
 
   return (
     <li
-      className={`star-vt-premium-card${isSectionVisible ? " is-visible" : ""}${isCurrent ? " is-current" : ""}`}
+      className={`star-vt-premium-card${isSectionVisible ? " is-visible" : ""}`}
       style={{ "--vt-stagger": `${staggerMs}ms` }}
     >
       <button
@@ -292,7 +171,31 @@ function TestimonialCard({ item, index, isSectionVisible, isCurrent, onOpen }) {
         onClick={() => onOpen(index)}
       >
         <span className="star-vt-premium-visual">
-          <TestimonialThumb item={item} className="star-vt-premium-img" loading="lazy" />
+          {poster ? (
+            <img
+              className="star-vt-premium-img"
+              src={poster}
+              alt={item.title}
+              loading="lazy"
+              decoding="async"
+              draggable={false}
+              onError={(event) => {
+                const image = event.currentTarget;
+                const fallbacks = testimonialThumbFallbacks(item.id);
+                const next = fallbacks.find((url) => !image.src.includes(url.split("/").pop()?.replace(".jpg", "") || ""));
+                if (next && image.src !== next) {
+                  image.src = next;
+                  return;
+                }
+                const mq = mqThumbnailUrl(item.id);
+                if (image.src !== mq) {
+                  image.src = mq;
+                }
+              }}
+            />
+          ) : (
+            <span className="star-vt-premium-placeholder">Video URL pending</span>
+          )}
           <span className="star-vt-premium-play" aria-hidden="true">
             <span className="star-vt-premium-play__ring" />
             <span className="star-vt-premium-play__icon material-symbols-outlined">play_arrow</span>
@@ -305,59 +208,17 @@ function TestimonialCard({ item, index, isSectionVisible, isCurrent, onOpen }) {
 }
 
 export default function VideoTestimonialsPage() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [slideDirection, setSlideDirection] = useState(1);
   const [lightboxIndex, setLightboxIndex] = useState(null);
-  const { isPaused, pauseProps } = useAutoSliderPause();
   const { ref: sectionRef, isVisible: isSectionVisible } = useInViewOnce();
   const total = videoTestimonials.length;
 
-  const goTo = (index) => {
-    const next = (index + total) % total;
-    if (next === activeIndex) {
-      return;
-    }
-    if (activeIndex === total - 1 && next === 0) {
-      setSlideDirection(1);
-    } else if (activeIndex === 0 && next === total - 1) {
-      setSlideDirection(-1);
-    } else {
-      setSlideDirection(next > activeIndex ? 1 : -1);
-    }
-    setActiveIndex(next);
-  };
-
-  const goNext = () => {
-    setSlideDirection(1);
-    setActiveIndex((current) => (current + 1) % total);
-  };
-
-  const goPrev = () => {
-    setSlideDirection(-1);
-    setActiveIndex((current) => (current - 1 + total) % total);
-  };
-
   const openLightbox = (index) => {
-    const next = (index + total) % total;
-    goTo(next);
-    setLightboxIndex(next);
+    setLightboxIndex(index);
   };
 
   const closeLightbox = () => {
     setLightboxIndex(null);
   };
-
-  useEffect(() => {
-    if (isPaused || lightboxIndex !== null) {
-      return undefined;
-    }
-
-    const timer = window.setInterval(() => {
-      setSlideDirection(1);
-      setActiveIndex((current) => (current + 1) % total);
-    }, SHOWCASE_AUTO_MS);
-    return () => window.clearInterval(timer);
-  }, [isPaused, lightboxIndex, total]);
 
   const lightboxItem = lightboxIndex !== null ? videoTestimonials[lightboxIndex] : null;
 
@@ -366,29 +227,15 @@ export default function VideoTestimonialsPage() {
       <section
         ref={sectionRef}
         className={`star-vt-page star-vt-premium pt---80 pb---120${isSectionVisible ? " is-visible" : ""}`}
-        {...pauseProps}
       >
         <div className="container">
           <header className="star-vt-intro star-vt-premium__head text-center">
             <p className="star-vt-premium__eyebrow">Real stories from our students</p>
             <h2 className="spa-section-title">Student video testimonials</h2>
             <p className="spa-section-text">
-              Watch the slideshow or pick any YouTube Short below. Tap play to open the video.
+              Each card uses the YouTube video thumbnail. Tap to watch the full testimonial.
             </p>
           </header>
-
-          <TestimonialShowcase
-            activeIndex={activeIndex}
-            direction={slideDirection}
-            total={total}
-            onPrev={goPrev}
-            onNext={goNext}
-            onSelect={goTo}
-            onPlay={openLightbox}
-            isPaused={isPaused || lightboxIndex !== null}
-          />
-
-          <h3 className="star-vt-all-head text-center">All student video testimonials</h3>
 
           <ul className="star-vt-premium-grid" aria-label="Student video testimonials">
             {videoTestimonials.map((item, index) => (
@@ -397,7 +244,6 @@ export default function VideoTestimonialsPage() {
                 item={item}
                 index={index}
                 isSectionVisible={isSectionVisible}
-                isCurrent={index === activeIndex}
                 onOpen={openLightbox}
               />
             ))}
@@ -413,14 +259,10 @@ export default function VideoTestimonialsPage() {
           total={total}
           onClose={closeLightbox}
           onPrevious={() => {
-            const next = (lightboxIndex - 1 + total) % total;
-            setLightboxIndex(next);
-            goTo(next);
+            setLightboxIndex((current) => (current - 1 + total) % total);
           }}
           onNext={() => {
-            const next = (lightboxIndex + 1) % total;
-            setLightboxIndex(next);
-            goTo(next);
+            setLightboxIndex((current) => (current + 1) % total);
           }}
         />
       ) : null}
