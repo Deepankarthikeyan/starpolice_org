@@ -10509,6 +10509,207 @@ body.star-site .spa-testimonial-card__quote {
   text-transform: uppercase;
 }
 
+.star-vt-showcase {
+  margin: 0 auto 40px;
+  max-width: 520px;
+  position: relative;
+}
+
+.star-vt-showcase__glow {
+  background:
+    radial-gradient(circle at 30% 20%, rgba(247, 201, 72, 0.28), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(11, 78, 179, 0.22), transparent 50%);
+  border-radius: 28px;
+  inset: -16px -20px 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+}
+
+.star-vt-showcase__controls {
+  align-items: center;
+  display: flex;
+  gap: clamp(10px, 2vw, 18px);
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.star-vt-showcase__arrow {
+  background: linear-gradient(145deg, #ffffff, #eef3fb);
+  border: 2px solid rgba(11, 78, 179, 0.22);
+  border-radius: 50%;
+  box-shadow: 0 10px 24px rgba(11, 78, 179, 0.14);
+  color: #0b4eb3;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-size: 1.6rem;
+  height: 46px;
+  line-height: 1;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  width: 46px;
+}
+
+.star-vt-showcase__arrow:hover {
+  box-shadow: 0 14px 28px rgba(11, 78, 179, 0.22);
+  transform: scale(1.06);
+}
+
+.star-vt-showcase__viewport {
+  min-height: 220px;
+  position: relative;
+  width: min(200px, 100%);
+}
+
+.star-vt-showcase__slide {
+  margin: 0 auto;
+  width: fit-content;
+}
+
+.star-vt-showcase__slide--from-next {
+  animation: starVtShowcaseInNext 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.star-vt-showcase__slide--from-prev {
+  animation: starVtShowcaseInPrev 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes starVtShowcaseInNext {
+  from {
+    filter: blur(4px);
+    opacity: 0;
+    transform: translateX(36px) scale(0.9) rotate(2deg);
+  }
+
+  to {
+    filter: blur(0);
+    opacity: 1;
+    transform: translateX(0) scale(1) rotate(0);
+  }
+}
+
+@keyframes starVtShowcaseInPrev {
+  from {
+    filter: blur(4px);
+    opacity: 0;
+    transform: translateX(-36px) scale(0.9) rotate(-2deg);
+  }
+
+  to {
+    filter: blur(0);
+    opacity: 1;
+    transform: translateX(0) scale(1) rotate(0);
+  }
+}
+
+.star-vt-premium-img--showcase {
+  height: 220px;
+  width: 132px;
+}
+
+.star-vt-premium-play--showcase {
+  height: 56px;
+  top: 54%;
+  width: 56px;
+}
+
+.star-vt-showcase__meta {
+  margin-top: 18px;
+  position: relative;
+  text-align: center;
+  z-index: 1;
+}
+
+.star-vt-showcase__title {
+  color: #0f2239;
+  font-size: 1rem;
+  font-weight: 800;
+  margin: 0 0 6px;
+  text-transform: uppercase;
+}
+
+.star-vt-showcase__counter {
+  color: #5a6573;
+  font-size: 13px;
+  margin: 0 0 12px;
+}
+
+.star-vt-showcase__counter strong {
+  color: #0b4eb3;
+}
+
+.star-vt-showcase__progress {
+  background: rgba(11, 78, 179, 0.15);
+  border-radius: 999px;
+  height: 4px;
+  margin: 0 auto;
+  max-width: 200px;
+  overflow: hidden;
+}
+
+.star-vt-showcase__progress span {
+  animation: starVtShowcaseProgress 7s linear forwards;
+  background: linear-gradient(90deg, #f7c948, #0b4eb3);
+  border-radius: inherit;
+  display: block;
+  height: 100%;
+  transform-origin: left center;
+  width: 100%;
+}
+
+.star-vt-showcase__progress.is-paused span {
+  animation-play-state: paused;
+}
+
+@keyframes starVtShowcaseProgress {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.star-vt-showcase__dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 16px;
+  max-height: 48px;
+  overflow: auto;
+  padding: 0 4px;
+  position: relative;
+  z-index: 1;
+}
+
+.star-vt-showcase__dots button {
+  background: rgba(11, 78, 179, 0.22);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  height: 7px;
+  padding: 0;
+  transition: background 0.25s ease, width 0.25s ease;
+  width: 7px;
+}
+
+.star-vt-showcase__dots button.is-active {
+  background: #0b4eb3;
+  width: 20px;
+}
+
+.star-vt-all-head {
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  margin: 0 0 22px;
+}
+
+.star-vt-premium-card.is-current .star-vt-premium-img {
+  outline: 3px solid #f7c948;
+  outline-offset: 3px;
+}
+
 .star-vt-premium-grid {
   display: grid;
   gap: clamp(16px, 2.5vw, 24px);
@@ -10808,6 +11009,8 @@ body.star-site .spa-testimonial-card__quote {
   .star-vt-premium-visual,
   .star-vt-premium-play__ring,
   .star-vt-premium-play__icon,
+  .star-vt-showcase__slide,
+  .star-vt-showcase__progress span,
   .star-vt-lightbox,
   .star-vt-lightbox__panel {
     animation: none;
