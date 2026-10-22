@@ -285,6 +285,12 @@ body.star-site .react-breadcrumbs .breadcrumbs-title {
   color: #ffffff;
 }
 
+body.star-site .react-breadcrumbs.exact-about-breadcrumb .breadcrumbs-title,
+body.star-site .react-breadcrumbs.exact-about-breadcrumb .breadcrumbs-eyebrow {
+  color: #ffffff !important;
+  text-align: center;
+}
+
 body.star-site .react-breadcrumbs .back-nav ul li a:hover {
   color: var(--spa-accent-gold) !important;
 }
