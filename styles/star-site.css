@@ -10582,38 +10582,19 @@ body.star-site .spa-gallery-lightbox__caption p {
   width: 100%;
 }
 
-.star-vt-all-card__media {
-  aspect-ratio: 16 / 9;
-  border-radius: 10px;
-  box-shadow: 0 10px 28px rgba(15, 34, 57, 0.12);
-  display: block;
-  overflow: hidden;
-  position: relative;
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
-  width: 100%;
-}
-
-.star-vt-all-card__thumb {
-  background-color: #0f2239;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  display: block;
-  height: 100%;
-  inset: 0;
-  position: absolute;
-  width: 100%;
-}
-
-.star-vt-all-card:hover .star-vt-all-card__media,
-.star-vt-all-card.is-current .star-vt-all-card__media {
+.star-vt-all-card:hover .star-vt-thumb-frame--card,
+.star-vt-all-card.is-current .star-vt-thumb-frame--card {
   box-shadow: 0 16px 36px rgba(11, 78, 179, 0.22);
   transform: translateY(-4px);
 }
 
-.star-vt-all-card.is-current .star-vt-all-card__media {
+.star-vt-all-card.is-current .star-vt-thumb-frame--card {
   outline: 3px solid #f7c948;
   outline-offset: 2px;
+}
+
+.star-vt-all-card .star-vt-thumb-frame--card {
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
 }
 
 .star-vt-all-card__play {

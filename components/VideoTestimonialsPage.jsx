@@ -17,17 +17,42 @@ function youtubeEmbedUrl(videoId, autoplay = false) {
   return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
 }
 
-function testimonialThumbnailUrl(videoId) {
-  return `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+function mqThumbnailUrl(videoId) {
+  return `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`;
 }
 
-function VideoThumbFrame({ videoId, className, alt }) {
+function maxresThumbnailUrl(videoId) {
+  return `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
+}
+
+function VideoThumb({ videoId, className, alt = "", loading }) {
+  const [src, setSrc] = useState(() => maxresThumbnailUrl(videoId));
+
+  useEffect(() => {
+    setSrc(maxresThumbnailUrl(videoId));
+  }, [videoId]);
+
+  const useMqFallback = () => {
+    setSrc(mqThumbnailUrl(videoId));
+  };
+
+  const handleLoad = (event) => {
+    const image = event.currentTarget;
+    if (image.naturalWidth < 200 || image.naturalHeight < 200) {
+      useMqFallback();
+    }
+  };
+
   return (
-    <span
+    <img
       className={className}
-      role="img"
-      aria-label={alt}
-      style={{ backgroundImage: `url("${testimonialThumbnailUrl(videoId)}")` }}
+      src={src}
+      alt={alt}
+      loading={loading}
+      decoding="async"
+      draggable={false}
+      onLoad={handleLoad}
+      onError={useMqFallback}
     />
   );
 }
@@ -165,7 +190,7 @@ export default function VideoTestimonialsPage() {
           <div className="star-vt-intro text-center">
             <h2 className="spa-section-title">Hear from our achievers</h2>
             <p className="spa-section-text">
-              Browse with the arrows, then tap the full image to watch the video.
+              Use the arrows to browse stories. Tap the image to play the video.
             </p>
           </div>
 
@@ -186,14 +211,16 @@ export default function VideoTestimonialsPage() {
                 aria-label={`Play ${activeItem.title}`}
                 onClick={() => openLightbox(activeIndex)}
               >
-                <VideoThumbFrame
-                  key={activeItem.id}
-                  videoId={activeItem.id}
-                  className="star-vt-feature__media"
-                  alt={activeItem.title}
-                />
-                <span className="star-vt-feature__play material-symbols-outlined" aria-hidden="true">
-                  play_circle
+                <span className="star-vt-thumb-frame star-vt-thumb-frame--hero">
+                  <VideoThumb
+                    key={activeItem.id}
+                    videoId={activeItem.id}
+                    className="star-vt-thumb-img"
+                    alt={activeItem.title}
+                  />
+                  <span className="star-vt-feature__play material-symbols-outlined" aria-hidden="true">
+                    play_circle
+                  </span>
                 </span>
               </button>
               <p className="star-vt-feature__label">
@@ -224,11 +251,12 @@ export default function VideoTestimonialsPage() {
                   className={`star-vt-all-card${index === activeIndex ? " is-current" : ""}`}
                   onClick={() => openLightbox(index)}
                 >
-                  <span className="star-vt-all-card__media">
-                    <VideoThumbFrame
+                  <span className="star-vt-thumb-frame star-vt-thumb-frame--card">
+                    <VideoThumb
                       videoId={item.id}
-                      className="star-vt-all-card__thumb"
+                      className="star-vt-thumb-img"
                       alt={item.title}
+                      loading="lazy"
                     />
                     <span className="star-vt-all-card__play material-symbols-outlined" aria-hidden="true">
                       play_circle
