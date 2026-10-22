@@ -21,13 +21,7 @@ function mqThumbnailUrl(videoId) {
 }
 
 function testimonialPosterSrc(item) {
-  if (item.accentImage) {
-    return item.accentImage;
-  }
-  if (item.id) {
-    return mqThumbnailUrl(item.id);
-  }
-  return "";
+  return item.id ? mqThumbnailUrl(item.id) : "";
 }
 
 function useInViewOnce(threshold = 0.12) {
@@ -180,6 +174,12 @@ function TestimonialCard({ item, index, isSectionVisible, onOpen }) {
               loading="lazy"
               decoding="async"
               draggable={false}
+              onError={(event) => {
+                const fallback = mqThumbnailUrl(item.id);
+                if (event.currentTarget.src !== fallback) {
+                  event.currentTarget.src = fallback;
+                }
+              }}
             />
           ) : (
             <span className="star-vt-premium-placeholder">Video URL pending</span>
@@ -221,7 +221,7 @@ export default function VideoTestimonialsPage() {
             <p className="star-vt-premium__eyebrow">Real stories from our students</p>
             <h2 className="spa-section-title">Student video testimonials</h2>
             <p className="spa-section-text">
-              Tap a photo to watch their Star Police Academy journey. Every image is shown in full.
+              Each card uses the YouTube video thumbnail. Tap to watch the full testimonial.
             </p>
           </header>
 
