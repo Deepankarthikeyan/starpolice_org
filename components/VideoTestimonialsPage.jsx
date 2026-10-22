@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { videoTestimonials } from "../lib/star-content";
-import { AUTO_SLIDER_INTERVAL_MS, useAutoSliderPause } from "../lib/useAutoSlider";
 
 function youtubeEmbedUrl(videoId, autoplay = false) {
   const params = new URLSearchParams({
@@ -21,31 +20,51 @@ function mqThumbnailUrl(videoId) {
   return `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`;
 }
 
-function VideoThumb({ videoId, className, alt = "", loading }) {
-  const [src, setSrc] = useState(() => mqThumbnailUrl(videoId));
+function testimonialPosterSrc(item) {
+  if (item.accentImage) {
+    return item.accentImage;
+  }
+  if (item.id) {
+    return mqThumbnailUrl(item.id);
+  }
+  return "";
+}
+
+function useInViewOnce(threshold = 0.12) {
+  const ref = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    setSrc(mqThumbnailUrl(videoId));
-  }, [videoId]);
+    const node = ref.current;
+    if (!node || isVisible) {
+      return undefined;
+    }
 
-  return (
-    <img
-      className={className}
-      src={src}
-      alt={alt}
-      loading={loading}
-      decoding="async"
-      draggable={false}
-      onError={() => setSrc(mqThumbnailUrl(videoId))}
-    />
-  );
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold },
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [isVisible, threshold]);
+
+  return { ref, isVisible };
 }
 
 function VideoLightbox({ videoId, title, index, total, onClose, onPrevious, onNext }) {
   const [isMounted, setIsMounted] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
+    const frame = window.requestAnimationFrame(() => setIsAnimating(true));
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   useEffect(() => {
@@ -78,7 +97,7 @@ function VideoLightbox({ videoId, title, index, total, onClose, onPrevious, onNe
 
   return createPortal(
     <div
-      className="star-vt-lightbox"
+      className={`star-vt-lightbox${isAnimating ? " is-visible" : ""}`}
       role="dialog"
       aria-modal="true"
       aria-label={`Video testimonial: ${title}`}
@@ -95,7 +114,10 @@ function VideoLightbox({ videoId, title, index, total, onClose, onPrevious, onNe
       >
         ‹
       </button>
-      <div className="star-vt-lightbox__panel" onClick={(event) => event.stopPropagation()}>
+      <div
+        className={`star-vt-lightbox__panel${isAnimating ? " is-visible" : ""}`}
+        onClick={(event) => event.stopPropagation()}
+      >
         <button
           className="star-vt-lightbox__close"
           type="button"
@@ -106,6 +128,7 @@ function VideoLightbox({ videoId, title, index, total, onClose, onPrevious, onNe
         </button>
         <div className="star-vt-lightbox__player">
           <iframe
+            key={videoId}
             title={title}
             src={youtubeEmbedUrl(videoId, true)}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -133,19 +156,51 @@ function VideoLightbox({ videoId, title, index, total, onClose, onPrevious, onNe
   );
 }
 
-export default function VideoTestimonialsPage() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [lightboxIndex, setLightboxIndex] = useState(null);
-  const { isPaused, pauseProps } = useAutoSliderPause();
-  const total = videoTestimonials.length;
-  const activeItem = videoTestimonials[activeIndex];
+function TestimonialCard({ item, index, isSectionVisible, onOpen }) {
+  const poster = testimonialPosterSrc(item);
+  const staggerMs = Math.min(index * 55, 660);
 
-  const goTo = (index) => {
-    setActiveIndex((index + total) % total);
-  };
+  return (
+    <li
+      className={`star-vt-premium-card${isSectionVisible ? " is-visible" : ""}`}
+      style={{ "--vt-stagger": `${staggerMs}ms` }}
+    >
+      <button
+        type="button"
+        className="star-vt-premium-hit"
+        aria-label={`Watch student testimonial: ${item.title}`}
+        onClick={() => onOpen(index)}
+      >
+        <span className="star-vt-premium-visual">
+          {poster ? (
+            <img
+              className="star-vt-premium-img"
+              src={poster}
+              alt={item.title}
+              loading="lazy"
+              decoding="async"
+              draggable={false}
+            />
+          ) : (
+            <span className="star-vt-premium-placeholder">Video URL pending</span>
+          )}
+          <span className="star-vt-premium-play" aria-hidden="true">
+            <span className="star-vt-premium-play__ring" />
+            <span className="star-vt-premium-play__icon material-symbols-outlined">play_arrow</span>
+          </span>
+        </span>
+      </button>
+      <p className="star-vt-premium-caption">{item.title}</p>
+    </li>
+  );
+}
+
+export default function VideoTestimonialsPage() {
+  const [lightboxIndex, setLightboxIndex] = useState(null);
+  const { ref: sectionRef, isVisible: isSectionVisible } = useInViewOnce();
+  const total = videoTestimonials.length;
 
   const openLightbox = (index) => {
-    setActiveIndex(index);
     setLightboxIndex(index);
   };
 
@@ -153,102 +208,32 @@ export default function VideoTestimonialsPage() {
     setLightboxIndex(null);
   };
 
-  useEffect(() => {
-    if (isPaused || lightboxIndex !== null) {
-      return undefined;
-    }
-
-    const timer = window.setInterval(() => {
-      setActiveIndex((current) => (current + 1) % total);
-    }, AUTO_SLIDER_INTERVAL_MS);
-
-    return () => window.clearInterval(timer);
-  }, [isPaused, lightboxIndex, total]);
-
   const lightboxItem = lightboxIndex !== null ? videoTestimonials[lightboxIndex] : null;
 
   return (
     <>
-      <section className="star-vt-page pt---80 pb---120">
+      <section
+        ref={sectionRef}
+        className={`star-vt-page star-vt-premium pt---80 pb---120${isSectionVisible ? " is-visible" : ""}`}
+      >
         <div className="container">
-          <div className="star-vt-intro text-center">
-            <h2 className="spa-section-title">Hear from our achievers</h2>
+          <header className="star-vt-intro star-vt-premium__head text-center">
+            <p className="star-vt-premium__eyebrow">Real stories from our students</p>
+            <h2 className="spa-section-title">Student video testimonials</h2>
             <p className="spa-section-text">
-              Use the arrows to browse stories. Tap the image to play the video.
+              Tap a photo to watch their Star Police Academy journey. Every image is shown in full.
             </p>
-          </div>
+          </header>
 
-          <div className="star-vt-feature" {...pauseProps}>
-            <button
-              type="button"
-              className="star-vt-feature__arrow star-vt-feature__arrow--prev"
-              aria-label="Previous story"
-              onClick={() => goTo(activeIndex - 1)}
-            >
-              ‹
-            </button>
-
-            <div className="star-vt-feature__main">
-              <button
-                type="button"
-                className="star-vt-feature__hit"
-                aria-label={`Play ${activeItem.title}`}
-                onClick={() => openLightbox(activeIndex)}
-              >
-                <span className="star-vt-thumb-frame star-vt-thumb-frame--hero">
-                  <VideoThumb
-                    key={activeItem.id}
-                    videoId={activeItem.id}
-                    className="star-vt-thumb-img"
-                    alt={activeItem.title}
-                  />
-                  <span className="star-vt-feature__play material-symbols-outlined" aria-hidden="true">
-                    play_circle
-                  </span>
-                </span>
-              </button>
-              <p className="star-vt-feature__label">
-                <span>{activeIndex + 1} / {total}</span>
-                {activeItem.title}
-              </p>
-            </div>
-
-            <button
-              type="button"
-              className="star-vt-feature__arrow star-vt-feature__arrow--next"
-              aria-label="Next story"
-              onClick={() => goTo(activeIndex + 1)}
-            >
-              ›
-            </button>
-          </div>
-
-          <div className="star-vt-all-head text-center">
-            <h3>All student video testimonials</h3>
-          </div>
-
-          <ul className="star-vt-all-grid">
+          <ul className="star-vt-premium-grid" aria-label="Student video testimonials">
             {videoTestimonials.map((item, index) => (
-              <li key={item.id}>
-                <button
-                  type="button"
-                  className={`star-vt-all-card${index === activeIndex ? " is-current" : ""}`}
-                  onClick={() => openLightbox(index)}
-                >
-                  <span className="star-vt-thumb-frame star-vt-thumb-frame--card">
-                    <VideoThumb
-                      videoId={item.id}
-                      className="star-vt-thumb-img"
-                      alt={item.title}
-                      loading="lazy"
-                    />
-                    <span className="star-vt-all-card__play material-symbols-outlined" aria-hidden="true">
-                      play_circle
-                    </span>
-                  </span>
-                  <span className="star-vt-all-card__title">{item.title}</span>
-                </button>
-              </li>
+              <TestimonialCard
+                key={item.id || `vt-${index}`}
+                item={item}
+                index={index}
+                isSectionVisible={isSectionVisible}
+                onOpen={openLightbox}
+              />
             ))}
           </ul>
         </div>
@@ -262,14 +247,10 @@ export default function VideoTestimonialsPage() {
           total={total}
           onClose={closeLightbox}
           onPrevious={() => {
-            const next = (lightboxIndex - 1 + total) % total;
-            setLightboxIndex(next);
-            setActiveIndex(next);
+            setLightboxIndex((current) => (current - 1 + total) % total);
           }}
           onNext={() => {
-            const next = (lightboxIndex + 1) % total;
-            setLightboxIndex(next);
-            setActiveIndex(next);
+            setLightboxIndex((current) => (current + 1) % total);
           }}
         />
       ) : null}
