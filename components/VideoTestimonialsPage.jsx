@@ -1,11 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { videoTestimonials } from "../lib/star-content";
 import { AUTO_SLIDER_INTERVAL_MS, useAutoSliderPause } from "../lib/useAutoSlider";
-
-function youtubeThumbnail(videoId) {
-  return `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
-}
 
 function youtubeEmbedUrl(videoId, autoplay = false) {
   const params = new URLSearchParams({
@@ -19,6 +15,22 @@ function youtubeEmbedUrl(videoId, autoplay = false) {
   }
 
   return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
+}
+
+function TestimonialThumb({ videoId, className, alt = "", loading }) {
+  const [src, setSrc] = useState(`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`);
+
+  return (
+    <img
+      className={className}
+      src={src}
+      alt={alt}
+      loading={loading}
+      onError={() => {
+        setSrc(`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`);
+      }}
+    />
+  );
 }
 
 function VideoLightbox({ videoId, title, index, total, onClose, onPrevious, onNext }) {
@@ -117,7 +129,6 @@ export default function VideoTestimonialsPage() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const { isPaused, pauseProps } = useAutoSliderPause();
-  const filmstripRef = useRef(null);
   const total = videoTestimonials.length;
   const activeItem = videoTestimonials[activeIndex];
 
@@ -146,16 +157,6 @@ export default function VideoTestimonialsPage() {
     return () => window.clearInterval(timer);
   }, [isPaused, lightboxIndex, total]);
 
-  useEffect(() => {
-    const strip = filmstripRef.current;
-    if (!strip) {
-      return;
-    }
-
-    const thumb = strip.querySelector(".star-vt-filmstrip__item.is-active");
-    thumb?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-  }, [activeIndex]);
-
   const lightboxItem = lightboxIndex !== null ? videoTestimonials[lightboxIndex] : null;
 
   return (
@@ -165,69 +166,78 @@ export default function VideoTestimonialsPage() {
           <div className="star-vt-intro text-center">
             <h2 className="spa-section-title">Hear from our achievers</h2>
             <p className="spa-section-text">
-              Use the arrows to browse stories. Tap any frame to watch in the video player.
+              Browse with the arrows, then tap the full image to watch the video.
             </p>
           </div>
 
-          <div className="star-vt-cinema" {...pauseProps}>
-            <div className="star-vt-cinema__stage">
+          <div className="star-vt-feature" {...pauseProps}>
+            <button
+              type="button"
+              className="star-vt-feature__arrow star-vt-feature__arrow--prev"
+              aria-label="Previous story"
+              onClick={() => goTo(activeIndex - 1)}
+            >
+              ‹
+            </button>
+
+            <div className="star-vt-feature__main">
               <button
                 type="button"
-                className="star-vt-cinema__arrow star-vt-cinema__arrow--prev"
-                aria-label="Previous story"
-                onClick={() => goTo(activeIndex - 1)}
+                className="star-vt-feature__hit"
+                aria-label={`Play ${activeItem.title}`}
+                onClick={() => openLightbox(activeIndex)}
               >
-                ‹
+                <TestimonialThumb
+                  videoId={activeItem.id}
+                  className="star-vt-feature__img"
+                  alt={activeItem.title}
+                />
+                <span className="star-vt-feature__play material-symbols-outlined" aria-hidden="true">
+                  play_circle
+                </span>
               </button>
+              <p className="star-vt-feature__label">
+                <span>{activeIndex + 1} / {total}</span>
+                {activeItem.title}
+              </p>
+            </div>
 
-              <div className="star-vt-cinema__viewport">
+            <button
+              type="button"
+              className="star-vt-feature__arrow"
+              aria-label="Next story"
+              onClick={() => goTo(activeIndex + 1)}
+            >
+              ›
+            </button>
+          </div>
+
+          <div className="star-vt-all-head text-center">
+            <h3>All student video testimonials</h3>
+          </div>
+
+          <ul className="star-vt-all-grid">
+            {videoTestimonials.map((item, index) => (
+              <li key={item.id}>
                 <button
                   type="button"
-                  className="star-vt-cinema__poster"
-                  aria-label={`Play ${activeItem.title}`}
-                  onClick={() => openLightbox(activeIndex)}
+                  className={`star-vt-all-card${index === activeIndex ? " is-current" : ""}`}
+                  onClick={() => openLightbox(index)}
                 >
-                  <img
-                    src={youtubeThumbnail(activeItem.id)}
-                    alt=""
-                    className="star-vt-cinema__image"
+                  <TestimonialThumb
+                    videoId={item.id}
+                    className="star-vt-all-card__img"
+                    alt={item.title}
+                    loading="lazy"
                   />
-                  <span className="star-vt-cinema__play material-symbols-outlined" aria-hidden="true">
+                  <span className="star-vt-all-card__play material-symbols-outlined" aria-hidden="true">
                     play_circle
                   </span>
-                  <span className="star-vt-cinema__badge">
-                    Story {activeIndex + 1} / {total}
-                  </span>
+                  <span className="star-vt-all-card__title">{item.title}</span>
                 </button>
-                <p className="star-vt-cinema__title">{activeItem.title}</p>
-              </div>
-
-              <button
-                type="button"
-                className="star-vt-cinema__arrow star-vt-cinema__arrow--next"
-                aria-label="Next story"
-                onClick={() => goTo(activeIndex + 1)}
-              >
-                ›
-              </button>
-            </div>
-
-            <div className="star-vt-filmstrip" ref={filmstripRef} role="tablist" aria-label="All video stories">
-              {videoTestimonials.map((item, index) => (
-                <button
-                  type="button"
-                  key={item.id}
-                  role="tab"
-                  aria-selected={index === activeIndex}
-                  className={`star-vt-filmstrip__item${index === activeIndex ? " is-active" : ""}`}
-                  onClick={() => goTo(index)}
-                >
-                  <img src={youtubeThumbnail(item.id)} alt="" loading="lazy" />
-                  <span className="star-vt-filmstrip__num">{index + 1}</span>
-                </button>
-              ))}
-            </div>
-          </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
