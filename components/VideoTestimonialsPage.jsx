@@ -16,13 +16,18 @@ function youtubeEmbedUrl(videoId, autoplay = false) {
   return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
 }
 
+function shortsThumbnailUrl(videoId) {
+  return `https://i.ytimg.com/vi/${videoId}/oardefault.jpg`;
+}
+
 function mqThumbnailUrl(videoId) {
   return `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`;
 }
 
 function testimonialPosterSrc(item) {
-  return item.id ? mqThumbnailUrl(item.id) : "";
+  return item.id ? shortsThumbnailUrl(item.id) : "";
 }
+
 
 function useInViewOnce(threshold = 0.12) {
   const ref = useRef(null);
@@ -175,9 +180,16 @@ function TestimonialCard({ item, index, isSectionVisible, onOpen }) {
               decoding="async"
               draggable={false}
               onError={(event) => {
-                const fallback = mqThumbnailUrl(item.id);
-                if (event.currentTarget.src !== fallback) {
-                  event.currentTarget.src = fallback;
+                const image = event.currentTarget;
+                const fallbacks = testimonialThumbFallbacks(item.id);
+                const next = fallbacks.find((url) => !image.src.includes(url.split("/").pop()?.replace(".jpg", "") || ""));
+                if (next && image.src !== next) {
+                  image.src = next;
+                  return;
+                }
+                const mq = mqThumbnailUrl(item.id);
+                if (image.src !== mq) {
+                  image.src = mq;
                 }
               }}
             />
