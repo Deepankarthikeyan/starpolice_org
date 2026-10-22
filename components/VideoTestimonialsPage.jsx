@@ -21,12 +21,33 @@ function mqThumbnailUrl(videoId) {
   return `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`;
 }
 
-function VideoThumb({ videoId, alt = "", loading, className = "" }) {
+function maxresThumbnailUrl(videoId) {
+  return `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
+}
+
+function VideoThumb({ videoId, className, alt = "", loading }) {
   const [src, setSrc] = useState(() => mqThumbnailUrl(videoId));
 
   useEffect(() => {
     setSrc(mqThumbnailUrl(videoId));
   }, [videoId]);
+
+  const promoteToHd = (event) => {
+    const image = event.currentTarget;
+    if (image.dataset.hdChecked === "true") {
+      return;
+    }
+    image.dataset.hdChecked = "true";
+
+    const hd = new Image();
+    hd.onload = () => {
+      if (hd.naturalWidth >= 200 && hd.naturalHeight >= 200) {
+        setSrc(maxresThumbnailUrl(videoId));
+      }
+    };
+    hd.onerror = () => {};
+    hd.src = maxresThumbnailUrl(videoId);
+  };
 
   return (
     <img
@@ -36,6 +57,7 @@ function VideoThumb({ videoId, alt = "", loading, className = "" }) {
       loading={loading}
       decoding="async"
       draggable={false}
+      onLoad={promoteToHd}
       onError={() => setSrc(mqThumbnailUrl(videoId))}
     />
   );
@@ -169,44 +191,45 @@ export default function VideoTestimonialsPage() {
 
   return (
     <>
-      <section className="star-vt-film pt---80 pb---120">
+      <section className="star-vt-page pt---80 pb---120">
         <div className="container">
-          <header className="star-vt-film__head text-center">
-            <p className="star-vt-film__eyebrow">Student success on video</p>
-            <h2 className="spa-section-title">Video testimonials</h2>
+          <div className="star-vt-intro text-center">
+            <h2 className="spa-section-title">Hear from our achievers</h2>
             <p className="spa-section-text">
-              Use the arrows or pick a story below. Each preview shows the full video thumbnail.
+              Use the arrows to browse stories. Tap the image to play the video.
             </p>
-          </header>
+          </div>
 
-          <div className="star-vt-film-hero" {...pauseProps}>
+          <div className="star-vt-feature" {...pauseProps}>
             <button
               type="button"
-              className="star-vt-film-hero__arrow star-vt-film-hero__arrow--prev"
+              className="star-vt-feature__arrow star-vt-feature__arrow--prev"
               aria-label="Previous story"
               onClick={() => goTo(activeIndex - 1)}
             >
               ‹
             </button>
 
-            <div className="star-vt-film-hero__stage">
+            <div className="star-vt-feature__main">
               <button
                 type="button"
-                className="star-vt-film-hero__hit"
+                className="star-vt-feature__hit"
                 aria-label={`Play ${activeItem.title}`}
                 onClick={() => openLightbox(activeIndex)}
               >
-                <VideoThumb
-                  key={activeItem.id}
-                  videoId={activeItem.id}
-                  alt={activeItem.title}
-                  className="star-vt-film-img star-vt-film-img--hero"
-                />
-                <span className="star-vt-film-hero__play material-symbols-outlined" aria-hidden="true">
-                  play_circle
+                <span className="star-vt-thumb-frame star-vt-thumb-frame--hero">
+                  <VideoThumb
+                    key={activeItem.id}
+                    videoId={activeItem.id}
+                    className="star-vt-thumb-img"
+                    alt={activeItem.title}
+                  />
+                  <span className="star-vt-feature__play material-symbols-outlined" aria-hidden="true">
+                    play_circle
+                  </span>
                 </span>
               </button>
-              <p className="star-vt-film-hero__meta">
+              <p className="star-vt-feature__label">
                 <span>{activeIndex + 1} / {total}</span>
                 {activeItem.title}
               </p>
@@ -214,7 +237,7 @@ export default function VideoTestimonialsPage() {
 
             <button
               type="button"
-              className="star-vt-film-hero__arrow star-vt-film-hero__arrow--next"
+              className="star-vt-feature__arrow star-vt-feature__arrow--next"
               aria-label="Next story"
               onClick={() => goTo(activeIndex + 1)}
             >
@@ -222,27 +245,30 @@ export default function VideoTestimonialsPage() {
             </button>
           </div>
 
-          <ul className="star-vt-film-grid">
+          <div className="star-vt-all-head text-center">
+            <h3>All student video testimonials</h3>
+          </div>
+
+          <ul className="star-vt-all-grid">
             {videoTestimonials.map((item, index) => (
               <li key={item.id}>
                 <button
                   type="button"
-                  className={`star-vt-film-card${index === activeIndex ? " is-active" : ""}`}
-                  aria-label={`Play ${item.title}`}
+                  className={`star-vt-all-card${index === activeIndex ? " is-current" : ""}`}
                   onClick={() => openLightbox(index)}
                 >
-                  <span className="star-vt-film-card__frame">
+                  <span className="star-vt-thumb-frame star-vt-thumb-frame--card">
                     <VideoThumb
                       videoId={item.id}
+                      className="star-vt-thumb-img"
                       alt={item.title}
-                      className="star-vt-film-img"
                       loading="lazy"
                     />
-                    <span className="star-vt-film-card__play material-symbols-outlined" aria-hidden="true">
+                    <span className="star-vt-all-card__play material-symbols-outlined" aria-hidden="true">
                       play_circle
                     </span>
                   </span>
-                  <span className="star-vt-film-card__label">{item.title}</span>
+                  <span className="star-vt-all-card__title">{item.title}</span>
                 </button>
               </li>
             ))}
