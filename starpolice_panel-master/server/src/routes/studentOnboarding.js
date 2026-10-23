@@ -632,7 +632,6 @@ router.put(
   "/:id",
   ...onboardingGuard,
   attachUser,
-  superAdminOnly,
   upload.fields(FILE_FIELDS),
   async (req, res) => {
     try {

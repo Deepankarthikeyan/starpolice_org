@@ -700,7 +700,7 @@ const StudentOnboarding = () => {
                             >
                               View
                             </button>
-                            {isSuperAdmin && (
+                            {canManage && (
                               <button
                                 type="button"
                                 className="btn btn-sm btn-outline-primary"
@@ -739,7 +739,7 @@ const StudentOnboarding = () => {
                   : "New Student Onboarding"}
             </h4>
             <div className="d-flex gap-2">
-              {viewMode && editingId && isSuperAdmin && (
+              {viewMode && editingId && canManage && (
                 <button
                   type="button"
                   className="btn btn-primary"
