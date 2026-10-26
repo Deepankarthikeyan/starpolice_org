@@ -382,3 +382,29 @@
   }
 }
 
+
+/* User management uses document scrolling on phones to avoid nested touch scroll areas. */
+@media only screen and (max-width: 47.9375rem) {
+  #main-wrapper[class*="spa-panel-"] .spa-user-management-page {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-user-management-layout {
+    min-height: 0;
+    overflow: visible;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-user-management-card {
+    flex: 0 0 auto;
+    overflow: visible;
+  }
+
+  #main-wrapper[class*="spa-panel-"] .spa-user-management-scroll {
+    flex: 0 0 auto;
+    min-height: 0;
+    overflow: visible;
+    overscroll-behavior: auto;
+  }
+}
