@@ -4,8 +4,11 @@ import PageTitle from "../../layouts/PageTitle";
 import { ThemeContext } from "../../../context/ThemeContext";
 import { api } from "../api";
 import { FILE_CATEGORY_LABELS } from "../constants";
+import { hasPermission } from "../permissions";
 import { getPanelMotherMenu } from "../panelLabels";
 import type { DashboardStats, StaffDashboardStats } from "../types";
+import type { LeadRecord } from "./leadDefaults";
+import { formatLeadFollowUpDate, fullLeadName, isLeadFollowUpOverdue, localDateKey } from "./leadDefaults";
 
 function formatPercent(value: number | null | undefined) {
   if (value === null || value === undefined) return "—";
@@ -26,8 +29,10 @@ function formatDateTime(value: string) {
 const AdminDashboard = () => {
   const { auth } = useContext(ThemeContext);
   const isStaff = auth?.panel === "staff" && auth?.role === "staff";
+  const canManageLeads = hasPermission(auth, "admin:leads");
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [staffStats, setStaffStats] = useState<StaffDashboardStats | null>(null);
+  const [leads, setLeads] = useState<LeadRecord[]>([]);
 
   useEffect(() => {
     if (isStaff) {
@@ -35,7 +40,23 @@ const AdminDashboard = () => {
       return;
     }
     api.getDashboardStats().then(setStats).catch(console.error);
-  }, [isStaff]);
+    if (canManageLeads) api.getLeads().then(setLeads).catch(console.error);
+  }, [isStaff, canManageLeads]);
+
+  const allFollowUps = leads.filter((lead) => lead.status === "follow_up" && lead.nextFollowUpDate);
+  const overdue = allFollowUps.filter((lead) => isLeadFollowUpOverdue(lead.nextFollowUpDate));
+  const upcoming = allFollowUps.filter((lead) => lead.nextFollowUpDate >= localDateKey());
+  const followUpCard = (title: string, items: LeadRecord[], pastDue = false) => (
+    <div className="col-xl-6"><div className="card h-100">
+      <div className="card-header d-flex justify-content-between align-items-center"><h4 className="card-title mb-0">{title}</h4><span className={"badge " + (pastDue ? "bg-danger" : "bg-primary")}>{items.length}</span></div>
+      <div className="card-body">
+        {items.length === 0 ? <p className="text-muted mb-0">No {pastDue ? "overdue" : "upcoming"} follow-ups.</p> : items.slice(0, 5).map((lead) => (
+          <div key={lead.id} className="d-flex justify-content-between gap-3 py-2 border-bottom"><div className="min-w-0"><div className="fw-semibold">{fullLeadName(lead)}</div><small className="text-muted d-block text-truncate">{lead.followUpNotes || "No notes"}</small></div><span className={"badge align-self-start " + (pastDue ? "bg-danger" : "bg-info text-dark")}>{formatLeadFollowUpDate(lead.nextFollowUpDate)}</span></div>
+        ))}
+        <Link to="/admin/leads" className="btn btn-sm btn-outline-primary mt-3">View leads</Link>
+      </div>
+    </div></div>
+  );
 
   if (isStaff) {
     return (
@@ -168,6 +189,11 @@ const AdminDashboard = () => {
           </div>
         </div>
       </div>
+
+      {canManageLeads && <div className="row g-3 mb-3">
+        {followUpCard("Upcoming Follow-ups", upcoming)}
+        {followUpCard("Overdue Follow-ups", overdue, true)}
+      </div>}
 
       <div className="row">
         <div className="col-xl-6">

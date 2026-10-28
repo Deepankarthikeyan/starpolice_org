@@ -132,6 +132,9 @@ router.post("/", ...leadGuard, async (req, res) => {
     if (!fields.firstName || !fields.lastName) {
       return res.status(400).json({ message: "First name and last name are required." });
     }
+    if (fields.nextFollowUpDate && !fields.followUpNotes) {
+      return res.status(400).json({ message: "Follow-up notes are required when setting a follow-up date." });
+    }
 
     const lead = await Lead.create({
       leadId: await generateLeadId(),
@@ -160,6 +163,9 @@ router.put("/:id", ...leadGuard, async (req, res) => {
     if (!fields.firstName || !fields.lastName) {
       return res.status(400).json({ message: "First name and last name are required." });
     }
+    if (fields.nextFollowUpDate && fields.nextFollowUpDate !== lead.nextFollowUpDate && !fields.followUpNotes) {
+      return res.status(400).json({ message: "Follow-up notes are required when changing the follow-up date." });
+    }
 
     Object.assign(lead, fields);
     await lead.save();
@@ -187,6 +193,10 @@ router.patch("/:id/status", ...leadGuard, async (req, res) => {
 
     if (status === "converted") {
       return res.status(400).json({ message: "Use convert endpoint to convert a lead to student." });
+    }
+
+    if (status === "follow_up" && !(lead.followUpNotes || "").trim()) {
+      return res.status(400).json({ message: "Please enter follow-up notes." });
     }
 
     if (status === "rejected" && lead.status === "rejected") {

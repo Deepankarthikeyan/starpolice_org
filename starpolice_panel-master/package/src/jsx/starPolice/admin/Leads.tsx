@@ -8,6 +8,7 @@ import { notify } from "../toast";
 import {
   emptyLeadForm,
   formatLeadCreatedDate,
+  formatLeadFollowUpDate,
   fullLeadName,
   leadCreatedInDateRange,
   LEAD_COURSE_OPTIONS,
@@ -18,6 +19,7 @@ import {
   leadRecordMatchesCourseFilter,
   leadRecordMatchesSearch,
   leadRecordMatchesStatusFilter,
+  isLeadFollowUpOverdue,
   recordToForm,
   statusBadgeClass,
   statusLabel,
@@ -28,11 +30,12 @@ import {
 } from "./leadDefaults";
 import { downloadLeadMobileNumbersCsv } from "./leadExport";
 
-function Field({ label, children, optional }: { label: string; children: React.ReactNode; optional?: boolean }) {
+function Field({ label, children, optional, required }: { label: string; children: React.ReactNode; optional?: boolean; required?: boolean }) {
   return (
     <div className="mb-3">
       <label className="form-label">
         {label}
+        {required && <span className="text-danger"> (Required)</span>}
         {optional && <span className="text-muted"> (Optional)</span>}
       </label>
       {children}
@@ -163,6 +166,11 @@ const Leads = () => {
         followUpNotes: form.leadDisposition === "follow_up" ? form.followUpNotes : "",
         rejectionReason: form.leadDisposition === "rejected" ? form.rejectionReason : "",
       };
+      if (payload.leadDisposition === "follow_up" && !payload.followUpNotes.trim()) {
+        setError("Please enter follow-up notes.");
+        setLoading(false);
+        return;
+      }
 
       if (editingId) {
         await api.updateLead(editingId, payload);
@@ -407,7 +415,10 @@ const Leads = () => {
                       type="date"
                       className="form-control"
                       value={form.nextFollowUpDate}
-                      onChange={(e) => setField("nextFollowUpDate", e.target.value)}
+                      onChange={(e) => {
+                        const nextDate = e.target.value;
+                        setForm((prev) => ({ ...prev, nextFollowUpDate: nextDate, followUpNotes: nextDate !== prev.nextFollowUpDate ? "" : prev.followUpNotes }));
+                      }}
                       disabled={form.leadDisposition !== "follow_up" || formLocked}
                     />
                   </Field>
@@ -427,13 +438,17 @@ const Leads = () => {
                 )}
                 {form.leadDisposition === "follow_up" && (
                   <div className="col-12">
-                    <Field label="Follow-up Notes" optional>
+                    <Field label="Follow-up Notes" required>
                       <textarea
                         className="form-control"
                         rows={3}
                         value={form.followUpNotes}
                         onChange={(e) => setField("followUpNotes", e.target.value)}
                         disabled={formLocked}
+                        required
+                        onInvalid={(e) => e.currentTarget.setCustomValidity("Please enter follow-up notes.")}
+                        onInput={(e) => e.currentTarget.setCustomValidity("")}
+                        placeholder={form.nextFollowUpDate ? "Enter the follow-up message for this date" : "Add notes about this follow-up"}
                       />
                     </Field>
                   </div>
@@ -606,6 +621,11 @@ const Leads = () => {
                         <span className={`badge ${statusBadgeClass(lead.status)}`}>
                           {statusLabel(lead.status)}
                         </span>
+                        {lead.status === "follow_up" && lead.nextFollowUpDate && (
+                          <div className="mt-1"><span className={"badge " + (isLeadFollowUpOverdue(lead.nextFollowUpDate) ? "bg-danger" : "bg-info text-dark")}>
+                            {isLeadFollowUpOverdue(lead.nextFollowUpDate) ? "Overdue" : "Follow-up"}: {formatLeadFollowUpDate(lead.nextFollowUpDate)}
+                          </span></div>
+                        )}
                       </td>
                       <td>
                         <div className="d-flex flex-wrap gap-2 align-items-center">

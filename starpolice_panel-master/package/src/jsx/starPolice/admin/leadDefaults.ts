@@ -161,6 +161,16 @@ export function formatLeadCreatedDate(createdAt: string) {
   });
 }
 
+export function localDateKey(date = new Date()) {
+  const year = date.getFullYear(), month = String(date.getMonth() + 1).padStart(2, "0"), day = String(date.getDate()).padStart(2, "0");
+  return year + "-" + month + "-" + day;
+}
+export function isLeadFollowUpOverdue(date: string) { return Boolean(date && date < localDateKey()); }
+export function formatLeadFollowUpDate(value: string) {
+  if (!value) return "-";
+  const date = new Date(value + "T00:00:00");
+  return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+}
 export function leadCreatedDateKey(createdAt: string) {
   if (!createdAt) return "";
   const isoDay = createdAt.match(/^(\d{4}-\d{2}-\d{2})/)?.[1];
