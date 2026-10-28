@@ -843,3 +843,83 @@ button.react-calendar__tile.react-calendar__tile--active.react-calendar__tile--r
     line-height: 1.5625rem;
     font-size: 0.75rem;  
 } */
+/* Consistent, independently scrollable data tables across Star Police panel lists. */
+.spa-table-panel {
+  min-width: 0;
+  width: 100%;
+}
+.spa-table-scroll {
+  max-height: min(62vh, 42rem);
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--border, #e9ecef);
+  border-radius: 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary, #4e73df) #f1f3f5;
+}
+.spa-table-scroll table {
+  margin-bottom: 0;
+  min-width: 100%;
+}
+.spa-table-scroll thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--card, #fff);
+  box-shadow: 0 1px 0 rgba(20, 30, 55, 0.1);
+}
+.spa-table-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  flex-wrap: wrap;
+  padding: 0.85rem 0.25rem 0.15rem;
+}
+.spa-table-page-size {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0;
+  color: #6c757d;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+.spa-table-page-size select {
+  width: auto;
+  min-width: 4.5rem;
+}
+.spa-table-count {
+  color: #6c757d;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+.spa-table-pages,
+.spa-table-page-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.spa-table-pages .btn {
+  min-width: 2rem;
+  font-variant-numeric: tabular-nums;
+}
+.spa-table-ellipsis {
+  color: #6c757d;
+  padding: 0 0.1rem;
+}
+@media (max-width: 575.98px) {
+  .spa-table-pagination {
+    justify-content: center;
+  }
+  .spa-table-count {
+    flex: 1 0 100%;
+    text-align: center;
+    order: 3;
+  }
+  .spa-table-pages {
+    max-width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}

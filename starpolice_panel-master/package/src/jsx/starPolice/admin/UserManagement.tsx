@@ -1,3 +1,4 @@
+import PaginatedTable from "../shared/PaginatedTable";
 import { FormEvent, useContext, useEffect, useState } from "react";
 import PageTitle from "../../layouts/PageTitle";
 import { ThemeContext } from "../../../context/ThemeContext";
@@ -355,7 +356,7 @@ const UserManagement = () => {
     canEditPermissions: boolean,
     showStaffDetails = false
   ) => (
-    <div className="table-responsive">
+    <PaginatedTable className="table-responsive">
       <table className="table table-striped align-middle">
         <thead>
           <tr>
@@ -471,7 +472,7 @@ const UserManagement = () => {
           )}
         </tbody>
       </table>
-    </div>
+    </PaginatedTable>
   );
 
   const listTabUsers =

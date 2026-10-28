@@ -1,3 +1,4 @@
+import PaginatedTable from "../shared/PaginatedTable";
 import { FormEvent, useContext, useEffect, useState } from "react";
 import PageTitle from "../../layouts/PageTitle";
 import { ThemeContext } from "../../../context/ThemeContext";
@@ -202,7 +203,7 @@ const ExamManagement = () => {
                   <h4 className="card-title mb-0">Exams</h4>
                 </div>
                 <div className="card-body">
-                  <div className="table-responsive">
+                  <PaginatedTable className="table-responsive">
                     <table className="table table-striped align-middle">
                       <thead>
                         <tr>
@@ -271,7 +272,7 @@ const ExamManagement = () => {
                         )}
                       </tbody>
                     </table>
-                  </div>
+                  </PaginatedTable>
                 </div>
               </div>
             </div>

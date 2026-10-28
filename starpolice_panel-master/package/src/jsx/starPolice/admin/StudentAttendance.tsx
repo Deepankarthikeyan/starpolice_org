@@ -1,3 +1,4 @@
+import PaginatedTable from "../shared/PaginatedTable";
 import { useContext, useEffect, useMemo, useState } from "react";
 import PageTitle from "../../layouts/PageTitle";
 import { ThemeContext } from "../../../context/ThemeContext";
@@ -339,7 +340,7 @@ const StudentAttendance = () => {
                       : "No students found."}
                   </p>
                 ) : (
-                  <div className="table-responsive">
+                  <PaginatedTable className="table-responsive">
                     <table className="table table-striped table-hover attendance-table mb-0">
                       <thead>
                         <tr>
@@ -384,7 +385,7 @@ const StudentAttendance = () => {
                         })}
                       </tbody>
                     </table>
-                  </div>
+                  </PaginatedTable>
                 )}
 
                 {!loading && filteredRows.length > 0 && (
@@ -489,7 +490,7 @@ const StudentAttendance = () => {
                               No attendance marked for this date yet. Students below are shown as Not marked.
                             </p>
                           )}
-                          <div className="table-responsive">
+                          <PaginatedTable className="table-responsive">
                           <table className="table table-sm table-striped mb-0">
                             <thead>
                               <tr>
@@ -516,7 +517,7 @@ const StudentAttendance = () => {
                               ))}
                             </tbody>
                           </table>
-                        </div>
+                        </PaginatedTable>
                         </>
                       )}
                     </div>

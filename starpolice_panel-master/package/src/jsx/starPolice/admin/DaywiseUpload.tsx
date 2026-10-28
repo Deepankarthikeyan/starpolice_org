@@ -1,3 +1,4 @@
+import PaginatedTable from "../shared/PaginatedTable";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import DatePicker from "react-datepicker";
 import PageTitle from "../../layouts/PageTitle";
@@ -282,7 +283,7 @@ const DaywiseUpload = () => {
               ) : filteredUploads.length === 0 ? (
                 <p className="text-muted mb-0">No uploads match your search or filter.</p>
               ) : (
-                <div className="table-responsive">
+                <PaginatedTable className="table-responsive">
                   <table className="table table-striped">
                     <thead>
                       <tr>
@@ -324,7 +325,7 @@ const DaywiseUpload = () => {
                       ))}
                     </tbody>
                   </table>
-                </div>
+                </PaginatedTable>
               )}
             </div>
           </div>

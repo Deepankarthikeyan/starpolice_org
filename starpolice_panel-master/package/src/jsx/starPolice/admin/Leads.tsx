@@ -1,3 +1,4 @@
+import PaginatedTable from "../shared/PaginatedTable";
 import { FormEvent, useContext, useEffect, useMemo, useState } from "react";
 import PageTitle from "../../layouts/PageTitle";
 import { ThemeContext } from "../../../context/ThemeContext";
@@ -576,7 +577,7 @@ const Leads = () => {
             </div>
           </div>
 
-          <div className="table-responsive">
+          <PaginatedTable className="table-responsive">
             <table className="table table-striped align-middle spa-leads-table">
               <thead>
                 <tr>
@@ -652,7 +653,7 @@ const Leads = () => {
                 )}
               </tbody>
             </table>
-          </div>
+          </PaginatedTable>
         </div>
       </div>
     </>

@@ -1,3 +1,4 @@
+import PaginatedTable from "../shared/PaginatedTable";
 import { FormEvent, useContext, useEffect, useMemo, useRef, useState } from "react";
 import PageTitle from "../../layouts/PageTitle";
 import { ThemeContext } from "../../../context/ThemeContext";
@@ -632,7 +633,7 @@ const StudentOnboarding = () => {
                 </div>
               </div>
             </div>
-            <div className="table-responsive spa-onboarding-table-wrap">
+            <PaginatedTable className="table-responsive spa-onboarding-table-wrap">
               <table className="table table-striped table-hover align-middle mb-0 spa-onboarding-table">
                 <thead>
                   <tr>
@@ -725,7 +726,7 @@ const StudentOnboarding = () => {
                   )}
                 </tbody>
               </table>
-            </div>
+            </PaginatedTable>
           </div>
         </div>
       ) : (
@@ -1072,7 +1073,7 @@ const StudentOnboarding = () => {
               </div>
             )}
 
-            <div className="table-responsive">
+            <PaginatedTable className="table-responsive">
               <table className="table table-sm table-striped align-middle mb-0">
                 <thead>
                   <tr>
@@ -1122,7 +1123,7 @@ const StudentOnboarding = () => {
                   )}
                 </tbody>
               </table>
-            </div>
+            </PaginatedTable>
           </SectionCard>
 
           <SectionCard title="12. Medical Information (Optional)">
@@ -1163,7 +1164,7 @@ const StudentOnboarding = () => {
 
           {editingId && activityLogs.length > 0 && (
             <SectionCard title="Activity Log">
-              <div className="table-responsive">
+              <PaginatedTable className="table-responsive">
                 <table className="table table-sm table-striped align-middle mb-0">
                   <thead>
                     <tr>
@@ -1205,7 +1206,7 @@ const StudentOnboarding = () => {
                       ))}
                   </tbody>
                 </table>
-              </div>
+              </PaginatedTable>
             </SectionCard>
           )}
 

@@ -1,3 +1,4 @@
+import PaginatedTable from "../shared/PaginatedTable";
 import { useEffect, useState } from "react";
 import PageTitle from "../../layouts/PageTitle";
 import { api } from "../api";
@@ -87,7 +88,7 @@ const StudentDashboard = () => {
                   </div>
                 ))}
               </div>
-              <div className="table-responsive d-none d-md-block">
+              <PaginatedTable className="table-responsive d-none d-md-block">
                 <table className="table">
                   <thead>
                     <tr>
@@ -106,7 +107,7 @@ const StudentDashboard = () => {
                     ))}
                   </tbody>
                 </table>
-              </div>
+              </PaginatedTable>
             </>
           )}
         </div>

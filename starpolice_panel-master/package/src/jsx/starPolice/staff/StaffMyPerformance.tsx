@@ -1,3 +1,4 @@
+import PaginatedTable from "../shared/PaginatedTable";
 import { useContext, useEffect, useState } from "react";
 import PageTitle from "../../layouts/PageTitle";
 import { ThemeContext } from "../../../context/ThemeContext";
@@ -107,7 +108,7 @@ const StaffMyPerformance = () => {
               {!detail.classHistory.length ? (
                 <p className="text-muted mb-0">No classes assigned yet.</p>
               ) : (
-                <div className="table-responsive">
+                <PaginatedTable className="table-responsive">
                   <table className="table table-sm table-striped mb-0">
                     <thead>
                       <tr>
@@ -130,7 +131,7 @@ const StaffMyPerformance = () => {
                       ))}
                     </tbody>
                   </table>
-                </div>
+                </PaginatedTable>
               )}
             </div>
           </div>
@@ -143,7 +144,7 @@ const StaffMyPerformance = () => {
               {!detail.recentUploads.length ? (
                 <p className="text-muted mb-0">No uploads yet.</p>
               ) : (
-                <div className="table-responsive">
+                <PaginatedTable className="table-responsive">
                   <table className="table table-sm table-striped mb-0">
                     <thead>
                       <tr>
@@ -162,7 +163,7 @@ const StaffMyPerformance = () => {
                       ))}
                     </tbody>
                   </table>
-                </div>
+                </PaginatedTable>
               )}
             </div>
           </div>

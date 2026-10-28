@@ -1,3 +1,4 @@
+import PaginatedTable from "./PaginatedTable";
 import { useMemo, useState } from "react";
 import PhysicalRecordCard from "./PhysicalRecordCard";
 import { formatPercent, type StudentExamMarkEntry, type StudentPerformanceDetail } from "../admin/examDefaults";
@@ -73,7 +74,7 @@ export function ExamMarksTable({ title, exams }: { title: string; exams: Student
         {exams.length === 0 ? (
           <p className="text-muted mb-0">No exam records yet.</p>
         ) : (
-          <div className="table-responsive">
+          <PaginatedTable className="table-responsive">
             <table className="table table-striped align-middle mb-0">
               <thead>
                 <tr>
@@ -100,7 +101,7 @@ export function ExamMarksTable({ title, exams }: { title: string; exams: Student
                 ))}
               </tbody>
             </table>
-          </div>
+          </PaginatedTable>
         )}
       </div>
     </div>
@@ -237,7 +238,7 @@ export function AttendancePerformanceList({
         ) : filteredAttendance.length === 0 ? (
           <p className="text-muted mb-0">No attendance records match the selected filters.</p>
         ) : (
-          <div className="table-responsive">
+          <PaginatedTable className="table-responsive">
             <table className="table table-sm table-striped mb-0">
               <thead>
                 <tr>
@@ -258,7 +259,7 @@ export function AttendancePerformanceList({
                 ))}
               </tbody>
             </table>
-          </div>
+          </PaginatedTable>
         )}
       </div>
     </div>

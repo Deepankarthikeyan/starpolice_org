@@ -1,3 +1,4 @@
+import PaginatedTable from "../shared/PaginatedTable";
 import { FormEvent, useContext, useEffect, useMemo, useRef, useState } from "react";
 import PageTitle from "../../layouts/PageTitle";
 import { ThemeContext } from "../../../context/ThemeContext";
@@ -532,7 +533,7 @@ const StudentPerformance = () => {
                   : "No students found."}
               </p>
             ) : (
-              <div className="table-responsive">
+              <PaginatedTable className="table-responsive">
                 <table className="table table-striped table-hover align-middle spa-performance-overview-table">
                   <thead>
                     <tr>
@@ -615,7 +616,7 @@ const StudentPerformance = () => {
                     ))}
                   </tbody>
                 </table>
-              </div>
+              </PaginatedTable>
             )}
           </div>
         </div>

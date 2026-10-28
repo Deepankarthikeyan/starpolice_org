@@ -1,3 +1,4 @@
+import PaginatedTable from "../shared/PaginatedTable";
 import { FormEvent, useContext, useEffect, useState } from "react";
 import PageTitle from "../../layouts/PageTitle";
 import { ThemeContext } from "../../../context/ThemeContext";
@@ -229,7 +230,7 @@ const ScheduleClass = () => {
               ) : classes.length === 0 ? (
                 <p className="text-muted mb-0">No classes scheduled yet.</p>
               ) : (
-                <div className="table-responsive">
+                <PaginatedTable className="table-responsive">
                   <table className="table table-striped align-middle mb-0">
                     <thead>
                       <tr>
@@ -265,7 +266,7 @@ const ScheduleClass = () => {
                       ))}
                     </tbody>
                   </table>
-                </div>
+                </PaginatedTable>
               )}
             </div>
           </div>

@@ -1,3 +1,4 @@
+import PaginatedTable from "../shared/PaginatedTable";
 import { FormEvent, useContext, useEffect, useMemo, useState } from "react";
 import PageTitle from "../../layouts/PageTitle";
 import { ThemeContext } from "../../../context/ThemeContext";
@@ -253,7 +254,7 @@ const ExamMarksEntry = ({ examType }: ExamMarksEntryProps) => {
             ) : !filteredStudents.length ? (
               <p className="text-muted mb-0">No students found.</p>
             ) : (
-              <div className="table-responsive">
+              <PaginatedTable className="table-responsive">
                 <table className="table table-hover align-middle">
                   <thead>
                     <tr>
@@ -300,7 +301,7 @@ const ExamMarksEntry = ({ examType }: ExamMarksEntryProps) => {
                     ))}
                   </tbody>
                 </table>
-              </div>
+              </PaginatedTable>
             )}
           </div>
         </div>

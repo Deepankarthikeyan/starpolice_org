@@ -1,3 +1,4 @@
+import PaginatedTable from "./PaginatedTable";
 import type {
   OverallPerformance,
   PerformanceCardType,
@@ -197,7 +198,7 @@ export default function PhysicalRecordCard({
         )}
       </div>
 
-      <div className="table-responsive">
+      <PaginatedTable className="table-responsive">
         <table className="table physical-record-table mb-0">
           <thead>
             <tr>
@@ -273,7 +274,7 @@ export default function PhysicalRecordCard({
             })}
           </tbody>
         </table>
-      </div>
+      </PaginatedTable>
 
       <div className="physical-record-footer">
         <div className="physical-record-attendance">

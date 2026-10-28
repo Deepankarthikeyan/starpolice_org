@@ -1,3 +1,4 @@
+import PaginatedTable from "../shared/PaginatedTable";
 import { FormEvent, useContext, useEffect, useMemo, useRef, useState } from "react";
 import PageTitle from "../../layouts/PageTitle";
 import { ThemeContext } from "../../../context/ThemeContext";
@@ -209,7 +210,7 @@ const QuestionPapers = () => {
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
-            <div className="table-responsive">
+            <PaginatedTable className="table-responsive">
               <table className="table table-striped table-hover align-middle mb-0">
                 <thead>
                   <tr>
@@ -265,7 +266,7 @@ const QuestionPapers = () => {
                   )}
                 </tbody>
               </table>
-            </div>
+            </PaginatedTable>
           </div>
         </div>
       ) : (

@@ -1,3 +1,4 @@
+import PaginatedTable from "./PaginatedTable";
 import type { StudentExamMarkEntry } from "../admin/examDefaults";
 
 export function ExamMarksTable({
@@ -27,7 +28,7 @@ export function ExamMarksTable({
         {exams.length === 0 ? (
           <p className="text-muted mb-0">No exams configured. Add exams under Master → Exams.</p>
         ) : (
-          <div className="table-responsive">
+          <PaginatedTable className="table-responsive">
             <table className="table table-striped align-middle mb-0">
               <thead>
                 <tr>
@@ -75,7 +76,7 @@ export function ExamMarksTable({
                 ))}
               </tbody>
             </table>
-          </div>
+          </PaginatedTable>
         )}
       </div>
     </div>
