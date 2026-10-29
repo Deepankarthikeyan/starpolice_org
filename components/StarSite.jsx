@@ -585,12 +585,7 @@ function Header() {
                       Home
                     </SiteLink>
                   </li>
-                  <li className={isNavPathMatch(currentPath, "/about") ? "menu-active" : undefined}>
-                    <SiteLink href="/about" onClick={closeNavigation} className={navLinkClassName(currentPath, "/about")}>
-                      About
-                    </SiteLink>
-                  </li>
-                  <li
+<li
                     className={
                       isNavSectionActive(currentPath, headerNavSections.testimonials) ? "menu-active" : undefined
                     }
@@ -625,22 +620,7 @@ function Header() {
                       </li>
                     ))}
                   </NavDropdown>
-                  <li
-                    className={
-                      isNavSectionActive(currentPath, headerNavSections.testimonials)
-                        ? "menu-active"
-                        : undefined
-                    }
-                  >
-                    <SiteLink
-                      href="/star-police-academy-testimonials"
-                      onClick={closeNavigation}
-                      className={navLinkClassName(currentPath, "/star-police-academy-testimonials")}
-                    >
-                      Testimonials
-                    </SiteLink>
-                  </li>
-                  <NavDropdown
+<NavDropdown
                     label="Notifications"
                     href="/star-police-academy-current-affairs"
                     menuKey="notifications"
