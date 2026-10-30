@@ -10,7 +10,6 @@ import { getAbsoluteFileUrl } from "../fileUrl";
 import { notify } from "../toast";
 import { SecureFilePreview } from "../shared/SecureFilePreview";
 import {
-  calculateTotalFees,
   displayBalanceAmount,
   emptyStudentOnboardingForm,
   formatOnboardingCourse,
@@ -193,7 +192,8 @@ const StudentOnboarding = () => {
   const [batchFilter, setBatchFilter] = useState("");
   const [residenceFilter, setResidenceFilter] = useState<"" | ResidenceType>("");
   const [paymentFilter, setPaymentFilter] = useState("");
-  const [admissionDateFilter, setAdmissionDateFilter] = useState("");
+  const [admissionDateFrom, setAdmissionDateFrom] = useState("");
+  const [admissionDateTo, setAdmissionDateTo] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -221,7 +221,7 @@ const StudentOnboarding = () => {
       batchFilter.trim() ||
       residenceFilter ||
       paymentFilter ||
-      admissionDateFilter
+      admissionDateFrom || admissionDateTo
   );
 
   const clearAllFilters = () => {
@@ -230,7 +230,8 @@ const StudentOnboarding = () => {
     setBatchFilter("");
     setResidenceFilter("");
     setPaymentFilter("");
-    setAdmissionDateFilter("");
+    setAdmissionDateFrom("");
+    setAdmissionDateTo("");
   };
 
   const filteredRecords = useMemo(() => {
@@ -241,7 +242,7 @@ const StudentOnboarding = () => {
       if (batchQuery && !record.batch.toLowerCase().includes(batchQuery)) return false;
       if (residenceFilter && record.residenceType !== residenceFilter) return false;
       if (!onboardingRecordMatchesPaymentFilter(record.paymentStatus, paymentFilter)) return false;
-      if (!onboardingAdmissionOnDate(record.admissionDate, admissionDateFilter)) return false;
+      if (!onboardingAdmissionOnDate(record.admissionDate, admissionDateFrom, admissionDateTo)) return false;
       if (!query) return true;
       const fullName = `${record.firstName} ${record.middleName} ${record.lastName}`.toLowerCase();
       const courseLabel = formatOnboardingCourse(record.course).toLowerCase();
@@ -259,7 +260,7 @@ const StudentOnboarding = () => {
         (record.paymentStatus || "").toLowerCase().includes(query)
       );
     });
-  }, [records, search, courseFilter, batchFilter, residenceFilter, paymentFilter, admissionDateFilter]);
+  }, [records, search, courseFilter, batchFilter, residenceFilter, paymentFilter, admissionDateFrom, admissionDateTo]);
 
   const setField = <K extends keyof StudentOnboardingFormState>(key: K, value: StudentOnboardingFormState[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -327,12 +328,6 @@ const StudentOnboarding = () => {
     }
     if (!form.paymentStatus) {
       const message = "Payment status is required.";
-      setError(message);
-      notify.error(message);
-      return;
-    }
-    if (form.paymentStatus === "Partial" && !form.balanceAmount.trim()) {
-      const message = "Balance amount is required for partial payment.";
       setError(message);
       notify.error(message);
       return;
@@ -613,13 +608,10 @@ const StudentOnboarding = () => {
               </div>
               <div className="row g-2 align-items-center">
                 <div className="col-md-6 col-lg-2">
-                  <input
-                    type="date"
-                    className="form-control"
-                    value={admissionDateFilter}
-                    onChange={(e) => setAdmissionDateFilter(e.target.value)}
-                    aria-label="Filter by admission date"
-                  />
+                  <input type="date" className="form-control" value={admissionDateFrom} onChange={(e) => setAdmissionDateFrom(e.target.value)} aria-label="Admission date from" />
+                </div>
+                <div className="col-md-6 col-lg-2">
+                  <input type="date" className="form-control" value={admissionDateTo} min={admissionDateFrom || undefined} onChange={(e) => setAdmissionDateTo(e.target.value)} aria-label="Admission date to" />
                 </div>
                 <div className="col-md-6 col-lg-auto">
                   <button
@@ -964,11 +956,6 @@ const StudentOnboarding = () => {
 
           <SectionCard title="10. Payment Information">
             <div className="row">
-              <div className="col-md-3"><Field label="Registration Fee"><TextInput value={form.registrationFee} onChange={(v) => setField("registrationFee", v)} /></Field></div>
-              <div className="col-md-3"><Field label="Course Fee"><TextInput value={form.courseFee} onChange={(v) => setField("courseFee", v)} /></Field></div>
-              <div className="col-md-3"><Field label="Scholarship" optional><TextInput value={form.scholarship} onChange={(v) => setField("scholarship", v)} /></Field></div>
-              <div className="col-md-3"><Field label="Discount"><TextInput value={form.discount} onChange={(v) => setField("discount", v)} /></Field></div>
-              <div className="col-md-3"><Field label="Payment Method"><TextInput value={form.paymentMethod} onChange={(v) => setField("paymentMethod", v)} /></Field></div>
               <div className="col-md-3">
                 <Field label="Payment Status">
                   <select
@@ -990,25 +977,6 @@ const StudentOnboarding = () => {
                   </select>
                 </Field>
               </div>
-              {form.paymentStatus === "Partial" && (
-                <div className="col-md-3">
-                  <Field label="Remaining Balance Amount">
-                    <TextInput
-                      value={form.balanceAmount}
-                      onChange={(v) => setField("balanceAmount", v)}
-                      placeholder="Enter remaining balance"
-                      required
-                    />
-                  </Field>
-                </div>
-              )}
-              <div className="col-md-3">
-                <Field label="Total Fees (Calculated)" optional>
-                  <input className="form-control" value={calculateTotalFees(form).toFixed(2)} disabled readOnly />
-                </Field>
-              </div>
-              <div className="col-md-3"><Field label="Transaction ID"><TextInput value={form.transactionId} onChange={(v) => setField("transactionId", v)} /></Field></div>
-              <div className="col-md-3"><Field label="Receipt Number"><TextInput value={form.receiptNumber} onChange={(v) => setField("receiptNumber", v)} /></Field></div>
             </div>
           </SectionCard>
 

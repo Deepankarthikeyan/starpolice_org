@@ -211,7 +211,12 @@ export function TestimonialShowcase({
       return;
     }
     const activeChip = strip.querySelector(`[data-film-index="${activeIndex}"]`);
-    activeChip?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    if (!activeChip) {
+      return;
+    }
+
+    const targetLeft = activeChip.offsetLeft - (strip.clientWidth - activeChip.offsetWidth) / 2;
+    strip.scrollTo({ left: Math.max(0, targetLeft), behavior: "smooth" });
   }, [activeIndex]);
 
   return (

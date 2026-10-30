@@ -2916,3 +2916,24 @@ html {
     grid-template-columns: 1fr;
   }
 }
+
+
+.spa-row-scrollbar-row > td { height: 0; padding: 0 !important; border: 0 !important; background: transparent !important; }
+.spa-row-scrollbar-range { appearance: none; position: sticky; left: 0; display: block; height: 7px; max-width: 100%; margin: 0; padding: 0; border: 0; opacity: 0; pointer-events: none; background: transparent; cursor: ew-resize; vertical-align: top; }
+.spa-row-scrollbar-row:hover > td .spa-row-scrollbar-range,
+.spa-table-scroll tbody tr:not(.spa-row-scrollbar-row):hover + .spa-row-scrollbar-row .spa-row-scrollbar-range,
+.spa-row-scrollbar-row:focus-within .spa-row-scrollbar-range { opacity: 1; pointer-events: auto; }
+.spa-row-scrollbar-range::-webkit-slider-runnable-track { height: 5px; border-radius: 999px; background: #e6e9f1; }
+.spa-row-scrollbar-range::-webkit-slider-thumb { appearance: none; width: var(--spa-row-scroll-thumb, 24px); height: 5px; border-radius: 999px; background: var(--primary, #4e73df); }
+.spa-row-scrollbar-range::-moz-range-track { height: 5px; border-radius: 999px; background: #e6e9f1; }
+.spa-row-scrollbar-range::-moz-range-thumb { width: var(--spa-row-scroll-thumb, 24px); height: 5px; border: 0; border-radius: 999px; background: var(--primary, #4e73df); }
+@media (hover: none) { .spa-row-scrollbar-range { opacity: 1; pointer-events: auto; } }
+
+.spa-followup-count {
+  min-width: 2.5rem;
+  padding: 0.4rem 0.7rem;
+  font-size: 1rem;
+  line-height: 1.25;
+  text-align: center;
+  border-radius: 999px;
+}

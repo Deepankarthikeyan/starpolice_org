@@ -166,6 +166,30 @@ export function localDateKey(date = new Date()) {
   return year + "-" + month + "-" + day;
 }
 export function isLeadFollowUpOverdue(date: string) { return Boolean(date && date < localDateKey()); }
+export type LeadFollowUpTiming = "expired" | "today" | "tomorrow" | "later" | "none";
+export function leadFollowUpTiming(date: string, today = localDateKey()): LeadFollowUpTiming {
+  if (!date) return "none";
+  if (date < today) return "expired";
+  if (date === today) return "today";
+  const tomorrow = new Date(`${today}T00:00:00`);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  if (date === localDateKey(tomorrow)) return "tomorrow";
+  return "later";
+}
+export function leadFollowUpBadgeClass(date: string) {
+  const timing = leadFollowUpTiming(date);
+  if (timing === "expired") return "bg-danger";
+  if (timing === "today") return "bg-warning text-dark";
+  if (timing === "tomorrow") return "bg-success";
+  return "bg-info text-dark";
+}
+export function leadFollowUpLabel(date: string) {
+  const timing = leadFollowUpTiming(date);
+  if (timing === "expired") return "Expired Due";
+  if (timing === "today") return "Today Follow-up";
+  if (timing === "tomorrow") return "Tomorrow Follow-up";
+  return "Follow-up";
+}
 export function formatLeadFollowUpDate(value: string) {
   if (!value) return "-";
   const date = new Date(value + "T00:00:00");

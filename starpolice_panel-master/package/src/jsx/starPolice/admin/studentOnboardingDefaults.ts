@@ -68,10 +68,11 @@ export function formatOnboardingCourse(course: string) {
   return course || "—";
 }
 
-export function onboardingAdmissionOnDate(admissionDate: string, filterDate: string) {
-  if (!filterDate) return true;
+export function onboardingAdmissionOnDate(admissionDate: string, fromDate: string, toDate: string) {
+  if (!fromDate && !toDate) return true;
   if (!admissionDate) return false;
-  return admissionDate.slice(0, 10) === filterDate;
+  const date = admissionDate.slice(0, 10);
+  return (!fromDate || date >= fromDate) && (!toDate || date <= toDate);
 }
 
 export interface OnboardingMaterial {

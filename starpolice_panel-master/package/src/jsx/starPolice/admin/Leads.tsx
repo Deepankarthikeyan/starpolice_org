@@ -20,7 +20,9 @@ import {
   leadRecordMatchesCourseFilter,
   leadRecordMatchesSearch,
   leadRecordMatchesStatusFilter,
-  isLeadFollowUpOverdue,
+  leadFollowUpBadgeClass,
+  leadFollowUpLabel,
+  leadFollowUpTiming,
   recordToForm,
   statusBadgeClass,
   statusLabel,
@@ -63,6 +65,7 @@ const Leads = () => {
   const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<"" | LeadStatus>("");
+  const [followUpFilter, setFollowUpFilter] = useState<"" | "today" | "expired" | "tomorrow">("");
   const [courseFilter, setCourseFilter] = useState<"" | LeadCourse>("");
   const [dateFromFilter, setDateFromFilter] = useState("");
   const [dateToFilter, setDateToFilter] = useState("");
@@ -83,12 +86,13 @@ const Leads = () => {
   const searchQuery = search.trim();
 
   const hasActiveFilters = Boolean(
-    searchQuery || statusFilter || courseFilter || dateFromFilter || dateToFilter,
+    searchQuery || statusFilter || followUpFilter || courseFilter || dateFromFilter || dateToFilter,
   );
 
   const clearAllFilters = () => {
     setSearch("");
     setStatusFilter("");
+    setFollowUpFilter("");
     setCourseFilter("");
     setDateFromFilter("");
     setDateToFilter("");
@@ -97,11 +101,12 @@ const Leads = () => {
   const filteredLeads = useMemo(() => {
     return leads.filter((lead) => {
       if (!leadRecordMatchesStatusFilter(lead.status, statusFilter)) return false;
+      if (followUpFilter && (lead.status !== "follow_up" || leadFollowUpTiming(lead.nextFollowUpDate) !== followUpFilter)) return false;
       if (!leadRecordMatchesCourseFilter(lead.course, courseFilter)) return false;
       if (!leadCreatedInDateRange(lead.createdAt, dateFromFilter, dateToFilter)) return false;
       return leadRecordMatchesSearch(lead, searchQuery);
     });
-  }, [leads, searchQuery, statusFilter, courseFilter, dateFromFilter, dateToFilter]);
+  }, [leads, searchQuery, statusFilter, followUpFilter, courseFilter, dateFromFilter, dateToFilter]);
 
   const onDownloadMobileNumbers = () => {
     const withMobile = filteredLeads.filter((lead) => lead.mobileNumber.trim());
@@ -552,7 +557,7 @@ const Leads = () => {
                 <select
                   className="form-select"
                   value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value as "" | LeadStatus)}
+                  onChange={(e) => { const value = e.target.value as "" | LeadStatus; setStatusFilter(value); if (value !== "follow_up") setFollowUpFilter(""); }}
                 >
                   <option value="">All statuses</option>
                   {LEAD_STATUS_OPTIONS.map((option) => (
@@ -561,6 +566,14 @@ const Leads = () => {
                     </option>
                   ))}
                 </select>
+                {statusFilter === "follow_up" && (
+                  <select className="form-select mt-2" value={followUpFilter} onChange={(e) => setFollowUpFilter(e.target.value as typeof followUpFilter)} aria-label="Filter follow-ups by due date">
+                    <option value="">All follow-ups</option>
+                    <option value="today">Today Follow-up</option>
+                    <option value="expired">Expired Due</option>
+                    <option value="tomorrow">Tomorrow Follow-up</option>
+                  </select>
+                )}
               </ListFilterField>
             </div>
             <div className="col-6 col-md-3 col-lg-auto">
@@ -619,14 +632,9 @@ const Leads = () => {
                         {formatLeadCourse(lead.course)}
                       </td>
                       <td>
-                        <span className={`badge ${statusBadgeClass(lead.status)}`}>
-                          {statusLabel(lead.status)}
+                        <span className={`badge ${lead.status === "follow_up" ? leadFollowUpBadgeClass(lead.nextFollowUpDate) : statusBadgeClass(lead.status)}`}>
+                          {lead.status === "follow_up" ? `${leadFollowUpLabel(lead.nextFollowUpDate)}${lead.nextFollowUpDate ? `: ${formatLeadFollowUpDate(lead.nextFollowUpDate)}` : ""}` : statusLabel(lead.status)}
                         </span>
-                        {lead.status === "follow_up" && lead.nextFollowUpDate && (
-                          <div className="mt-1"><span className={"badge " + (isLeadFollowUpOverdue(lead.nextFollowUpDate) ? "bg-danger" : "bg-info text-dark")}>
-                            {isLeadFollowUpOverdue(lead.nextFollowUpDate) ? "Overdue" : "Follow-up"}: {formatLeadFollowUpDate(lead.nextFollowUpDate)}
-                          </span></div>
-                        )}
                       </td>
                       <td>
                         <div className="d-flex flex-wrap gap-2 align-items-center">
